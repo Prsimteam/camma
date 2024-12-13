@@ -38,19 +38,18 @@
                     return liff.getProfile();
                 } else {
                     liff.login({
-                        redirectUri: "https://spkthai.github.io/spklifftest/",
+                        redirectUri: "https://tksoft11.github.io/camma/",
                     });
                 }
             })
             .then((profile) => {
                 window.location.replace(
-                    `https://docs.google.com/forms/d/e/1FAIpQLSc8rCN-y5qfzME8VqTUUmDWSyabvw0XzXDMyQqtd3e-XPP5mw/viewform?
-            usp=pp_url
-            &entry.1120450161=%E0%B8%97%E0%B8%94%E0%B8%AA%E0%B8%AD%E0%B8%9A
-            &entry.32591038=${profile.userId}
-            &entry.914809996=${profile.displayName}
-            &entry.1682278055=${profile.pictureUrl}
-            &entry.1098356252=${profile.statusMessage}`
+                    `https://docs.google.com/forms/d/e/1FAIpQLScXbOOdxNDFymNyBAVenU08XsCMvpxoMnzTFiVNOli_77Ypxg/viewform?usp=pp_url
+&entry.389709692=%E0%B8%ADE0%B8%B0%E0%B9%84%E0%B8%A3
+&entry.105153744=${profile.userId}
+&entry.604876249=${profile.displayName}
+&entry.880286323=${profile.pictureUrl}
+&entry.586837713=${profile.statusMessage}`
                 );
             });
         liff.init({
