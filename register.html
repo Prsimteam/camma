@@ -109,11 +109,16 @@
                     <input type="text" id="lastName" name="lastName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="mb-4">
-                    <label for="position" class="block text-gray-700 text-sm font-bold mb-2">ตำแหน่ง</label>
-                    <input type="text" id="position" name="position" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <label for="position" class="block text-gray-700 text-sm font-bold mb-2">ปฏิบัติหน้าที่เป็น</label>
+                      <select name="position" id="position" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="FCG">ผู้ดูแลในครอบครัว</option>
+                        <option value="CG">CG,อสม.หรือกู้ชีพ</option>
+                        <option value="CM">CM</option>
+                        <option value="บุคคลทั่วไป">บุคคลทั่วไป</option>
+                      </select>
                 </div>
                 <div class="mb-4">
-                    <label for="department" class="block text-gray-700 text-sm font-bold mb-2">แผนก</label>
+                    <label for="department" class="block text-gray-700 text-sm font-bold mb-2">หน่วยงาน</label>
                     <input type="text" id="department" name="department" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="flex items-center justify-center">
@@ -280,7 +285,7 @@
                                                 "contents": [
                                                     {
                                                         "type": "span",
-                                                        "text": `กิจกรรม : ${type}`,
+                                                        "text": `บันทึกกิจกรรม : ${type}`,
                                                         "weight": "bold",
                                                         "color": "#000000"
                                                     },
