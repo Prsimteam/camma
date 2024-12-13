@@ -1,19 +1,67 @@
 <!DOCTYPE html>
-<html lang="th">
+
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ทดสอบ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>กำลังเข้าสู่ Form</title>
     <style>
-        body {
-            font-family: 'Prompt', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+        .centerScreen {
+            margin-top: 20;
+            margin-right: auto;
+            margin-bottom: 20;
+            margin-left: auto;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-<h1>Test</h1>
+
+<body style="background-color: powderblue;">
+    <div class="centerScreen">
+        <center>
+            <img src="https://drive.google.com/uc?id=1mEyShWSX9rPf4klIDeMTlHAOc4BsySFK" height="200px" , width="200px" />
+            <h1>
+                กำลังเข้าสู่ Google Form กรุณารอซักครู่
+            </h1>
+        </center>
+    </div>
 </body>
+<footer>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script>
+        /// Config Your LIFF ID Here
+        const liffId = "2006649095-6dV4OjAL";
+        /// Config Your LIFF ID Here
+        liff.ready
+            .then(() => {
+                if (liff.isLoggedIn()) {
+                    return liff.getProfile();
+                } else {
+                    liff.login({
+                        redirectUri: "https://spkthai.github.io/spklifftest/",
+                    });
+                }
+            })
+            .then((profile) => {
+                window.location.replace(
+                    `https://docs.google.com/forms/d/e/1FAIpQLSc8rCN-y5qfzME8VqTUUmDWSyabvw0XzXDMyQqtd3e-XPP5mw/viewform?
+            usp=pp_url
+            &entry.1120450161=%E0%B8%97%E0%B8%94%E0%B8%AA%E0%B8%AD%E0%B8%9A
+            &entry.32591038=${profile.userId}
+            &entry.914809996=${profile.displayName}
+            &entry.1682278055=${profile.pictureUrl}
+            &entry.1098356252=${profile.statusMessage}`
+                );
+            });
+        liff.init({
+                liffId: liffId,
+            },
+            () => {},
+            (err) => {
+                window.alert(err);
+            }
+        );
+    </script>
+</footer>
+
 </html>
