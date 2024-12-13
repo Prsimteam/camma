@@ -221,7 +221,7 @@
 
             showLoading(); 
 
-            await sendToGoogleSheet(userId, firstName, lastName, position, department);
+            await sendToGoogleSheet(userId, firstName, lastName, position, profile.pictureUrl);
 
             hideLoading(); 
             document.getElementById('registrationForm').reset();
