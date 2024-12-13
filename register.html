@@ -216,12 +216,13 @@
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
             const position = document.getElementById('position').value;
-            const department = document.getElementById('department').value;
+            //const department = document.getElementById('department').value;
+            const profileImage = document.getElementById('profileImage').src;
             const userId = liff.getDecodedIDToken().sub; 
 
             showLoading(); 
 
-            await sendToGoogleSheet(userId, firstName, lastName, position, profile.pictureUrl);
+            await sendToGoogleSheet(userId, firstName, lastName, position, profileImage);
 
             hideLoading(); 
             document.getElementById('registrationForm').reset();
