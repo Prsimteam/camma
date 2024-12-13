@@ -173,7 +173,7 @@
         initializeLiff();
 
         
-        async function sendToGoogleSheet(userId, firstName, lastName, "user", "บุคคลทั่วไป") {
+        async function sendToGoogleSheet(userId, firstName, lastName, position, department) {
             try {
                 const response = await fetch('https://script.google.com/macros/s/AKfycbzEra2WSYdWw3NSxgItCcl5BWEIs41ZajR6lPYLx5GqVu0e6l-GGV-z6Eu6fdTseMVt/exec', {  // เปลี่ยนจุดที่ 2 (3.Register)
                     method: 'POST',
@@ -208,12 +208,11 @@
             const lastName = document.getElementById('lastName').value;
             const position = document.getElementById('position').value;
             const department = document.getElementById('department').value;
-            const profileImage = document.getElementById('profileImage').src;
             const userId = liff.getDecodedIDToken().sub; 
 
             showLoading(); 
 
-            await sendToGoogleSheet(userId, firstName, lastName, position, department);
+            await sendToGoogleSheet(userId, firstName, lastName, "user", "บุคคลทั่วไป");
 
             hideLoading(); 
             document.getElementById('registrationForm').reset();
