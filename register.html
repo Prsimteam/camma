@@ -114,7 +114,7 @@
                         <option value="FCG">ผู้ดูแลในครอบครัว</option>
                         <option value="CG">CG,อสม.หรือกู้ชีพ</option>
                         <option value="CM">CM</option>
-                        <option value="บุคคลทั่วไป">บุคคลทั่วไป</option>
+                        <option value="user">บุคคลทั่วไป</option>
                       </select>
                 </div>
                 <div class="mb-4">
@@ -136,6 +136,16 @@
     <!-- LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
+
+document.getElementById('position').addEventListener('change', function() {
+    if (this.value == "user") {
+        document.getElementById('department').disabled = false;
+    } else {
+        document.getElementById('department').disabled = true;
+    }
+});
+
+        
       
     const liffId = '2006670422-W8z1J0rl'; // เปลี่ยนจุดที่ 1 liff register
 
