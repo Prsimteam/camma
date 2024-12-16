@@ -137,15 +137,15 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
 
-document.getElementById('position').addEventListener('change', function() {
+document.getElementById('position').addEventListener('change', change2);
+
+    function change2() {
     if (this.value == "user") {
         document.getElementById('department').disabled = false;
-    } else {
-        document.getElementById('department').disabled = true;
+        } else {
+            document.getElementById('department').disabled = true;
+        }
     }
-});
-
-        
       
     const liffId = '2006670422-W8z1J0rl'; // เปลี่ยนจุดที่ 1 liff register
 
