@@ -304,7 +304,7 @@ document.getElementById('position').addEventListener('change', change2);
                                                 "contents": [
                                                     {
                                                         "type": "span",
-                                                        "text": `บันทึกกิจกรรม : ${type}`,
+                                                        "text": `ลงทะเบียนเป็น : ${position}`,
                                                         "weight": "bold",
                                                         "color": "#000000"
                                                     },
@@ -321,7 +321,24 @@ document.getElementById('position').addEventListener('change', change2);
                                                 "contents": [
                                                     {
                                                         "type": "span",
-                                                        "text": `เวลา : ${time}`,
+                                                        "text": `ขึ้นตรงกับ : ${department}`,
+                                                        "weight": "bold",
+                                                        "color": "#000000"
+                                                    },
+                                                    {
+                                                        "type": "span",
+                                                        "text": "     "
+                                                    }
+                                                ],
+                                                "size": "sm",
+                                                "wrap": false
+                                            },
+                                            {
+                                                "type": "text",
+                                                "contents": [
+                                                    {
+                                                        "type": "span",
+                                                        "text": `ลงทะเบียนสำเร็จ เวลา : ${time}`,
                                                         "weight": "bold",
                                                         "color": "#000000"
                                                     },
