@@ -243,6 +243,11 @@ document.getElementById('position').addEventListener('change', change2);
         async function sendFlexMessage(type) {
             const now = new Date();
             const time = now.toLocaleTimeString('en-GB', { hour12: false });
+
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const position = document.getElementById('position').value;
+            const department = document.getElementById('department').value;            
             const profile = await liff.getProfile();
             const message = {
                 type: 'flex',
