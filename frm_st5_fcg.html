@@ -1,52 +1,58 @@
 <!DOCTYPE html>
-<html lang="th">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frm-St5</title>
+  <title>กำลังเข้าสู่ Form</title>
+  <style>
+    .centerScreen {
+      margin-top: 20;
+      margin-right: auto;
+      margin-bottom: 20;
+      margin-left: auto;
+    }
+  </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
 
-
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
-    </div>
-
-    <!-- LIFF SDK -->
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <script>
-      
-    const liffId = '2006670422-3b8vmOqK'; // เปลี่ยนจุดที่ 1 liff register
-
-        
-
-        
-    liff.ready
-        .then (() => {
-            if(liff.isLoggedIn()) {
-                return liff.getProfile();
-            } else {
-                liff.login({
-                    redirectUri:"",
-                })
-            }
-        })
-        .then((profile) =>{
-            window.location.replace('https://docs.google.com/forms/d/e/1FAIpQLSfGG8aVpUKbc5K9h_3KMChTh3NqO2GiW5cCnKGigsBKk9OdHQ/viewform?usp=pp_url&entry.981386523=${profile.userId}');
-        });
-    liff.init (
-        {
-            liffId:liffId,
-        },
-        ()  =>{},
-        (err)=> {
-            window.alert(err);
-        }
-    )
-
-  
-    </script>
-   
+<body style="background-color: powderblue;">
+  <div class="centerScreen">
+    <center>
+      <img src="https://drive.google.com/uc?id=1mEyShWSX9rPf4klIDeMTlHAOc4BsySFK" height="200px" , width="200px" />
+      <h1>
+        กำลังเข้าสู่ Google Form กรุณารอซักครู่
+      </h1>
+    </center>
+  </div>
 </body>
-</html>
+<footer>
+  <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+  <script>
+    /// Config Your LIFF ID Here
+    const liffId = "2006670422-3b8vmOqK";
+    /// Config Your LIFF ID Here
+
+    liff.ready
+      .then(() => {
+        if (liff.isLoggedIn()) {
+          return liff.getProfile();
+        } else {
+          liff.login({
+            redirectUri: "Redirect URL",
+          });
+        }
+      })
+      .then((profile) => {
+        window.location.replace(
+          `https://docs.google.com/forms/d/e/1FAIpQLSfGG8aVpUKbc5K9h_3KMChTh3NqO2GiW5cCnKGigsBKk9OdHQ/viewform?usp=pp_url&entry.981386523=${profile.userId}`
+          
+        );
+      });
+    liff.init(
+      {
+        liffId: liffId,
+      },
+      () => {},
+      (err) => {
+        window.alert(err);
+      }
+    );
+  </script>
+</footer>
