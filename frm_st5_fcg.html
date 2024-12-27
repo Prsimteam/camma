@@ -1,32 +1,74 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> LIFF app </title>
-  <script src="https://cdn.tailwindcss.com"></script>
- 
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-    body {
-      font-family: 'Prompt', sans-serif;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frm-St5</title>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="flex items-center justify-center min-h-screen">
 
 
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
 
-  <!-- สคริปต์ -->
-  <script>
+    <!-- LIFF SDK -->
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+      
+    const liffId = '2006670422-3b8vmOqK'; // เปลี่ยนจุดที่ 1 liff register
 
-    window.location.replace("https://docs.google.com/forms/d/e/1FAIpQLSfGG8aVpUKbc5K9h_3KMChTh3NqO2GiW5cCnKGigsBKk9OdHQ/viewform?usp=pp_url&entry.981386523=");
+        
 
-  </script>
+        
+    liff.ready
+        .then (() => {
+            if(liff.isLoggedIn()) {
+                return liff.getProfile();
+            } else {
+                liff.login({
+                    redirectUri:"",
+                })
+            }
+        })
+        .then((profile) =>{
+            window.location.replace(
+                https://docs.google.com/forms/d/e/1FAIpQLSfGG8aVpUKbc5K9h_3KMChTh3NqO2GiW5cCnKGigsBKk9OdHQ/viewform?usp=pp_url&entry.981386523=${profile.userId}
+            );
+        });
+    liff.init (
+        {
+            liffId:liffId,
+        },
+        ()  =>{},
+        (err)=> {
+            window.alert(err);
+        }
+    )
 
+
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: liffId });
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    document.getElementById('displayName').textContent = profile.displayName;
+                    document.getElementById('statusMessage').textContent = profile.statusMessage;
+                    document.getElementById('profileImage').src = profile.pictureUrl;
+                    document.getElementById('userStatus').textContent = liff.isLoggedIn() ? 'Online' : 'Offline';
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('LIFF initialization error:', error);
+            }
+        }
+
+
+  
+  
+    </script>
+   
 </body>
 </html>
