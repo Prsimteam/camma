@@ -132,7 +132,7 @@
 
 
       
-    const liffId = '2006670422-W8z1J0rl'; // เปลี่ยนจุดที่ 1 liff register
+    const liffId = '2006670422-pg2E91G4'; // เปลี่ยนจุดที่ 1 liff register
 
         
         function updateTime() {
@@ -177,19 +177,17 @@
         initializeLiff();
 
         
-        async function sendToGoogleSheet(userId, firstName, lastName, position, department) {
+        async function sendToGoogleSheet(userId, subject, message) {
             try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbzEra2WSYdWw3NSxgItCcl5BWEIs41ZajR6lPYLx5GqVu0e6l-GGV-z6Eu6fdTseMVt/exec', {  // เปลี่ยนจุดที่ 2 (3.Register)
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxycop7QaxATXsQNYdEVsJ__5AqA86SmbS_IO7LhMRhySP14FFzvAhPOB9tI8ktItq-/exec', {  // เปลี่ยนจุดที่ 2 (3.Register)
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: new URLSearchParams({
                         userId: userId,
-                        firstName: firstName,
-                        lastName: lastName,
-                        position: position,
-                        department: department,
+                        subject: subject,
+                        message: message,
                     })
                 });
 
@@ -208,16 +206,15 @@
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
             const subject = document.getElementById('subject').value;
-            const department = document.getElementById('department').value;
+            const message = document.getElementById('message').value;
+            const subject = document.getElementById('subject').value;
             const profileImage = document.getElementById('profileImage').src;
             const userId = liff.getDecodedIDToken().sub; 
 
             showLoading(); 
 
-            await sendToGoogleSheet(userId, firstName, lastName, position, department);
+            await sendToGoogleSheet(userId, subject, message);
 
             hideLoading(); 
             document.getElementById('registrationForm').reset();
@@ -227,10 +224,8 @@
             const now = new Date();
             const time = now.toLocaleTimeString('en-GB', { hour12: false });
 
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const position = document.getElementById('position').value;
-            const department = document.getElementById('department').value;            
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;         
             const profile = await liff.getProfile();
             const message = {
                 type: 'flex',
@@ -269,11 +264,11 @@
                                                 "contents": [
                                                     {
                                                         "type": "span",
-                                                        "text": `คุณ : `,
+                                                        "text": `ส่งเรื่อง : `,
                                                     },
                                                     {
                                                         "type": "span",
-                                                        "text": `${firstName} ${lastName}`,
+                                                        "text": `${subject}`,
                                                         "weight": "bold",
                                                         "color": "#0000aa"
                                                     }
@@ -286,11 +281,11 @@
                                                 "contents": [
                                                     {
                                                         "type": "span",
-                                                        "text": `ลงทะเบียนเป็น : `,
+                                                        "text": `รายละเอียด : `,
                                                     },
                                                     {
                                                         "type": "span",
-                                                        "text": `${position}`,
+                                                        "text": `${message}`,
                                                         "weight": "bold",
                                                         "color": "#0000aa"
                                                     }
@@ -303,24 +298,7 @@
                                                 "contents": [
                                                     {
                                                         "type": "span",
-                                                        "text": `ขึ้นตรงกับ : `,
-                                                    },
-                                                    {
-                                                        "type": "span",
-                                                        "text": `${department}`,
-                                                        "weight": "bold",
-                                                        "color": "#0000aa"
-                                                    }
-                                                ],
-                                                "size": "sm",
-                                                "wrap": false
-                                            },
-                                            {
-                                                "type": "text",
-                                                "contents": [
-                                                    {
-                                                        "type": "span",
-                                                        "text": "ทำการลงทะเบียนสำเร็จ\n",
+                                                        "text": "ส่งเรื่องถึงแอดมมินเรียบร้อย\n",
                                                         "weight": "bold",
                                                         "color": "#000000"
                                                     },
