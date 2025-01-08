@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ลงทะเบียนสมาชิก</title>
+    <title>แจ้งปัญหากับแอดมิน</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -100,13 +100,19 @@
         <!-- Registration Form -->
         <div class="p-4">
             <form id="registrationForm">
+
                 <div class="mb-4">
-                    <label for="firstName" class="block text-gray-700 text-sm font-bold mb-2">เรื่อง</label>
-                    <input type="text" id="firstName" name="firstName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
+                    <label for="subject" class="block text-gray-700 text-sm font-bold mb-2">เรื่อง</label>
+                      <select name="subject" id="subject" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="ข้อมูลผิดพลาด" selected>ข้อมูลผิดพลาด</option>
+                        <option value="การทำงานผิดปกติ">การทำงานผิดปกติ</option>
+                        <option value="โปรแกรมแสดงผลผิด">โปรแกรมแสดงผลผิด</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                      </select>
+                </div>                
                 <div class="mb-4">
                     <label for="lastName" class="block text-gray-700 text-sm font-bold mb-2">รายละเอียด</label>
-                    <input type="text" id="lastName" name="lastName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <textarea id="message" name="message" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="10" cols="30">
                 </div>
                 <div class="flex items-center justify-center">
                     <button type="submit" class="bg-gray-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">ส่งเรื่อง</button>
@@ -124,17 +130,7 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
 
-document.getElementById('position').addEventListener('change', change2);
 
-        function change2() {
-            if (this.value == "user") {
-                    document.getElementById('department').value = "บุคคลทั่วไป";
-                    document.getElementById('department').disabled = true;
-                } else {
-                document.getElementById('department').value = "";
-                    document.getElementById('department').disabled = false;
-                }
-        }
       
     const liffId = '2006670422-W8z1J0rl'; // เปลี่ยนจุดที่ 1 liff register
 
@@ -214,7 +210,7 @@ document.getElementById('position').addEventListener('change', change2);
 
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
-            const position = document.getElementById('position').value;
+            const subject = document.getElementById('subject').value;
             const department = document.getElementById('department').value;
             const profileImage = document.getElementById('profileImage').src;
             const userId = liff.getDecodedIDToken().sub; 
