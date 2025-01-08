@@ -226,7 +226,7 @@
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;         
             const profile = await liff.getProfile();
-            const message = {
+            const messageFlex = {
                 type: 'flex',
                 altText: `You have ${type === 'Register' ? 'Register' : 'Register'} at ${time}`,
                 contents: {
@@ -326,7 +326,7 @@
             };
 
             try {
-                await liff.sendMessages([message]);
+                await liff.sendMessages([messageFlex]);
                 liff.closeWindow(); 
             } catch (error) {
                 console.error('Error sending message:', error);
