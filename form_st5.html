@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบประเมินความเครียด (ST-5)</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <!-- Line LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/versions/2.16.0/sdk.js"></script>
+  <style>
+    body {
+      padding: 20px;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h1 class="text-center my-4">แบบประเมินความเครียด (ST-5)</h1>
+    <p class="text-center lead">
+      ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกอย่างไร?...<br>
+      โดยเลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด
+    </p>
+
+    <form @submit.prevent="submitForm" v-if="!submitted">
+      <div v-for="(question, index) in questions" :key="index" class="question card p-3 mb-3 shadow-sm">
+        <p class="fw-bold">{{ question.text }}</p>
+        <div class="form-check" v-for="option in options" :key="option.value">
+          <input
+            class="form-check-input"
+            type="radio"
+            :name="'q' + index"
+            :value="option.value"
+            v-model="answers[index]"
+          />
+          <label class="form-check-label">{{ option.label }}</label>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
+    </form>
+
+    <div v-if="submitted" class="result text-center mt-5">
+      <h2 class="text-success">ขอบคุณที่ทำแบบสอบถาม!</h2>
+      <p class="lead">ผลคะแนนของคุณ: <strong>{{ totalScore }}</strong></p>
+      <p v-if="totalScore <= 5" class="text-info">ระดับความเครียด: <strong>ต่ำ</strong></p>
+      <p v-else-if="totalScore <= 10" class="text-warning">ระดับความเครียด: <strong>ปานกลาง</strong></p>
+      <p v-else class="text-danger">ระดับความเครียด: <strong>สูง</strong></p>
+    </div>
+  </div>
+
+  <script>
+    // Initialize LIFF
+    async function initializeLiff() {
+      await liff.init({ liffId: "2006670422-3b8vmOqK" });
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
+        const profile = await liff.getProfile();
+        app.userId = profile.userId; // เก็บ User ID ไว้ใน Vue instance
+      }
+    }
+
+    const app = new Vue({
+      el: '#app',
+      data: {
+        userId: null, // จะถูกกำหนดค่าจาก Line LIFF
+        questions: [
+          { text: "มีปัญหาการนอน นอนไม่หลับหรือนอนมาก" },
+          { text: "มีสมาธิน้อยลง" },
+          { text: "หงุดหงิด/กระวนกระวาย/ว้าวุ่นใจ" },
+          { text: "รู้สึกเบื่อ เซ็ง" },
+          { text: "ไม่อยากพบปะผู้คน" },
+        ],
+        options: [
+          { label: "แทบไม่มี", value: 0 },
+          { label: "เป็นบางครั้ง", value: 1 },
+          { label: "บ่อยครั้ง", value: 2 },
+          { label: "เป็นประจำ", value: 3 },
+        ],
+        answers: [],
+        submitted: false,
+      },
+      computed: {
+        totalScore() {
+          return this.answers.reduce((sum, answer) => sum + (parseInt(answer) || 0), 0);
+        },
+      },
+      methods: {
+        async submitForm() {
+          const data = {
+            userId: this.userId,
+            question1: this.answers[0],
+            question2: this.answers[1],
+            question3: this.answers[2],
+            question4: this.answers[3],
+            question5: this.answers[4],
+          };
+
+          try {
+            const response = await fetch("https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+              this.submitted = true;
+            } else {
+              alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+            }
+          } catch (error) {
+            console.error(error);
+            alert("ไม่สามารถเชื่อมต่อได้");
+          }
+        },
+      },
+    });
+
+    // Initialize LIFF on page load
+    initializeLiff();
+  </script>
+
+  <!-- Bootstrap JS (Optional) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
