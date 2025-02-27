@@ -112,14 +112,13 @@
               },
               body: JSON.stringify(data),
             });
-
-            if (response.ok) {
-              // ส่ง Flex Message กลับไปยังผู้ใช้งานผ่าน LIFF
-              await this.sendFlexMessage();
-              this.submitted = true;
-            } else {
-              alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
-            }
+                  if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+            
+                  // ส่ง Flex Message กลับไปยังผู้ใช้งาน
+                  await this.sendFlexMessage();
+                  this.submitted = true;
           } catch (error) {
             console.error(error);
             alert("ไม่สามารถเชื่อมต่อได้");
