@@ -22,6 +22,46 @@
       padding: 10px;
       font-size: 18px;
     }
+
+    /* Custom Radio Button */
+    .custom-radio {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .custom-radio input[type="radio"] {
+      appearance: none; /* ลบสไตล์เริ่มต้นของ radio button */
+      width: 20px;
+      height: 20px;
+      border: 2px solid #007bff;
+      border-radius: 50%;
+      outline: none;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .custom-radio input[type="radio"]:checked {
+      background-color: #007bff; /* สีเมื่อถูกเลือก */
+    }
+
+    .custom-radio label {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Hover Effect */
+    .custom-radio:hover input[type="radio"] {
+      border-color: #0056b3;
+    }
+
+    /* Focus Effect */
+    .custom-radio input[type="radio"]:focus {
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -34,7 +74,7 @@
     <form @submit.prevent="submitForm" v-if="!submitted">
       <div v-for="(question, index) in questions" :key="index" class="question card p-3 mb-3 shadow-sm">
         <p class="fw-bold">{{ question.text }}</p>
-        <div class="form-check" v-for="option in options" :key="option.value">
+        <div class="custom-radio" v-for="option in options" :key="option.value">
           <input
             class="form-check-input"
             type="radio"
@@ -42,7 +82,7 @@
             :value="option.value"
             v-model="answers[index]"
           />
-          <label class="form-check-label">{{ option.label }}</label>
+          <label>{{ option.label }}</label>
         </div>
       </div>
       <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
@@ -209,7 +249,7 @@
                               {
                                 type: "text",
                                 text: `ระดับความเครียด: ${level}`,
-                                size: "sm", 
+                                size: "sm", // แก้ไขจาก "sl" เป็น "sm"
                                 align: "center",
                                 weight: "bold",
                               },
