@@ -150,99 +150,99 @@ async sendFlexMessage() {
     type: "flex",
     altText: "ผลคะแนนความเครียดของคุณ",
     contents: {
-      type: "bubble",
-      body: {
-        type: "box",
-        layout: "vertical",
-        contents: [
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
           {
-            type: "box",
-            layout: "vertical",
-            contents: [
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
               {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "image",
-                    url: this.userPictureUrl, // รูปโปรไฟล์ของผู้ใช้งาน
-                    aspectMode: "cover",
-                    size: "full",
-                    align: "center",
-                    cornerRadius: "100px",
-                    width: "200px",
-                    height: "200px",
-                  },
-                ],
-              },
-              {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "box",
-                    layout: "baseline",
-                    contents: [
-                      {
-                        type: "text",
-                        text: "ได้คะแนน",
-                        size: "xl",
-                        weight: "bold",
-                        align: "center",
-                      },
-                    ],
-                    spacing: "sm",
-                    margin: "md",
-                  },
-                  {
-                    type: "box",
-                    layout: "vertical",
-                    contents: [
-                      {
-                        type: "text",
-                        text: `${totalScore}`,
-                        size: "5xl",
-                        color: "#111111",
-                        align: "center",
-                      },
-                      {
-                        type: "text",
-                        text: "คะแนน",
-                        size: "lg",
-                        color: "#444444",
-                        align: "center",
-                      },
-                      {
-                        type: "text",
-                        text: `${level}`,
-                        size: "xl",
-                        align: "center",
-                        weight: "bold",
-                      },
-                      {
-                        type: "separator",
-                        margin: "20px",
-                      },
-                    ],
-                    spacing: "sm",
-                    margin: "md",
-                    backgroundColor: "#ff0000",
-                    cornerRadius: "xxl",
-                  },
-                ],
-                paddingAll: "sm",
-                width: "250px",
-              },
+                "type": "image",
+                "url":  this.userPictureUrl, // รูปโปรไฟล์ของผู้ใช้งาน
+                "aspectMode": "cover",
+                "size": "full",
+                "align": "center"
+              }
             ],
-            spacing: "xl",
-            paddingAll: "20px",
-            alignItems: "center",
+            "cornerRadius": "100px",
+            "width": "200px",
+            "height": "200px"
           },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": `${totalScore}`,
+                    "size": "xl",
+                    "weight": "bold",
+                    "align": "center"
+                  }
+                ],
+                "spacing": "sm",
+                "margin": "md"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "9",
+                    "size": "5xl",
+                    "color": "#111111",
+                    "align": "center"
+                  },
+                  {
+                    "type": "text",
+                    "text": "คะแนน",
+                    "size": "lg",
+                    "color": "#444444",
+                    "align": "center"
+                  },
+                  {
+                    "type": "text",
+                    "text": `ระดับความเครียด: ${level}`,
+                    "size": "sl",
+                    "align": "center",
+                    "weight": "bold"
+                  },
+                  {
+                    "type": "separator",
+                    "margin": "20px"
+                  }
+                ],
+                "spacing": "sm",
+                "margin": "md",
+                "backgroundColor": "#ff0000",
+                "cornerRadius": "xxl"
+              }
+            ],
+            "paddingAll": "sm",
+            "width": "250px"
+          }
         ],
-        paddingAll: "0px",
-        backgroundColor: "#f6f6f6",
-      },
-    },
+        "spacing": "xl",
+        "paddingAll": "20px",
+        "alignItems": "center"
+      }
+    ],
+    "paddingAll": "0px",
+    "backgroundColor": "#f6f6f6"
+  }
+},
   };
 
   try {
