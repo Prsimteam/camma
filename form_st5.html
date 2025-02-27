@@ -144,20 +144,20 @@ fieldset input[type="radio"]:checked + span > .icon {
     </p>
     <form @submit.prevent="submitForm" v-if="!submitted">
       <fieldset>
-      <div v-for="(question, index) in questions" :key="index" class="radio-item-container">
+      <div v-for="(question, index) in questions" :key="index" class="radio">
         <legend>{{ question.text }}</legend>
-        <div class="radio-item" v-for="option in options" :key="option.value">
-          <input
-            
+        <div class="radio-item-container" v-for="option in options" :key="option.value">
+	<div class="radio-item">
+          <label><input
             type="radio"
             :name="'q' + index"
             :value="option.value"
             v-model="answers[index]"
           />
-          <label>{{ option.label }}</label>
+	  <span>{{ option.label }} </span></label></div>
         </div>
       </div>
-      </fieldset>fieldset>
+      </fieldset>
       <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
     </form>
     <div v-if="submitted" class="result text-center mt-5">
