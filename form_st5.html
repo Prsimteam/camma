@@ -57,10 +57,12 @@
     async function initializeLiff() {
       await liff.init({ liffId: "2006670422-3b8vmOqK" });
       if (!liff.isLoggedIn()) {
+        console.log("User is not logged in");
         liff.login();
       } else {
         const profile = await liff.getProfile();
         app.userId = profile.userId; // เก็บ User ID ไว้ใน Vue instance
+        console.log("User ID:", profile.userId);
       }
     }
 
