@@ -91,26 +91,16 @@
           return this.answers.reduce((sum, answer) => sum + (parseInt(answer) || 0), 0);
         },
       },
-      methods: {
-        async submitForm() {
-          /*
-            const data = {
-            userId: this.userId,
-            question1: this.answers[0],
-            question2: this.answers[1],
-            question3: this.answers[2],
-            question4: this.answers[3],
-            question5: this.answers[4],
-          };
-            */
-           
-            userId = this.userId;
-            question1 = this.answers[0];
-            question2 = this.answers[1];
-            question3 = this.answers[2];
-            question4 = this.answers[3];
-            question5 = this.answers[4];
-
+methods: {
+  async submitForm() {
+    const data = {
+      userId: this.userId,
+      question1: this.answers[0],
+      question2: this.answers[1],
+      question3: this.answers[2],
+      question4: this.answers[3],
+      question5: this.answers[4],
+    };
 
           try {
             // ส่งข้อมูลไปยัง Google Apps Script
@@ -125,22 +115,15 @@
             alert("ไม่สามารถเชื่อมต่อได้");
           }
         },
-        async sendDataToGoogleAppsScript(userId, question1, question2, question3, question4, question5) {
+        async sendDataToGoogleAppsScript(data) {
             
           const response = await fetch("https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({
-                        userId: userId,
-                        question1: question1,
-                        question2: question2,
-                        question3: question3,
-                        question4: question4,
-                        question5: question5,
-                    })
-          });
+                  method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
