@@ -192,13 +192,13 @@
         <p class="fw-bold">{{ question.text }}</p>
         <div class="form-check" v-for="option in options" :key="option.value">
           <input
-            class="form-check-input"
+            class="btn-check"
             type="radio"
             :name="'q' + index"
             :value="option.value"
             v-model="answers[index]"
           />
-          <label class="form-check-label">{{ option.label }}</label>
+          <label class="btn btn-outline-danger font-weight-bold border-2">{{ option.label }}</label>
         </div>
       </div>
       <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
