@@ -144,8 +144,8 @@ fieldset input[type="radio"]:checked + span > .icon {
     </p>
     <form @submit.prevent="submitForm" v-if="!submitted">
       <fieldset>
-      <div v-for="(question, index) in questions" :key="index" class="radio-item-container">
-        <legend>{{ question.text }}</legend>
+      <legend  v-for="(question, index) in questions" :key="index" >{{ question.text }}</legend>
+	<div class="radio-item-container">
         <div class="radio-item" v-for="option in options" :key="option.value">
           <label><input
             type="radio"
