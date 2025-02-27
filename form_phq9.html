@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบประเมินภาวะซึมเศร้า (PHQ-9)</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <!-- Line LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/versions/2.16.0/sdk.js"></script>
+  <style>
+    body {
+      padding: 20px;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 22px;
+    }
+    .fw-bold {
+      font-weight: 700 !important;
+      padding: 20px;
+      font-size: 22px;
+      background: #f6f6ff;
+      border-radius: 10px;
+    }
+    /* Custom Radio Button */
+    .custom-radio {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 18px;
+      padding-left: 20px;
+    }
+    .custom-radio input[type="radio"] {
+      appearance: none; /* ลบสไตล์เริ่มต้นของ radio button */
+      width: 30px;
+      height: 30px;
+      border: 2px solid #007bff;
+      border-radius: 50%;
+      outline: none;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .custom-radio input[type="radio"]:checked {
+      background-color: #007bff; /* สีเมื่อถูกเลือก */
+    }
+    .custom-radio label {
+      cursor: pointer;
+      font-weight: bold;
+    }
+    /* Hover Effect */
+    .custom-radio:hover input[type="radio"] {
+      border-color: #0056b3;
+    }
+    /* Focus Effect */
+    .custom-radio input[type="radio"]:focus {
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h1 class="text-center my-4">แบบประเมินภาวะซึมเศร้า (PHQ-9)</h1>
+    <p class="text-center lead">
+      ความรู้สึกในช่วง 2 สัปดาห์ที่ผ่านมา<br>
+      เลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด
+    </p>
+    <form @submit.prevent="submitForm" v-if="!submitted">
+      <div v-for="(question, index) in questions" :key="index" class="question card p-3 mb-3 shadow-sm">
+        <p class="fw-bold">{{ question.text }}</p>
+        <div class="custom-radio" v-for="option in options" :key="option.value">
+          <input
+            class="form-check-input"
+            type="radio"
+            :name="'q' + index"
+            :value="option.value"
+            v-model="answers[index]"
+          />
+          <label>{{ option.label }}</label>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
+    </form>
+    <div v-if="submitted" class="result text-center mt-5">
+      <h2 class="text-success">ขอบคุณที่ทำแบบสอบถาม!</h2>
+      <p class="lead">ผลคะแนนของคุณได้ถูกส่งไปยังแชทของคุณแล้ว</p>
+    </div>
+  </div>
+  <script>
+    // Initialize LIFF
+    async function initializeLiff() {
+      await liff.init({ liffId: "2006670422-P9AYeln9" });
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
+        const profile = await liff.getProfile();
+        app.userId = profile.userId; // เก็บ User ID ไว้ใน Vue instance
+        app.userPictureUrl = profile.pictureUrl || "https://via.placeholder.com/150"; // รูปโปรไฟล์หรือรูปสำรอง
+      }
+    }
+
+    const app = new Vue({
+      el: '#app',
+      data: {
+        userId: null, // จะถูกกำหนดค่าจาก Line LIFF
+        userPictureUrl: null, // URL รูปโปรไฟล์ของผู้ใช้งาน
+        questions: [
+          { text: "เบื่อ ไม่สนใจอยากทำอะไร" },
+          { text: "ไม่สบายใจ ซึ่งเศร้า ท้อแท้" },
+          { text: "หลับยาก หรือ หลับๆ ตื่นๆ หรือหลับมากไป" },
+          { text: "เหนื่อยง่าย หรือไม่ค่อยมีแรง" },
+          { text: "เบื่ออาหาร หรือ กินมากเกินไป" },
+          { text: "รู้สึกไม่ดีกับตัวเอง คิดว่าตนเองล้มเหลว หรือ ทำให้ตนเองหรือครอบครัวผิดหวัง" },
+          { text: "สมาธิไม่ดีเวลาทำอะไร เช่น ดูโทรทัศน์ ฟังวิทยุ หรือทำงาน ที่ต้องใช้ความต้องการ" },
+          { text: "พูดช้า ทำอะไรช้าลงจนคนอื่นสังเกตเห็นได้ หรือ กระสับกระส่ายไม่สามารถอยู่นิ่งได้เหมือนที่เคยเป็น" },
+          { text: "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี" },
+        ],
+        options: [
+          { label: "ไม่มีเลย", value: 0 },
+          { label: "เป็นบางวัน (1-7 วัน)", value: 1 },
+          { label: "เป็นบ่อย (> 7 วัน)", value: 2 },
+          { label: "เป็นทุกวัน", value: 3 },
+        ],
+        answers: [],
+        submitted: false,
+      },
+      computed: {
+        totalScore() {
+          return this.answers.reduce((sum, answer) => sum + (parseInt(answer) || 0), 0);
+        },
+      },
+      methods: {
+        async submitForm() {
+          const data = {
+            userId: this.userId,
+            question1: this.answers[0],
+            question2: this.answers[1],
+            question3: this.answers[2],
+            question4: this.answers[3],
+            question5: this.answers[4],
+            question6: this.answers[5],
+            question7: this.answers[6],
+            question8: this.answers[7],
+            question9: this.answers[8],
+          };
+
+          try {
+            // ส่งข้อมูลไปยัง Google Apps Script
+            //await this.sendDataToGoogleAppsScript(data);
+
+            // ส่ง Flex Message กลับไปยังผู้ใช้งาน
+            await this.sendFlexMessage();
+
+            this.submitted = true;
+          } catch (error) {
+            console.error(error);
+            alert("ไม่สามารถเชื่อมต่อได้");
+          }
+        },
+        async sendDataToGoogleAppsScript(data) {
+          const response = await fetch("https://script.google.com/macros/s/YOUR_WEB_APP_ID/exec", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+        },
+        async sendFlexMessage() {
+          const totalScore = this.totalScore;
+          const level =
+            totalScore < 7
+              ? "ไม่มีอาการของโรคซึมเศร้าหรือมีอาการของโรคซึมเศร้าระดับน้อยมาก"
+              : totalScore <= 12
+              ? "มีอาการของโรคซึมเศร้า ระดับน้อย"
+              : totalScore <= 18
+              ? "มีอาการของโรคซึมเศร้า ระดับกลาง"
+              : "มีอาการของโรคซึมเศร้า ระดับรุนแรง";
+
+          // กำหนดสีพื้นหลังตามระดับความเครียด
+          let vbackgroundColor;
+          if (totalScore < 7) {
+            vbackgroundColor = "#45fa36"; // สีเขียว
+          } else if (totalScore <= 12) {
+            vbackgroundColor = "#FFA500"; // สีส้ม
+          } else if (totalScore <= 18) {
+            vbackgroundColor = "#ff0000"; // สีแดง
+          } else {
+            vbackgroundColor = "#8B0000"; // สีแดงเข้ม
+          }
+
+          const flexMessage = {
+            type: "flex",
+            altText: "ผลคะแนน PHQ-9 ของคุณ",
+            contents: {
+              type: "bubble",
+              body: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "image",
+                    url: this.userPictureUrl, // รูปโปรไฟล์ของผู้ใช้งาน
+                    aspectMode: "cover",
+                    size: "full",
+                    align: "center",
+                    cornerRadius: "100px",
+                    width: "200px",
+                    height: "200px",
+                  },
+                  {
+                    type: "text",
+                    text: "ผลคะแนน PHQ-9 ของคุณ",
+                    weight: "bold",
+                    size: "xl",
+                    align: "center",
+                    margin: "md",
+                  },
+                  {
+                    type: "text",
+                    text: `คะแนนรวม: ${totalScore}`,
+                    margin: "md",
+                    align: "center",
+                    size: "lg",
+                    color: "#FF5733",
+                  },
+                  {
+                    type: "text",
+                    text: `ระดับ: ${level}`,
+                    margin: "md",
+                    align: "center",
+                    size: "lg",
+                    color: vbackgroundColor,
+                  },
+                  {
+                    type: "separator",
+                    margin: "20px",
+                  },
+                  {
+                    type: "text",
+                    text: `คำแนะนำ: หากคุณมีอาการซึมเศร้าระดับกลางหรือรุนแรง ควรปรึกษาแพทย์หรือผู้เชี่ยวชาญเพื่อรับการช่วยเหลือ`,
+                    margin: "md",
+                    align: "start",
+                    wrap: true,
+                    size: "sm",
+                    color: "#444444",
+                  },
+                ],
+                spacing: "xl",
+                paddingAll: "20px",
+              },
+            },
+          };
+
+          try {
+            await liff.sendMessages([flexMessage]);
+            liff.closeWindow();
+          } catch (error) {
+            console.error("เกิดข้อผิดพลาดในการส่งข้อความ:", error);
+            alert("ไม่สามารถส่งข้อความได้");
+          }
+        },
+      },
+    });
+
+    // Initialize LIFF on page load
+    initializeLiff();
+  </script>
+  <!-- Bootstrap JS (Optional) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
