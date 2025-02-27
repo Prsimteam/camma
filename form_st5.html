@@ -11,128 +11,57 @@
   <!-- Line LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/versions/2.16.0/sdk.js"></script>
   <style>
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap");
+    body {
+      padding: 20px;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+    }
 
-body {
-	height: 100vh;
-	margin: 0;
-	display: grid;
-	place-items: center;
-	font-family: "Inter", sans-serif;
-	user-select: none;
-}
+    /* Custom Radio Button */
+    .custom-radio {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
 
-fieldset {
-	padding: 0;
-	margin: 0;
-	border: 0;
-	max-width: 340px;
-	border-radius: 20px;
-	width: 100%;
-}
+    .custom-radio input[type="radio"] {
+      appearance: none; /* ลบสไตล์เริ่มต้นของ radio button */
+      width: 20px;
+      height: 20px;
+      border: 2px solid #007bff;
+      border-radius: 50%;
+      outline: none;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-legend {
-	font-size: 22px;
-	font-weight: 600;
-	color: #191919;
-	margin: 0;
-	background: #edf4fe;
-	width: 100%;
-	padding: 20px;
-	box-sizing: border-box;
-	border-radius: 10px 10px 0 0;
-	border: 2px solid #3a88f6;
-	display: flex;
-}
+    .custom-radio input[type="radio"]:checked {
+      background-color: #007bff; /* สีเมื่อถูกเลือก */
+    }
 
-fieldset label {
-	font-weight: 300;
-	font-size: 16px;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	flex: 1;
-	box-sizing: border-box;
-	display: flex;
-	padding: 20px 20px 20px 50px;
-	font-weight: 500;
-	color: #191919;
-	-webkit-tap-highlight-color: transparent;
-}
+    .custom-radio label {
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-fieldset input[type="radio"] {
-	position: relative;
-	appearance: none;
-	-webkit-appearance: none;
-	transition: linear 0.8s;
-	height: 0;
-	width: 0;
-	-webkit-tap-highlight-color: transparent;
-}
+    /* Hover Effect */
+    .custom-radio:hover input[type="radio"] {
+      border-color: #0056b3;
+    }
 
-fieldset input[type="radio"]:after {
-	content: "";
-	position: absolute;
-	height: 16px;
-	width: 16px;
-	top: -10.5px;
-	left: -30px;
-	border-radius: 20px;
-	border: 2px solid #3a88f6;
-	transition: linear 0.2s;
-	cursor: pointer;
-}
-
-fieldset input[type="radio"]:checked:after {
-	content: "";
-	position: absolute;
-	height: 16px;
-	width: 16px;
-	background: #3a88f6;
-	transition: linear 0.2s;
-	cursor: pointer;
-}
-
-fieldset input[type="radio"]:checked:before {
-	content: "";
-	position: absolute;
-	height: 8px;
-	width: 8px;
-	border-radius: 4px;
-	background: #fff;
-	left: -24px;
-	top: -4.5px;
-	z-index: 1;
-	cursor: pointer;
-}
-
-.radio-item-container {
-	display: flex;
-	flex-direction: column;
-	border: 2px solid #3a88f6;
-	border-top: 0;
-	background: #fff;
-	border-radius: 0 0 10px 10px;
-	padding: 10px 0;
-}
-
-.radio-item {
-	display: flex;
-	position: relative;
-}
-
-.icon {
-	font-size: 24px;
-	position: absolute;
-	right: 26px;
-	top: 11px;
-	transition: linear 0.3s;
-}
-
-fieldset input[type="radio"]:checked + span > .icon {
-	transform: scale(1.7);
-}
-
+    /* Focus Effect */
+    .custom-radio input[type="radio"]:focus {
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -143,20 +72,19 @@ fieldset input[type="radio"]:checked + span > .icon {
       โดยเลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด
     </p>
     <form @submit.prevent="submitForm" v-if="!submitted">
-      <fieldset>
-      <legend  v-for="(question, index) in questions" :key="index" >{{ question.text }}</legend>
-	<div class="radio-item-container">
-        <div class="radio-item" v-for="option in options" :key="option.value">
-          <label><input
+      <div v-for="(question, index) in questions" :key="index" class="question card p-3 mb-3 shadow-sm">
+        <p class="fw-bold">{{ question.text }}</p>
+        <div class="custom-radio" v-for="option in options" :key="option.value">
+          <input
+            class="form-check-input"
             type="radio"
             :name="'q' + index"
             :value="option.value"
             v-model="answers[index]"
           />
-	  <span>{{ option.label }} </span></label></div>
+          <label>{{ option.label }}</label>
         </div>
       </div>
-      </fieldset>
       <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
     </form>
     <div v-if="submitted" class="result text-center mt-5">
