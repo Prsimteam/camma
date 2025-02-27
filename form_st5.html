@@ -22,8 +22,6 @@
       padding: 10px;
       font-size: 18px;
     }
-
-
   </style>
 </head>
 <body>
@@ -63,7 +61,7 @@
       } else {
         const profile = await liff.getProfile();
         app.userId = profile.userId; // เก็บ User ID ไว้ใน Vue instance
-        app.userPictureUrl = profile.pictureUrl || "https://lh3.googleusercontent.com/d/1U4hzLd-IRerepRj8WPnupuCOMypasYtm"; // รูปโปรไฟล์หรือรูปสำรอง
+        app.userPictureUrl = profile.pictureUrl || "https://via.placeholder.com/150"; // รูปโปรไฟล์หรือรูปสำรอง
       }
     }
 
@@ -103,14 +101,11 @@
             question4: this.answers[3],
             question5: this.answers[4],
           };
-
           try {
             // ส่งข้อมูลไปยัง Google Apps Script
             //await this.sendDataToGoogleAppsScript(data);
-
             // ส่ง Flex Message กลับไปยังผู้ใช้งาน
             await this.sendFlexMessage();
-
             this.submitted = true;
           } catch (error) {
             console.error(error);
@@ -125,134 +120,133 @@
             },
             body: JSON.stringify(data),
           });
-
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
         },
-async sendFlexMessage() {
-  const totalScore = this.totalScore;
-  const level = totalScore <= 5 ? "ต่ำ" : totalScore <= 10 ? "ปานกลาง" : "สูง";
+        async sendFlexMessage() {
+          const totalScore = this.totalScore;
+          const level = totalScore <= 5 ? "ต่ำ" : totalScore <= 10 ? "ปานกลาง" : "สูง";
 
-  // กำหนดค่า backgroundColor และ text โดยใช้ if
-  let vbackgroundColor;
-  if (level === "ต่ำ") {
-    vbackgroundColor = "#008000"; // สีเขียว
-  } else if (level === "ปานกลาง") {
-    vbackgroundColor = "#FFA500"; // สีส้ม
-  } else if (level === "สูง") {
-    vbackgroundColor = "#ff0000"; // สีแดง
-  }
-
-  const stressLevelText = `มีความเครียด${level}`;
-
-  const flexMessage = {
-    type: "flex",
-    altText: "ผลคะแนนความเครียดของคุณ",
-    contents: {
-  "type": "bubble",
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-              {
-                "type": "image",
-                "url":  this.userPictureUrl, // รูปโปรไฟล์ของผู้ใช้งาน
-                "aspectMode": "cover",
-                "size": "full",
-                "align": "center"
-              }
-            ],
-            "cornerRadius": "100px",
-            "width": "200px",
-            "height": "200px"
-          },
-          {
-            "type": "box",
-            "layout": "vertical",
-            "contents": [
-              {
-                "type": "box",
-                "layout": "baseline",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": `${totalScore}`,
-                    "size": "xl",
-                    "weight": "bold",
-                    "align": "center"
-                  }
-                ],
-                "spacing": "sm",
-                "margin": "md"
-              },
-              {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                  {
-                    "type": "text",
-                    "text": "9",
-                    "size": "5xl",
-                    "color": "#111111",
-                    "align": "center"
-                  },
-                  {
-                    "type": "text",
-                    "text": "คะแนน",
-                    "size": "lg",
-                    "color": "#444444",
-                    "align": "center"
-                  },
-                  {
-                    "type": "text",
-                    "text": `ระดับความเครียด: ${level}`,
-                    "size": "sl",
-                    "align": "center",
-                    "weight": "bold"
-                  },
-                  {
-                    "type": "separator",
-                    "margin": "20px"
-                  }
-                ],
-                "spacing": "sm",
-                "margin": "md",
-                "backgroundColor": "#ff0000",
-                "cornerRadius": "xxl"
-              }
-            ],
-            "paddingAll": "sm",
-            "width": "250px"
+          // กำหนดค่า backgroundColor และ text โดยใช้ if
+          let vbackgroundColor;
+          if (level === "ต่ำ") {
+            vbackgroundColor = "#008000"; // สีเขียว
+          } else if (level === "ปานกลาง") {
+            vbackgroundColor = "#FFA500"; // สีส้ม
+          } else if (level === "สูง") {
+            vbackgroundColor = "#ff0000"; // สีแดง
           }
-        ],
-        "spacing": "xl",
-        "paddingAll": "20px",
-        "alignItems": "center"
-      }
-    ],
-    "paddingAll": "0px",
-    "backgroundColor": "#f6f6f6"
-  }
-},
-  };
 
-  try {
-    await liff.sendMessages([flexMessage]);
-    liff.closeWindow();
-  } catch (error) {
-    console.error("เกิดข้อผิดพลาดในการส่งข้อความ:", error);
-    alert("ไม่สามารถส่งข้อความได้");
-  }
-},
+          const stressLevelText = `มีความเครียด${level}`;
+
+          const flexMessage = {
+            type: "flex",
+            altText: "ผลคะแนนความเครียดของคุณ",
+            contents: {
+              type: "bubble",
+              body: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                      {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                          {
+                            type: "image",
+                            url: this.userPictureUrl, 
+                            aspectMode: "cover",
+                            size: "full",
+                            align: "center",
+                          },
+                        ],
+                        cornerRadius: "100px",
+                        width: "200px",
+                        height: "200px",
+                      },
+                      {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                          {
+                            type: "box",
+                            layout: "baseline",
+                            contents: [
+                              {
+                                type: "text",
+                                text: `${totalScore}`,
+                                size: "xl",
+                                weight: "bold",
+                                align: "center",
+                              },
+                            ],
+                            spacing: "sm",
+                            margin: "md",
+                          },
+                          {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                              {
+                                type: "text",
+                                text: `${totalScore}`,
+                                size: "5xl",
+                                color: "#111111",
+                                align: "center",
+                              },
+                              {
+                                type: "text",
+                                text: "คะแนน",
+                                size: "lg",
+                                color: "#444444",
+                                align: "center",
+                              },
+                              {
+                                type: "text",
+                                text: `ระดับความเครียด: ${level}`,
+                                size: "sm", 
+                                align: "center",
+                                weight: "bold",
+                              },
+                              {
+                                type: "separator",
+                                margin: "20px",
+                              },
+                            ],
+                            spacing: "sm",
+                            margin: "md",
+                            backgroundColor: vbackgroundColor, 
+                            cornerRadius: "xxl",
+                          },
+                        ],
+                        paddingAll: "sm",
+                        width: "250px",
+                      },
+                    ],
+                    spacing: "xl",
+                    paddingAll: "20px",
+                    alignItems: "center",
+                  },
+                ],
+                paddingAll: "0px",
+                backgroundColor: "#f6f6f6",
+              },
+            },
+          };
+
+          try {
+            await liff.sendMessages([flexMessage]);
+            liff.closeWindow();
+          } catch (error) {
+            console.error("เกิดข้อผิดพลาดในการส่งข้อความ:", error);
+            alert("ไม่สามารถส่งข้อความได้");
+          }
+        },
       },
     });
 
