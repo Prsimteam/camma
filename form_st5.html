@@ -104,7 +104,7 @@
 
           try {
             // ส่งข้อมูลไปยัง Google Apps Script
-            // await this.sendDataToGoogleAppsScript(data);
+            //await this.sendDataToGoogleAppsScript(data);
 
             // ส่ง Flex Message กลับไปยังผู้ใช้งาน
             await this.sendFlexMessage();
@@ -132,110 +132,52 @@
           const totalScore = this.totalScore;
           const level = totalScore <= 5 ? "ต่ำ" : totalScore <= 10 ? "ปานกลาง" : "สูง";
 
-          // กำหนดค่า backgroundColor และ text จากตัวแปร
-          const backgroundColor = {
-            "ต่ำ": "#008000",
-            "ปานกลาง": "#FFA500",
-            "สูง": "#ff0000",
-          }[level];
-
-          const stressLevelText = `มีความเครียด${level}`;
-
           const flexMessage = {
             type: "flex",
             altText: "ผลคะแนนความเครียดของคุณ",
             contents: {
               type: "bubble",
+              header: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "image",
+                    url: this.userPictureUrl, // รูปโปรไฟล์ของผู้ใช้งาน
+                    size: "full",
+                    aspectMode: "cover",
+                    aspectRatio: "1:1",
+                  },
+                ],
+              },
               body: {
                 type: "box",
                 layout: "vertical",
                 contents: [
                   {
-                    type: "box",
-                    layout: "vertical",
-                    contents: [
-                      {
-                        type: "box",
-                        layout: "vertical",
-                        contents: [
-                          {
-                            type: "image",
-                            url: this.userPictureUrl, // รูปโปรไฟล์ของผู้ใช้งาน
-                            aspectMode: "cover",
-                            size: "full",
-                            align: "center",
-                            cornerRadius: "100px",
-                            width: "200px",
-                            height: "200px",
-                          },
-                        ],
-                      },
-                      {
-                        type: "box",
-                        layout: "vertical",
-                        contents: [
-                          {
-                            type: "box",
-                            layout: "baseline",
-                            contents: [
-                              {
-                                type: "text",
-                                text: "ได้คะแนน",
-                                size: "xl",
-                                weight: "bold",
-                                align: "center",
-                              },
-                            ],
-                            spacing: "sm",
-                            margin: "md",
-                          },
-                          {
-                            type: "box",
-                            layout: "vertical",
-                            contents: [
-                              {
-                                type: "text",
-                                text: `${totalScore}`,
-                                size: "5xl",
-                                color: "#111111",
-                                align: "center",
-                              },
-                              {
-                                type: "text",
-                                text: "คะแนน",
-                                size: "lg",
-                                color: "#444444",
-                                align: "center",
-                              },
-                              {
-                                type: "text",
-                                text: stressLevelText,
-                                size: "xl",
-                                align: "center",
-                                weight: "bold",
-                              },
-                              {
-                                type: "separator",
-                                margin: "20px",
-                              },
-                            ],
-                            spacing: "sm",
-                            margin: "md",
-                            backgroundColor: backgroundColor,
-                            cornerRadius: "xxl",
-                          },
-                        ],
-                        paddingAll: "sm",
-                        width: "250px",
-                      },
-                    ],
-                    spacing: "xl",
-                    paddingAll: "20px",
-                    alignItems: "center",
+                    type: "text",
+                    text: "ผลคะแนนความเครียดของคุณ",
+                    weight: "bold",
+                    size: "xl",
+                    align: "center",
+                  },
+                  {
+                    type: "text",
+                    text: `คะแนนรวม: ${totalScore}`,
+                    margin: "md",
+                    align: "center",
+                    size: "lg",
+                    color: "#FF5733",
+                  },
+                  {
+                    type: "text",
+                    text: `ระดับความเครียด: ${level}`,
+                    margin: "md",
+                    align: "center",
+                    size: "lg",
+                    color: level === "สูง" ? "#FF0000" : level === "ปานกลาง" ? "#FFA500" : "#008000",
                   },
                 ],
-                paddingAll: "0px",
-                backgroundColor: "#f6f6f6",
               },
             },
           };
