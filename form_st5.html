@@ -31,7 +31,6 @@
       ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกอย่างไร?...<br>
       โดยเลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด
     </p>
-
     <form @submit.prevent="submitForm" v-if="!submitted">
       <div v-for="(question, index) in questions" :key="index" class="question card p-3 mb-3 shadow-sm">
         <p class="fw-bold">{{ question.text }}</p>
@@ -48,13 +47,11 @@
       </div>
       <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
     </form>
-
     <div v-if="submitted" class="result text-center mt-5">
       <h2 class="text-success">ขอบคุณที่ทำแบบสอบถาม!</h2>
       <p class="lead">ผลคะแนนของคุณได้ถูกส่งไปยังแชทของคุณแล้ว</p>
     </div>
   </div>
-
   <script>
     // Initialize LIFF
     async function initializeLiff() {
@@ -105,23 +102,28 @@
 
           try {
             // ส่งข้อมูลไปยัง Google Apps Script
-            const response = await fetch("https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            });
-                  if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                  }
-            
-                  // ส่ง Flex Message กลับไปยังผู้ใช้งาน
-                  await this.sendFlexMessage();
-                  this.submitted = true;
+            await this.sendDataToGoogleAppsScript(data);
+
+            // ส่ง Flex Message กลับไปยังผู้ใช้งาน
+            await this.sendFlexMessage();
+
+            this.submitted = true;
           } catch (error) {
             console.error(error);
             alert("ไม่สามารถเชื่อมต่อได้");
+          }
+        },
+        async sendDataToGoogleAppsScript(data) {
+          const response = await fetch("https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
         },
         async sendFlexMessage() {
@@ -167,7 +169,7 @@
 
           try {
             await liff.sendMessages([flexMessage]);
-                liff.closeWindow(); 
+            liff.closeWindow();
           } catch (error) {
             console.error("เกิดข้อผิดพลาดในการส่งข้อความ:", error);
             alert("ไม่สามารถส่งข้อความได้");
@@ -179,7 +181,6 @@
     // Initialize LIFF on page load
     initializeLiff();
   </script>
-
   <!-- Bootstrap JS (Optional) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
