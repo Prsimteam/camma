@@ -51,10 +51,6 @@
 
     <div v-if="submitted" class="result text-center mt-5">
       <h2 class="text-success">ขอบคุณที่ทำแบบสอบถาม!</h2>
-      <p class="lead">ผลคะแนนของคุณ: <strong>{{ totalScore }}</strong></p>
-      <p v-if="totalScore <= 5" class="text-info">ระดับความเครียด: <strong>ต่ำ</strong></p>
-      <p v-else-if="totalScore <= 10" class="text-warning">ระดับความเครียด: <strong>ปานกลาง</strong></p>
-      <p v-else class="text-danger">ระดับความเครียด: <strong>สูง</strong></p>
       <p class="lead">ผลคะแนนของคุณได้ถูกส่งไปยังแชทของคุณแล้ว</p>
     </div>
   </div>
@@ -108,6 +104,7 @@
           };
 
           try {
+            // ส่งข้อมูลไปยัง Google Apps Script
             const response = await fetch("https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec", {
               method: "POST",
               headers: {
@@ -117,6 +114,8 @@
             });
 
             if (response.ok) {
+              // ส่ง Flex Message กลับไปยังผู้ใช้งานผ่าน LIFF
+              await this.sendFlexMessage();
               this.submitted = true;
             } else {
               alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
@@ -124,6 +123,55 @@
           } catch (error) {
             console.error(error);
             alert("ไม่สามารถเชื่อมต่อได้");
+          }
+        },
+        async sendFlexMessage() {
+          const totalScore = this.totalScore;
+          const level = totalScore <= 5 ? "ต่ำ" : totalScore <= 10 ? "ปานกลาง" : "สูง";
+
+          const flexMessage = {
+            type: "flex",
+            altText: "ผลคะแนนความเครียดของคุณ",
+            contents: {
+              type: "bubble",
+              body: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "text",
+                    text: "ผลคะแนนความเครียดของคุณ",
+                    weight: "bold",
+                    size: "xl",
+                    align: "center",
+                  },
+                  {
+                    type: "text",
+                    text: `คะแนนรวม: ${totalScore}`,
+                    margin: "md",
+                    align: "center",
+                    size: "lg",
+                    color: "#FF5733",
+                  },
+                  {
+                    type: "text",
+                    text: `ระดับความเครียด: ${level}`,
+                    margin: "md",
+                    align: "center",
+                    size: "lg",
+                    color: level === "สูง" ? "#FF0000" : level === "ปานกลาง" ? "#FFA500" : "#008000",
+                  },
+                ],
+              },
+            },
+          };
+
+          try {
+            await liff.sendMessages([flexMessage]);
+                liff.closeWindow(); 
+          } catch (error) {
+            console.error("เกิดข้อผิดพลาดในการส่งข้อความ:", error);
+            alert("ไม่สามารถส่งข้อความได้");
           }
         },
       },
