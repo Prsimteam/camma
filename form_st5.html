@@ -171,19 +171,29 @@
             throw new Error(`HTTP error! status: ${response.status}`);
           }
         },
-        async sendFlexMessage() {
-          const totalScore = this.totalScore;
-          const level = totalScore <= 5 ? "ต่ำ" : totalScore <= 10 ? "ปานกลาง" : "สูง";
-
-          // กำหนดค่า backgroundColor และ text โดยใช้ if
-          let vbackgroundColor;
-          if (level === "ต่ำ") {
-            vbackgroundColor = "#45fa36"; // สีเขียว
-          } else if (level === "ปานกลาง") {
-            vbackgroundColor = "#FFA500"; // สีส้ม
-          } else if (level === "สูง") {
-            vbackgroundColor = "#ff0000"; // สีแดง
-          }
+          async sendFlexMessage() {
+            const totalScore = this.totalScore;
+              // กำหนดระดับความเครียดตามคะแนน
+              const level =
+                totalScore <= 4
+                  ? "ต่ำ"
+                  : totalScore <= 7
+                  ? "ปานกลาง"
+                  : totalScore <= 9
+                  ? "สูง"
+                  : "สูงมาก";
+              
+              // กำหนดสีพื้นหลังตามระดับความเครียด
+              let vbackgroundColor;
+              if (level === "ต่ำ") {
+                vbackgroundColor = "#45fa36"; // สีเขียว (เครียดน้อย)
+              } else if (level === "ปานกลาง") {
+                vbackgroundColor = "#FFA500"; // สีส้ม (เครียดปานกลาง)
+              } else if (level === "สูง") {
+                vbackgroundColor = "#ff0000"; // สีแดง (เครียดมาก)
+              } else if (level === "สูงมาก") {
+                vbackgroundColor = "#8B0000"; // สีแดงเข้ม (เครียดมากที่สุด)
+              }
 
           // ข้อความการแปลผลระดับความเครียด
           const stressLevelDescription = {
@@ -270,21 +280,28 @@
                                 type: "separator",
                                 margin: "20px",
                               },
-                              {
-                                type: "text",
-                                text: stressLevelDescription,
-                                margin: "md",
-                                align: "start",
-                                wrap: true,
-                                size: "sm",
-                                color: "#444444",
-                              },
                             ],
                             spacing: "sm",
                             margin: "md",
                             backgroundColor: vbackgroundColor, 
                             cornerRadius: "xxl",
                           },
+                          {
+                              "type": "box",
+                              "layout": "vertical",
+                              "contents": [
+                                {
+                                  "type": "text",
+                                  "text": stressLevelDescription,
+                                  "wrap": true,
+                                  "size": "md"
+                                }
+                              ],
+                              "paddingAll": "10px",
+                              "backgroundColor": "#f6f6f6",
+                              "cornerRadius": "20px",
+                              "margin": "lg"
+                          }
                         ],
                         paddingAll: "sm",
                         width: "250px",
