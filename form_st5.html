@@ -104,7 +104,7 @@
 
           try {
             // ส่งข้อมูลไปยัง Google Apps Script
-           // await this.sendDataToGoogleAppsScript(data);
+            // await this.sendDataToGoogleAppsScript(data);
 
             // ส่ง Flex Message กลับไปยังผู้ใช้งาน
             await this.sendFlexMessage();
@@ -131,6 +131,15 @@
         async sendFlexMessage() {
           const totalScore = this.totalScore;
           const level = totalScore <= 5 ? "ต่ำ" : totalScore <= 10 ? "ปานกลาง" : "สูง";
+
+          // กำหนดค่า backgroundColor และ text จากตัวแปร
+          const backgroundColor = {
+            "ต่ำ": "#008000",
+            "ปานกลาง": "#FFA500",
+            "สูง": "#ff0000",
+          }[level];
+
+          const stressLevelText = `มีความเครียด${level}`;
 
           const flexMessage = {
             type: "flex",
@@ -200,7 +209,7 @@
                               },
                               {
                                 type: "text",
-                                text: `มีความเครียด${level === "สูง" ? "สูง" : level === "ปานกลาง" ? "ปานกลาง" : "ต่ำ"}`,
+                                text: stressLevelText,
                                 size: "xl",
                                 align: "center",
                                 weight: "bold",
@@ -212,7 +221,7 @@
                             ],
                             spacing: "sm",
                             margin: "md",
-                            backgroundColor: level === "สูง" ? "#ff0000" : level === "ปานกลาง" ? "#FFA500" : "#008000",
+                            backgroundColor: backgroundColor,
                             cornerRadius: "xxl",
                           },
                         ],
