@@ -61,6 +61,7 @@
       } else {
         const profile = await liff.getProfile();
         app.userId = profile.userId; // เก็บ User ID ไว้ใน Vue instance
+        app.userPictureUrl = profile.pictureUrl || "https://lh3.googleusercontent.com/d/1U4hzLd-IRerepRj8WPnupuCOMypasYtm"; // รูปโปรไฟล์หรือรูปสำรอง
       }
     }
 
@@ -68,6 +69,7 @@
       el: '#app',
       data: {
         userId: null, // จะถูกกำหนดค่าจาก Line LIFF
+        userPictureUrl: null, // URL รูปโปรไฟล์ของผู้ใช้งาน
         questions: [
           { text: "มีปัญหาการนอน นอนไม่หลับหรือนอนมาก" },
           { text: "มีสมาธิน้อยลง" },
@@ -135,6 +137,19 @@
             altText: "ผลคะแนนความเครียดของคุณ",
             contents: {
               type: "bubble",
+              header: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "image",
+                    url: this.userPictureUrl, // รูปโปรไฟล์ของผู้ใช้งาน
+                    size: "full",
+                    aspectMode: "cover",
+                    aspectRatio: "1:1",
+                  },
+                ],
+              },
               body: {
                 type: "box",
                 layout: "vertical",
