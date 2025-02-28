@@ -68,7 +68,7 @@
 </head>
 <body>
   <div id="app" class="container">
-    <h1 class="text-center my-4">แบบประเมินภาวะซึมเศร้า (PHQ-9)</h1>
+    <h1 class="text-center my-4">ประเมินภาวะซึมเศร้า</h1>
     <p class="text-center lead">
       ความรู้สึกในช่วง 2 สัปดาห์ที่ผ่านมา<br>
       เลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด
@@ -203,7 +203,7 @@
 
           const flexMessage = {
             type: "flex",
-            altText: "ผลคะแนน PHQ-9 ของคุณ",
+            altText: "ผลคะแนนประเมินภาวะซึมเศร้า",
             contents: {
               type: "bubble",
               body: {
@@ -212,7 +212,7 @@
                 contents: [
                   {
                     type: "image",
-                    url: this.userPictureUrl, // รูปโปรไฟล์ของผู้ใช้งาน
+                    url: this.userPictureUrl,
                     aspectMode: "cover",
                     size: "full",
                     align: "center",
@@ -222,7 +222,7 @@
                   },
                   {
                     type: "text",
-                    text: "ผลคะแนน PHQ-9 ของคุณ",
+                    text: "ผลคะแนนประเมินภาวะซึมเศร้า",
                     weight: "bold",
                     size: "xl",
                     align: "center",
@@ -250,7 +250,7 @@
                   },
                   {
                     type: "text",
-                    text: `คำแนะนำ: หากคุณมีอาการซึมเศร้าระดับกลางหรือรุนแรง ควรปรึกษาแพทย์หรือผู้เชี่ยวชาญเพื่อรับการช่วยเหลือ`,
+                    text: "คำแนะนำ: หากคุณมีอาการซึมเศร้าระดับกลางหรือรุนแรง ควรปรึกษาแพทย์หรือผู้เชี่ยวชาญเพื่อรับการช่วยเหลือ",
                     margin: "md",
                     align: "start",
                     wrap: true,
