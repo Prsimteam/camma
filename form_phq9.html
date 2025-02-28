@@ -205,68 +205,59 @@
             vbackgroundColor = "#8B0000"; // สีแดงเข้ม
           }
 
-          const flexMessage = {
-            type: "flex",
-            altText: "ผลคะแนนประเมินภาวะซึมเศร้า",
-            contents: {
-              type: "bubble",
-              body: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                  {
-                    type: "image",
-                    url: this.userPictureUrl,
-                    aspectMode: "cover",
-                    size: "full",
-                    align: "center",
-                    cornerRadius: "100px",
-                    width: "200px",
-                    height: "200px",
-                  },
-                  {
-                    type: "text",
-                    text: "ผลคะแนนประเมินภาวะซึมเศร้า",
-                    weight: "bold",
-                    size: "xl",
-                    align: "center",
-                    margin: "md",
-                  },
-                  {
-                    type: "text",
-                    text: `คะแนนรวม: ${totalScore}`,
-                    margin: "md",
-                    align: "center",
-                    size: "lg",
-                    color: "#FF5733",
-                  },
-                  {
-                    type: "text",
-                    text: `ระดับ: ${level}`,
-                    margin: "md",
-                    align: "center",
-                    size: "lg",
-                    color: vbackgroundColor,
-                  },
-                  {
-                    type: "separator",
-                    margin: "20px",
-                  },
-                  {
-                    type: "text",
-                    text: "คำแนะนำ หากคุณมีอาการซึมเศร้าระดับกลางหรือรุนแรง ควรปรึกษาแพทย์หรือผู้เชี่ยวชาญเพื่อรับการช่วยเหลือ",
-                    margin: "md",
-                    align: "start",
-                    wrap: true,
-                    size: "sm",
-                    color: "#444444",
-                  },
-                ],
-                spacing: "xl",
-                paddingAll: "20px",
-              },
-            },
-          };
+         
+  const flexMessage = {
+    type: "flex",
+    altText: "ผลคะแนนความเครียดของคุณ",
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: "ผลคะแนนความเครียดของคุณ",
+            weight: "bold",
+            size: "xl",
+            align: "center",
+          },
+          {
+            type: "text",
+            text: `คะแนนรวม: ${totalScore}`,
+            margin: "md",
+            align: "center",
+            size: "lg",
+            color: "#FF5733",
+          },
+          {
+            type: "text",
+            text: `ระดับ: ${level}`,
+            margin: "md",
+            align: "center",
+            size: "lg",
+            color: vbackgroundColor,
+          },
+          {
+            type: "separator",
+            margin: "20px",
+          },
+          {
+            type: "text",
+            text: `คำแนะนำ: หากคุณมีอาการเครียดระดับมาก ควรปรึกษาแพทย์หรือผู้เชี่ยวชาญ`,
+            margin: "md",
+            align: "start",
+            wrap: true,
+            size: "sm",
+            color: "#444444",
+          },
+        ],
+        spacing: "xl",
+        paddingAll: "20px",
+      },
+    },
+  };
+
 
           try {
             await liff.sendMessages([flexMessage]);
