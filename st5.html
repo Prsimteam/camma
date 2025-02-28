@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบประเมินความเครียด (ST-5)</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* CSS จากที่คุณให้มา (ปรับให้สมบูรณ์ด้วยตัวแปร Bootstrap) */
+        .form-check {
+            display: block;
+            min-height: 1.5rem;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-check-input {
+            width: 1rem;
+            height: 1rem;
+            margin-top: 0.3em;
+            vertical-align: top;
+            background-color: #fff;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            border: 1px solid #ced4da;
+            appearance: none;
+            color-adjust: exact;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-check-input[type="checkbox"] {
+            border-radius: 0.25rem;
+        }
+
+        .form-check-input[type="radio"] {
+            border-radius: 50%;
+        }
+
+        .form-check-input:active {
+            filter: brightness(90%);
+        }
+
+        .form-check-input:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .form-check-input:checked[type="checkbox"] {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+        }
+
+        .form-check-input:checked[type="radio"] {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+        }
+
+        .form-check-input:disabled {
+            pointer-events: none;
+            opacity: 0.65;
+        }
+
+        .form-check-label {
+            color: #212529;
+            cursor: pointer;
+        }
+
+        .form-switch {
+            padding-left: 2.5rem;
+        }
+
+        .form-switch .form-check-input {
+            width: 2rem;
+            margin-left: -2.5rem;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+            background-position: left center;
+            border-radius: 2rem;
+            transition: background-position 0.15s ease-in-out;
+        }
+
+        .form-switch .form-check-input:focus {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+        }
+
+        .form-switch .form-check-input:checked {
+            background-position: right center;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+        }
+
+        .form-check-inline {
+            display: inline-block;
+            margin-right: 1rem;
+        }
+
+        .btn-check {
+            position: absolute;
+            clip: rect(0, 0, 0, 0);
+            pointer-events: none;
+        }
+
+        .btn-check:disabled + .btn {
+            pointer-events: none;
+            opacity: 0.65;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container mt-5">
+        <div class="pricing-table-inner p-4">
+            <div class="pricing-body text-left">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center font-weight-bold font--18 color-1">แบบประเมินความเครียด (ST-5)</p>
+                        <div class="alert alert-primary" role="alert">
+                            <p class="font-weight-bold font--16"><i class="fas fa-question-circle"></i> ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกอย่างไร ?...โดยเลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form @submit.prevent="submitForm" ref="form">
+                    <div v-for="question in questions" :key="question.id" class="mb-4 row">
+                        <label :for="question.id" class="col-sm-6 col-form-label font-weight-bold font--16">
+                            {{ question.text }}
+                        </label>
+                        <div class="col-sm-6">
+                            <div class="btn-group w-100" role="group" :aria-label="'Basic radio toggle button group for ' + question.text">
+                                <input v-for="option in question.options" :key="option.value" type="radio" class="btn-check" :name="question.id" :id="`${question.id}_${option.value}`" :value="option.value" v-model="answers[question.id]" required>
+                                <label :for="`${question.id}_${option.value}`" class="btn btn-outline-success font-weight-bold border-2 rounded-start" v-if="option.value === '0'">{{ option.label }}</label>
+                                <label :for="`${question.id}_${option.value}`" class="btn btn-outline-primary font-weight-bold border-2" v-if="option.value === '1'">{{ option.label }}</label>
+                                <label :for="`${question.id}_${option.value}`" class="btn btn-outline-warning font-weight-bold border-2" v-if="option.value === '2'">{{ option.label }}</label>
+                                <label :for="`${question.id}_${option.value}`" class="btn btn-outline-danger font-weight-bold border-2" v-if="option.value === '3'">{{ option.label }}</label>
+                            </div>
+                            <small :id="`${question.id}_error`" class="text-danger">{{ errors[question.id] || '' }}</small>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
+                    </div>
+                </form>
+
+                <div v-if="showResult" class="mt-4 text-center">
+                    <h4>ผลการประเมิน</h4>
+                    <p>คะแนนรวมของคุณ: {{ totalScore }}</p>
+                    <p v-if="totalScore <= 5" class="text-success">ระดับความเครียด: ต่ำ</p>
+                    <p v-else-if="totalScore <= 10" class="text-warning">ระดับความเครียด: ปานกลาง</p>
+                    <p v-else class="text-danger">ระดับความเครียด: สูง ควรปรึกษาแพทย์</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vue.js และ Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    questions: [
+                        { id: 'st5_1', text: 'ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ "มีปัญหาการนอน นอนไม่หลับหรือนอนมาก"' },
+                        { id: 'st5_2', text: 'ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ "มีสมาธิน้อยลง"' },
+                        { id: 'st5_3', text: 'ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ "หงุดหงิด/กระวนกระวาย/ว้าวุ่นใจ"' },
+                        { id: 'st5_4', text: 'ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ "รู้สึกเบื่อ เซ็ง"' },
+                        { id: 'st5_5', text: 'ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ "ไม่อยากพบปะผู้คน"' },
+                    ],
+                    options: [
+                        { value: '0', label: 'แทบไม่มี' },
+                        { value: '1', label: 'เป็นบางครั้ง' },
+                        { value: '2', label: 'บ่อยครั้ง' },
+                        { value: '3', label: 'เป็นประจำ' },
+                    ],
+                    answers: {},
+                    errors: {},
+                    showResult: false,
+                    totalScore: 0,
+                };
+            },
+            methods: {
+                validateForm() {
+                    this.errors = {};
+                    let isValid = true;
+                    this.questions.forEach(q => {
+                        if (!this.answers[q.id]) {
+                            this.errors[q.id] = 'กรุณาเลือกคำตอบ';
+                            isValid = false;
+                        }
+                    });
+                    return isValid;
+                },
+                calculateScore() {
+                    this.totalScore = Object.values(this.answers).reduce((sum, val) => sum + parseInt(val), 0);
+                },
+                submitForm() {
+                    if (!this.validateForm()) return;
+
+                    this.calculateScore();
+                    this.showResult = true;
+
+                    // ส่งข้อมูลไป Google Sheets
+                    const data = {
+                        answers: this.answers,
+                        date: new Date().toLocaleString('th-TH')
+                    };
+/*
+                    axios.post('YOUR_GOOGLE_APPS_SCRIPT_URL', data, {
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                    .then(response => {
+                        alert('บันทึกข้อมูลสำเร็จ!');
+                    })
+                    .catch(error => {
+                        console.error('เกิดข้อผิดพลาด:', error);
+                        alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                    });
+                    */
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
