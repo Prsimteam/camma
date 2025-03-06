@@ -159,18 +159,31 @@
             alert("ไม่สามารถเชื่อมต่อได้");
           }
         },
-        async sendDataToGoogleAppsScript(data) {
-          const response = await fetch("https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec", {
-            method: "POST",
+
+        // 
+        // ส่งข้อมูลไปยัง Google Apps Script
+async function sendDataToGoogleSheet(data) {
+    try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec', {
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-        },
+        });
+
+        // ตรวจสอบสถานะการตอบกลับ
+        if (response.ok) {
+            document.getElementById('response').innerHTML = 'ส่งข้อมูลสำเร็จ!';
+            document.getElementById('dataForm').reset();
+        } else {
+            throw new Error('เกิดข้อผิดพลาดในการส่งข้อมูล');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('response').innerHTML = 'เกิดข้อผิดพลาดในการส่งข้อมูล';
+    }
+},
           async sendFlexMessage() {
             const totalScore = this.totalScore;
               // กำหนดระดับความเครียดตามคะแนน
