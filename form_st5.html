@@ -150,7 +150,7 @@
           };
           try {
             // ส่งข้อมูลไปยัง Google Apps Script
-           // await this.sendDataToGoogleAppsScript(data);
+            await this.sendDataToGoogleAppsScript(data);
             // ส่ง Flex Message กลับไปยังผู้ใช้งาน
             await this.sendFlexMessage();
             this.submitted = true;
