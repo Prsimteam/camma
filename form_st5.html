@@ -149,6 +149,10 @@
             try {
                 await liff.init({ liffId: '2006670422-3b8vmOqK' });
                 console.log('LIFF initialized successfully');
+                // ตรวจสอบสถานะการล็อกอิน
+                if (!liff.isLoggedIn()) {
+                    liff.login(); // Redirect ไปยังหน้าล็อกอินของ LINE
+                }
             } catch (error) {
                 console.error('Error initializing LIFF:', error);
                 Swal.fire({
