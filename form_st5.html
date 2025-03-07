@@ -144,25 +144,35 @@
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Initialize LIFF
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: '2006670422-3b8vmOqK' });
-                console.log('LIFF initialized successfully');
-                // ตรวจสอบสถานะการล็อกอิน
-                if (!liff.isLoggedIn()) {
-                    liff.login(); // Redirect ไปยังหน้าล็อกอินของ LINE
-                }
-            } catch (error) {
-                console.error('Error initializing LIFF:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถเริ่มต้น LIFF ได้ กรุณาลองใหม่อีกครั้ง'
-                });
-            }
+
+// Initialize LIFF
+async function initializeLiff() {
+    try {
+        await liff.init({ liffId: 'YOUR_LIFF_ID' });
+        console.log('LIFF initialized successfully');
+
+        // ตรวจสอบสถานะการล็อกอิน
+        if (!liff.isLoggedIn()) {
+            liff.login(); // Redirect ไปยังหน้าล็อกอินของ LINE
         }
 
+        // ตรวจสอบสถานะการเปิด LIFF ในเบราว์เซอร์
+        if (!liff.isInClient()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'กรุณาเปิด LIFF ในแอปพลิเคชัน LINE',
+                text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE เพื่อใช้งาน'
+            });
+        }
+    } catch (error) {
+        console.error('Error initializing LIFF:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ไม่สามารถเริ่มต้น LIFF ได้ กรุณาลองใหม่อีกครั้ง'
+        });
+    }
+}
         // ส่งคำตอบและข้อความผ่าน LINE
         document.getElementById('submitButton').addEventListener('click', async () => {
             const question1 = parseInt(document.querySelector('input[name="question1"]:checked')?.value || 0);
