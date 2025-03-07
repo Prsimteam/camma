@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
+<html lang="th" style="color-scheme: light; --liff-base-background-color: #FFFFFF; --liff-base-text-color: #000000; --liff-base-background-rgb-color: 255, 255, 255; --liff-base-text-rgb-color: 0, 0, 0; --liff-light-button-border-color: rgba(0, 0, 0, 0.15); --liff-title-text-color: #111111; --liff-title-background-color: #FFFFFF; --liff-title-button-color: #111111; --liff-icon-color: #111111; --liff-status-bar-color: black; --liff-title-subtext-color: #B7B7B7; --liff-progress-bar-color: #06C755; --liff-progress-background-color: #FFFFFF; --liff-title-button-area-background-color: rgba(255, 255, 255, 0.12); --liff-title-button-area-border-color: rgba(0, 0, 0, 0.15);"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แบบประเมินความเครียด (ST-5)</title>
@@ -72,33 +70,10 @@
   </style>
 </head>
 <body>
-  <div id="app" class="container">
-    <h1 class="text-center my-4">แบบประเมินความเครียด (ST-5)</h1>
-    <p class="text-center lead">
+  <div id="app" class="container"><h1 class="text-center my-4">แบบประเมินความเครียด (ST-5)</h1> <p class="text-center lead">
       ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกอย่างไร?...<br>
       โดยเลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด
-    </p>
-    <form @submit.prevent="submitForm" v-if="!submitted">
-      <div v-for="(question, index) in questions" :key="index" class="question card p-3 mb-3 shadow-sm">
-        <p class="fw-bold">{{ question.text }}</p>
-        <div class="custom-radio" v-for="option in options" :key="option.value">
-          <input
-            class="form-check-input"
-            type="radio"
-            :name="'q' + index"
-            :value="option.value"
-            v-model="answers[index]"
-          />
-          <label>{{ option.label }}</label>
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary">ส่งคำตอบ</button>
-    </form>
-    <div v-if="submitted" class="result text-center mt-5">
-      <h2 class="text-success">ขอบคุณที่ทำแบบสอบถาม!</h2>
-      <p class="lead">ผลคะแนนของคุณได้ถูกส่งไปยังแชทของคุณแล้ว</p>
-    </div>
-  </div>
+    </p> <form><div class="question card p-3 mb-3 shadow-sm"><p class="fw-bold">มีปัญหาการนอน นอนไม่หลับหรือนอนมาก</p> <div class="custom-radio"><input type="radio" name="q0" class="form-check-input" value="0"> <label>แทบไม่มี</label></div><div class="custom-radio"><input type="radio" name="q0" class="form-check-input" value="1"> <label>เป็นบางครั้ง</label></div><div class="custom-radio"><input type="radio" name="q0" class="form-check-input" value="2"> <label>บ่อยครั้ง</label></div><div class="custom-radio"><input type="radio" name="q0" class="form-check-input" value="3"> <label>เป็นประจำ</label></div></div><div class="question card p-3 mb-3 shadow-sm"><p class="fw-bold">มีสมาธิน้อยลง</p> <div class="custom-radio"><input type="radio" name="q1" class="form-check-input" value="0"> <label>แทบไม่มี</label></div><div class="custom-radio"><input type="radio" name="q1" class="form-check-input" value="1"> <label>เป็นบางครั้ง</label></div><div class="custom-radio"><input type="radio" name="q1" class="form-check-input" value="2"> <label>บ่อยครั้ง</label></div><div class="custom-radio"><input type="radio" name="q1" class="form-check-input" value="3"> <label>เป็นประจำ</label></div></div><div class="question card p-3 mb-3 shadow-sm"><p class="fw-bold">หงุดหงิด/กระวนกระวาย/ว้าวุ่นใจ</p> <div class="custom-radio"><input type="radio" name="q2" class="form-check-input" value="0"> <label>แทบไม่มี</label></div><div class="custom-radio"><input type="radio" name="q2" class="form-check-input" value="1"> <label>เป็นบางครั้ง</label></div><div class="custom-radio"><input type="radio" name="q2" class="form-check-input" value="2"> <label>บ่อยครั้ง</label></div><div class="custom-radio"><input type="radio" name="q2" class="form-check-input" value="3"> <label>เป็นประจำ</label></div></div><div class="question card p-3 mb-3 shadow-sm"><p class="fw-bold">รู้สึกเบื่อ เซ็ง</p> <div class="custom-radio"><input type="radio" name="q3" class="form-check-input" value="0"> <label>แทบไม่มี</label></div><div class="custom-radio"><input type="radio" name="q3" class="form-check-input" value="1"> <label>เป็นบางครั้ง</label></div><div class="custom-radio"><input type="radio" name="q3" class="form-check-input" value="2"> <label>บ่อยครั้ง</label></div><div class="custom-radio"><input type="radio" name="q3" class="form-check-input" value="3"> <label>เป็นประจำ</label></div></div><div class="question card p-3 mb-3 shadow-sm"><p class="fw-bold">ไม่อยากพบปะผู้คน</p> <div class="custom-radio"><input type="radio" name="q4" class="form-check-input" value="0"> <label>แทบไม่มี</label></div><div class="custom-radio"><input type="radio" name="q4" class="form-check-input" value="1"> <label>เป็นบางครั้ง</label></div><div class="custom-radio"><input type="radio" name="q4" class="form-check-input" value="2"> <label>บ่อยครั้ง</label></div><div class="custom-radio"><input type="radio" name="q4" class="form-check-input" value="3"> <label>เป็นประจำ</label></div></div> <button type="submit" class="btn btn-primary">ส่งคำตอบ</button></form> <!----></div>
   <script>
     // Initialize LIFF
     async function initializeLiff() {
@@ -150,7 +125,7 @@
           };
           try {
             // ส่งข้อมูลไปยัง Google Apps Script
-           // await this.sendDataToGoogleAppsScript(data);
+            //await this.sendDataToGoogleAppsScript(data);
             // ส่ง Flex Message กลับไปยังผู้ใช้งาน
             await this.sendFlexMessage();
             this.submitted = true;
@@ -159,39 +134,53 @@
             alert("ไม่สามารถเชื่อมต่อได้");
           }
         },
+
+
         async sendDataToGoogleAppsScript(data) {
           const response = await fetch("https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec", {
             method: "POST",
+            mode: "no-cors", 
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
           });
           if (!response.ok) {
+        console.error('Error:', error);
             throw new Error(`HTTP error! status: ${response.status}`);
           }
         },
-        async sendFlexMessage() {
-          const totalScore = this.totalScore;
-          const level = totalScore <= 5 ? "ต่ำ" : totalScore <= 10 ? "ปานกลาง" : "สูง";
-
-          // กำหนดค่า backgroundColor และ text โดยใช้ if
-          let vbackgroundColor;
-          if (level === "ต่ำ") {
-            vbackgroundColor = "#45fa36"; // สีเขียว
-          } else if (level === "ปานกลาง") {
-            vbackgroundColor = "#FFA500"; // สีส้ม
-          } else if (level === "สูง") {
-            vbackgroundColor = "#ff0000"; // สีแดง
-          }
+          async sendFlexMessage() {
+            const totalScore = this.totalScore;
+              // กำหนดระดับความเครียดตามคะแนน
+              const level =
+                totalScore <= 4
+                  ? "ต่ำ"
+                  : totalScore <= 7
+                  ? "ปานกลาง"
+                  : totalScore <= 9
+                  ? "สูง"
+                  : "สูงมาก";
+              
+              // กำหนดสีพื้นหลังตามระดับความเครียด
+              let vbackgroundColor;
+              if (level === "ต่ำ") {
+                vbackgroundColor = "#45fa36"; // สีเขียว (เครียดน้อย)
+              } else if (level === "ปานกลาง") {
+                vbackgroundColor = "#FFA500"; // สีส้ม (เครียดปานกลาง)
+              } else if (level === "สูง") {
+                vbackgroundColor = "#ff0000"; // สีแดง (เครียดมาก)
+              } else if (level === "สูงมาก") {
+                vbackgroundColor = "#8B0000"; // สีแดงเข้ม (เครียดมากที่สุด)
+              }
 
           // ข้อความการแปลผลระดับความเครียด
           const stressLevelDescription = {
-                "ต่ำ" (ระดับคะแนน 0 - 4):`คุณมีระดับความเครียดอยู่ในระดับน้อย ซึ่งเป็นเรื่องปกติที่เกิดขึ้นได้ในชีวิตประจำวัน ความเครียดระดับนี้อาจเป็นแรงผลักดันให้คุณทำสิ่งต่างๆ ได้ดียิ่งขึ้น และคุณสามารถจัดการกับสถานการณ์ต่างๆ ได้อย่างเหมาะสมค่ะ`,
-                "ปานกลาง" (ระดับคะแนน 5 - 7):`คุณมีระดับความเครียดอยู่ในระดับปานกลาง ซึ่งเป็นเรื่องที่เกิดขึ้นได้เมื่อมีสิ่งต่างๆ เข้ามากระทบจิตใจ ลองหากิจกรรมที่ช่วยให้ผ่อนคลาย เช่น ออกกำลังกาย ฟังเพลง หรือพูดคุยกับคนที่คุณไว้ใจ เพื่อช่วยลดความเครียดนะคะ`,
-                "สูง" (ระดับคะแนน 8 - 9):`คุณมีระดับความเครียดอยู่ในระดับสูง ซึ่งอาจส่งผลต่อการใช้ชีวิตประจำวันได้ ลองใช้เทคนิคการหายใจคลายเครียด หรือพูดคุยกับคนที่คุณไว้ใจเพื่อระบายความรู้สึก หากคุณรู้สึกว่าจัดการกับความเครียดด้วยตัวเองได้ยาก ลองปรึกษาผู้เชี่ยวชาญเพื่อขอคำแนะนำเพิ่มเติมนะคะ`,
-                "สูงมาก" (ระดับคะแนน 10 - 15):`คุณมีระดับความเครียดอยู่ในระดับสูงมาก ซึ่งอาจส่งผลกระทบต่อสุขภาพกายและใจของคุณได้ อย่าลังเลที่จะขอความช่วยเหลือจากผู้เชี่ยวชาญ เช่น นักจิตวิทยา หรือผู้ให้คำปรึกษา เพื่อรับการดูแลและสนับสนุนอย่างเหมาะสมนะคะ`,
-              }[level];
+            "ต่ำ": `ระดับคะแนน 0 - 4 รู้สึกเครียดเล็กน้อย\nท่านมีความเครียดอยู่ในระดับน้อยและหายไปได้ในระยะเวลาสั้นๆ เป็นความเครียดที่เกิดขึ้นได้ในชีวิตประจำวัน และสามารถปรับตัวกับสถานการณ์ต่างๆ ได้อย่างเหมาะสม ความเครียดในระดับนี้ถือว่ามีประโยชน์ในการดำเนินชีวิตประจำวัน เป็นแรงจูงใจที่นำไปสู่ความสำเร็จในชีวิตได้`,
+            "ปานกลาง": `ระดับคะแนน 5 - 7 รู้สึกเครียดปานกลาง\nท่านมีความเครียดในระดับปานกลาง เกิดขึ้นได้ในชีวิตประจำวัน เนื่องจากมีสิ่งคุกคามหรือเหตุการณ์ที่ทำให้เครียด อาจรู้สึกวิตกกังวลหรือกลัว ถือว่าอยู่ในเกณฑ์ปกติ ความเครียดระดับนี้ไม่ก่อให้เกิดอันตรายหรือเป็นผลเสียต่อการดำเนินชีวิต ท่านสามารถผ่อนคลายความเครียดด้วยการออกกำลังกาย เล่นกีฬา ทำสิ่งที่สนุกสนานเพลิดเพลิน เช่น อ่านหนังสือ ฟังเพลง ทำงานอดิเรก หรือพูดคุยระบายความไม่สบายใจกับผู้ที่ไว้วางใจ`,
+            "สูง": `ระดับคะแนน 8 - 9 รู้สึกเครียดมาก\nท่านมีความเครียดในระดับมาก เป็นระดับที่ท่านได้รับความเดือดร้อนจากสิ่งต่างๆ หรือเหตุการณ์รอบตัว ทำให้วิตกกังวล กลัว รู้สึกขัดแย้งหรืออยู่ในสถานการณ์ที่แก้ไข / จัดการปัญหานั้นไม่ได้ ปรับความรู้สึกด้วยความลำบากจะส่งผลต่อการใช้ชีวิตประจำวัน และการเจ็บป่วย เช่น ความดันโลหิตสูง เป็นแผลในกระเพาะอาหาร ฯลฯ สิ่งที่ท่านต้องรีบทำเมื่อมีความเครียดในระดับนี้คือคลายเครียดด้วยวิธีที่ทำได้ง่ายแต่ได้ผลดีคือ การฝึกหายใจคลายเครียด พูดคุยระบายความเครียดกับผู้ที่ไว้วางใจ หาสาเหตุหรือปัญหาที่ทำให้เกิดความเครียดและหาวิธีแก้ไข หากท่านไม่สามารถจัดการคลายเครียดด้วยตนเอง ควรปรึกษากับผู้ให้การปรึกษาในหน่วยงานต่างๆ`,
+            "สูงมาก": `ระดับคะแนน 10 - 15 รู้สึกเครียดมากที่สุด\nท่านมีความเครียดในระดับมากที่สุด เป็นความเครียดระดับสูงที่เกิดขึ้นต่อเนื่องหรือท่านกำลังเผชิญกับวิกฤตของชีวิต เช่น เจ็บป่วยรุนแรง / เรื้อรัง มีความพิการ สูญเสียคนรัก ทรัพย์สิน หรือสิ่งที่รัก ความเครียดระดับนี้ส่งผลทำให้เจ็บป่วยทางกายและสุขภาพจิต ชีวิตไม่มีความสุข ความคิดฟุ้งซ่าน การตัดสินใจไม่ดี ยับยั้งอารมณ์ไม่ได้ ความเครียดระดับนี้ถ้าปล่อยไว้จะเกิดผลเสียทั้งต่อตนเองและคนใกล้ชิด ควรได้รับการช่วยเหลือจากผู้ให้การปรึกษาอย่างรวดเร็ว เช่น ทางโทรศัพท์ หรือผู้ให้การปรึกษาในหน่วยงานต่างๆ`,
+          }[level];
 
           const flexMessage = {
             type: "flex",
@@ -270,21 +259,28 @@
                                 type: "separator",
                                 margin: "20px",
                               },
-                              {
-                                type: "text",
-                                text: stressLevelDescription,
-                                margin: "md",
-                                align: "start",
-                                wrap: true,
-                                size: "sm",
-                                color: "#444444",
-                              },
                             ],
                             spacing: "sm",
                             margin: "md",
                             backgroundColor: vbackgroundColor, 
                             cornerRadius: "xxl",
                           },
+                          {
+                              "type": "box",
+                              "layout": "vertical",
+                              "contents": [
+                                {
+                                  "type": "text",
+                                  "text": stressLevelDescription,
+                                  "wrap": true,
+                                  "size": "md"
+                                }
+                              ],
+                              "paddingAll": "10px",
+                              "backgroundColor": "#afffff",
+                              "cornerRadius": "20px",
+                              "margin": "lg"
+                          }
                         ],
                         paddingAll: "sm",
                         width: "250px",
@@ -314,8 +310,9 @@
 
     // Initialize LIFF on page load
     initializeLiff();
-  </script>
+  </script><script src="https://static.line-scdn.net/liff/edge/2/non-ios-extensions.js" type="text/javascript"></script>
   <!-- Bootstrap JS (Optional) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+
+</body></html>
