@@ -220,15 +220,22 @@
             };
         
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec';
-        
+                            // https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec
             try {
+                console.log('Sending request to:', scriptURL);
+                console.log('Data:', JSON.stringify(data));
                 const response = await fetch(scriptURL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+                console.log('Response status:', response.status);
+                console.log('Response text:', await response.text());
         
-                if (!response.ok) throw new Error('Server responded with an error');
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${response.status} - ${errorText}`);
+                }
         
                 Swal.fire({
                     icon: 'success',
@@ -240,7 +247,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่'
+                    text: 'ไม่สามารถบันทึกข้อมูลได้: ${error.message}'
                 });
             }
         });
