@@ -225,9 +225,10 @@
         
             const scriptURL = 'https://script.google.com/macros/s/AKfycbxm2PlUDvQ8RmYTH-l-g6Gi_J3hwgHmhByQ1y3q4fIWEgNZPotzfj7jkMwohBzxkvm4tg/exec';
                             // https://script.google.com/macros/s/AKfycbwDvpE58nUXpT8WWHAm-s9kDqsH8B4gTAHhb0Ic5aQE3zPyCqqVrPXapXY_jq9wPSamHQ/exec
-            try {
+                    
                 console.log('Sending request to:', scriptURL);
                 console.log('Data:', JSON.stringify(data));
+            try {
                 const response = await fetch(scriptURL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
