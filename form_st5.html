@@ -7,7 +7,7 @@
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- LINE LIFF SDK -->
-    <script src="https://static.line-scdn.net/liff/edge/versions/2.1/sdk.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -155,22 +155,21 @@
         // Initialize LIFF
         async function initializeLiff() {
             try {
+                console.log('Starting LIFF initialization...');
                 await liff.init({ liffId: '2006670422-3b8vmOqK' });
                 console.log('LIFF initialized successfully');
 
                 // ตรวจสอบสถานะการล็อกอิน
                 if (!liff.isLoggedIn()) {
                     liff.login(); // Redirect ไปยังหน้าล็อกอินของ LINE
-                }
-
-                // ตรวจสอบสถานะการเปิด LIFF ในเบราว์เซอร์
-                if (!liff.isInClient()) {
+                }else if (!liff.isInClient()) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'กรุณาเปิด LIFF ในแอปพลิเคชัน LINE',
-                        text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE เพื่อใช้งาน'
+                        title: 'กรุณาเปิดใน LINE',
+                        text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
                     });
                 }
+
             } catch (error) {
                 console.error('Error initializing LIFF:', error);
                 Swal.fire({
