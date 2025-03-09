@@ -228,12 +228,32 @@
                     
                 console.log('Sending request to:', scriptURL);
                 console.log('Data:', JSON.stringify(data));
+            // URL จาก Google Apps Script Web App ที่คุณ deploy แล้ว
+      
+            try {
+                // ส่งข้อมูลไปยัง Google Apps Script
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // จำเป็นสำหรับการข้าม CORS
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+
+            /*
             try {
                 const response = await fetch(scriptURL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+            */
+
+
+
+                
                 console.log('Response status:', response.status);
                 console.log('Response text:', await response.text());
         
