@@ -4,283 +4,166 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แบบประเมินความเครียด (ST-5)</title>
-    <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <!-- LINE LIFF SDK -->
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        input[type="radio"]:checked + span {
-              background-color: #dbeafe;
-              color: #1e40af;
-              font-weight: bold;
-              font-size: larger;
-              padding: 5px 24px;
-              border-radius: 20px;
-        }
-
-</style>
 </head>
 <body class="bg-gray-100 font-sans">
-    <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6 mt-10">
-        <h1 class="text-2xl font-bold text-center text-gray-800 mb-4">แบบประเมินความเครียด (ST-5)</h1>
-
-        <p class="text-gray-600 mb-6">
-            ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกอย่างไร?...<br>
-            โดยเลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด
-        </p>
-
-        <!-- คำถามที่ 1 -->
-        <div class="mb-6">
-            <p class="font-medium text-gray-800 mb-3">1. มีปัญหาการนอน นอนไม่หลับหรือนอนมาก?</p>
-            <div class="space-y-2">
-                <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                    <input type="radio" name="question1" value="0" class="hidden">
-                    <span class="ml-3 text-gray-700">แทบไม่มี</span>
-                </label>
-                <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                    <input type="radio" name="question1" value="1" class="hidden">
-                    <span class="ml-3 text-gray-700">เป็นบางครั้ง</span>
-                </label>
-                <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                    <input type="radio" name="question1" value="2" class="hidden">
-                    <span class="ml-3 text-gray-700">ค่อนข้างบ่อย</span>
-                </label>
-                <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                    <input type="radio" name="question1" value="3" class="hidden">
-                    <span class="ml-3 text-gray-700">เป็นประจำ</span>
-                </label>
-            </div>
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold text-center mb-6">แบบประเมินความเครียด (ST-5)</h1>
+        
+        <!-- คำถามทั้ง 5 ข้อ จะแสดงทีละหน้า -->
+        <div id="question-container" class="bg-white p-6 rounded-lg shadow-md">
+            <!-- คำถามจะถูก inject ด้วย JavaScript -->
         </div>
-        <!-- คำถามที่ 2 -->
-        <div class="mb-6">
-          <p class="font-medium text-gray-800 mb-3">2. มีสมาธิน้อยลง?</p>
-          <div class="space-y-2">
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question2" value="0" class="hidden">
-                  <span class="ml-3 text-gray-700">แทบไม่มี</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question2" value="1" class="hidden">
-                  <span class="ml-3 text-gray-700">เป็นบางครั้ง</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question2" value="2" class="hidden">
-                  <span class="ml-3 text-gray-700">ค่อนข้างบ่อย</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question2" value="3" class="hidden">
-                  <span class="ml-3 text-gray-700">เป็นประจำ</span>
-              </label>
-          </div>
-      </div>
-        <!-- คำถามที่ 3 -->
-        <div class="mb-6">
-          <p class="font-medium text-gray-800 mb-3">3. หงุดหงิด/กระวนกระวาย/ว้าวุ่นใจ?</p>
-          <div class="space-y-2">
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question3" value="0" class="hidden">
-                  <span class="ml-3 text-gray-700">แทบไม่มี</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question3" value="1" class="hidden">
-                  <span class="ml-3 text-gray-700">เป็นบางครั้ง</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question3" value="2" class="hidden">
-                  <span class="ml-3 text-gray-700">ค่อนข้างบ่อย</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question3" value="3" class="hidden">
-                  <span class="ml-3 text-gray-700">เป็นประจำ</span>
-              </label>
-          </div>
-      </div>
-        <!-- คำถามที่ 4 -->
-        <div class="mb-6">
-          <p class="font-medium text-gray-800 mb-3">4. รู้สึกเบื่อ เซ็ง?</p>
-          <div class="space-y-2">
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question4" value="0" class="hidden">
-                  <span class="ml-3 text-gray-700">แทบไม่มี</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question4" value="1" class="hidden">
-                  <span class="ml-3 text-gray-700">เป็นบางครั้ง</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question4" value="2" class="hidden">
-                  <span class="ml-3 text-gray-700">ค่อนข้างบ่อย</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question4" value="3" class="hidden">
-                  <span class="ml-3 text-gray-700">เป็นประจำ</span>
-              </label>
-          </div>
-      </div>
-        <!-- คำถามที่ 5 -->
-        <div class="mb-6">
-          <p class="font-medium text-gray-800 mb-3">5. ไม่อยากพบปะผู้คน?</p>
-          <div class="space-y-2">
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question5" value="0" class="hidden">
-                  <span class="ml-3 text-gray-700">แทบไม่มี</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question5" value="1" class="hidden">
-                  <span class="ml-3 text-gray-700">เป็นบางครั้ง</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question5" value="2" class="hidden">
-                  <span class="ml-3 text-gray-700">ค่อนข้างบ่อย</span>
-              </label>
-              <label class="flex items-center p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                  <input type="radio" name="question5" value="3" class="hidden">
-                  <span class="ml-3 text-gray-700">เป็นประจำ</span>
-              </label>
-          </div>
-      </div>
 
-
-        <!-- เพิ่มคำถามที่เหลือ (3-5) ตามโครงสร้างเดียวกัน -->
-
-        <!-- ปุ่มส่งคำตอบ -->
-        <button id="submitButton" class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-            ส่งคำตอบ
-        </button>
+        <!-- ปุ่มนำทาง -->
+        <div class="flex justify-between mt-6">
+            <button id="prevButton" class="bg-gray-300 text-gray-700 px-4 py-2 rounded disabled:opacity-50" disabled>ย้อนกลับ</button>
+            <button id="nextButton" class="bg-blue-500 text-white px-4 py-2 rounded">ถัดไป</button>
+        </div>
     </div>
 
-    <!-- SweetAlert2 JS -->
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // คำถามทั้ง 5 ข้อ
+        const questions = [
+            { id: "question1", text: "ท่านรู้สึกหงุดหงิด โกรธง่าย" },
+            { id: "question2", text: "ท่านรู้สึกท้อแท้ เบื่อหน่าย" },
+            { id: "question3", text: "ท่านรู้สึกเครียดหรือกังวล" },
+            { id: "question4", text: "ท่านนอนหลับยากกว่าปกติ" },
+            { id: "question5", text: "ท่านรู้สึกเหนื่อยล้า อ่อนเพลีย" }
+        ];
 
-        // Initialize LIFF
-        async function initializeLiff() {
-            try {
-                console.log('Starting LIFF initialization...');
-                await liff.init({ liffId: '2006670422-3b8vmOqK' });
-                console.log('LIFF initialized successfully');
+        let currentPage = 0; // หน้าเริ่มต้น
+        const answers = {}; // เก็บคำตอบ
 
-                // ตรวจสอบสถานะการล็อกอิน
-                if (!liff.isLoggedIn()) {
-                        liff.login();
-                    } else {
-                        const profile = await liff.getProfile();
-                        profilePictureUrl = profile.pictureUrl || 'https://via.placeholder.com/200';
-                       /* if (!liff.isInClient()) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'กรุณาเปิดใน LINE',
-                                text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
-                            });
-                        }
-                        */
-                    }
+        // โหลดคำถามตามหน้า
+        function loadQuestion(page) {
+            const question = questions[page];
+            const container = document.getElementById('question-container');
+            container.innerHTML = `
+                <h2 class="text-lg font-semibold mb-4">ข้อที่ ${page + 1}: ${question.text}</h2>
+                <div class="space-y-2">
+                    <label class="block"><input type="radio" name="${question.id}" value="0" class="mr-2"> ไม่เลย </label>
+                    <label class="block"><input type="radio" name="${question.id}" value="1" class="mr-2"> เล็กน้อย </label>
+                    <label class="block"><input type="radio" name="${question.id}" value="2" class="mr-2"> ปานกลาง </label>
+                    <label class="block"><input type="radio" name="${question.id}" value="3" class="mr-2"> มาก </label>
+                </div>
+            `;
 
-            } catch (error) {
-                console.error('Error initializing LIFF:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ไม่สามารถเชื่อมต่อ LINE ได้',
-                    text: error.message || 'กรุณาตรวจสอบการเชื่อมต่อหรือลองใหม่'
-                });
+            // อัปเดตปุ่ม
+            document.getElementById('prevButton').disabled = page === 0;
+            const nextButton = document.getElementById('nextButton');
+            nextButton.textContent = page === questions.length - 1 ? 'ส่งคำตอบ' : 'ถัดไป';
+        }
+
+        // บันทึกคำตอบ
+        function saveAnswer() {
+            const questionId = questions[currentPage].id;
+            const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+            if (selected) {
+                answers[questionId] = parseInt(selected.value);
             }
         }
 
-        // ส่งคำตอบและข้อความผ่าน LINE
-document.getElementById('submitButton').addEventListener('click', async () => {
-    const answers = [
-        document.querySelector('input[name="question1"]:checked'),
-        document.querySelector('input[name="question2"]:checked'),
-        document.querySelector('input[name="question3"]:checked'),
-        document.querySelector('input[name="question4"]:checked'),
-        document.querySelector('input[name="question5"]:checked')
-    ];
+        // เริ่มต้น LIFF
+        let profilePictureUrl = 'https://via.placeholder.com/200';
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: '2006670422-3b8vmOqK' });
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                } else {
+                    const profile = await liff.getProfile();
+                    profilePictureUrl = profile.pictureUrl || 'https://via.placeholder.com/200';
+                    if (!liff.isInClient()) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'กรุณาเปิดใน LINE',
+                            text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
+                        });
+                    }
+                    loadQuestion(currentPage); // โหลดคำถามแรก
+                }
+            } catch (error) {
+                console.error('LIFF Error:', error);
+                Swal.fire({ icon: 'error', title: 'ไม่สามารถเชื่อมต่อ LINE ได้', text: error.message });
+            }
+        }
 
-    if (answers.some(answer => !answer)) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'กรุณาตอบคำถามทั้งหมด',
-            text: 'คุณยังไม่ได้ตอบคำถามบางข้อ'
-        });
-        return;
-    }
-
-    const [q1, q2, q3, q4, q5] = answers.map(answer => parseInt(answer.value));
-    const totalScore = q1 + q2 + q3 + q4 + q5;
-
-    const data = {
-        userId: liff.getDecodedIDToken()?.sub || 'unknown',
-        question1: q1,
-        question2: q2,
-        question3: q3,
-        question4: q4,
-        question5: q5,
-        totalScore: totalScore
-    };
-
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxm2PlUDvQ8RmYTH-l-g6Gi_J3hwgHmhByQ1y3q4fIWEgNZPotzfj7jkMwohBzxkvm4tg/exec'; // URL เดิมที่ใช้ได้
-
-    console.log('Sending to:', scriptURL);
-    console.log('Data:', JSON.stringify(data));
-
-    try {
-        // ส่ง request ด้วย no-cors
-        await fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors', // ใช้ no-cors เพื่อข้าม CORS
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-
-        // ไม่ตรวจสอบ response เพราะ no-cors คืน opaque response
-        console.log('Request sent (no response available due to no-cors)');
-
-        // ดำเนินการต่อโดยสมมติว่าบันทึกสำเร็จ
-        sendFlexMessage(totalScore);
-        Swal.fire({
-            icon: 'success',
-            title: 'ส่งคำตอบสำเร็จ!',
-            text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
-        }).then(() => liff.closeWindow());
-    } catch (error) {
-        // error จาก fetch เอง (เช่น network ล่ม) ไม่ใช่จาก response
-        console.error('Fetch Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'เกิดข้อผิดพลาด',
-            text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
-        });
-    }
-});
-        // ฟังก์ชันสร้างและส่ง Flex Message
-        async function sendFlexMessage(totalScore) {
-            const level =
-                totalScore <= 4
-                    ? "ต่ำ"
-                    : totalScore <= 7
-                    ? "ปานกลาง"
-                    : totalScore <= 9
-                    ? "สูง"
-                    : "สูงมาก";
-
-            let vbackgroundColor;
-            if (level === "ต่ำ") {
-                vbackgroundColor = "#45fa36"; // สีเขียว (เครียดน้อย)
-            } else if (level === "ปานกลาง") {
-                vbackgroundColor = "#FFA500"; // สีส้ม (เครียดปานกลาง)
-            } else if (level === "สูง") {
-                vbackgroundColor = "#ff0000"; // สีแดง (เครียดมาก)
-            } else if (level === "สูงมาก") {
-                vbackgroundColor = "#8B0000"; // สีแดงเข้ม (เครียดมากที่สุด)
+        // ปุ่มถัดไป
+        document.getElementById('nextButton').addEventListener('click', async () => {
+            saveAnswer();
+            if (!answers[questions[currentPage].id] && answers[questions[currentPage].id] !== 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'กรุณาตอบคำถาม',
+                    text: 'คุณยังไม่ได้เลือกคำตอบ'
+                });
+                return;
             }
 
+            if (currentPage < questions.length - 1) {
+                currentPage++;
+                loadQuestion(currentPage);
+            } else {
+                // ส่งข้อมูลเมื่อถึงหน้าสุดท้าย
+                const totalScore = Object.values(answers).reduce((sum, val) => sum + val, 0);
+                const data = {
+                    userId: liff.getDecodedIDToken()?.sub || 'unknown',
+                    question1: answers.question1,
+                    question2: answers.question2,
+                    question3: answers.question3,
+                    question4: answers.question4,
+                    question5: answers.question5,
+                    totalScore: totalScore
+                };
+
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbxm2PlUDvQ8RmYTH-l-g6Gi_J3hwgHmhByQ1y3q4fIWEgNZPotzfj7jkMwohBzxkvm4tg/exec';
+
+                try {
+                    await fetch(scriptURL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    sendFlexMessage(totalScore);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ส่งคำตอบสำเร็จ!',
+                        text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
+                    }).then(() => liff.closeWindow());
+                } catch (error) {
+                    console.error('Fetch Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
+                    });
+                }
+            }
+        });
+
+        // ปุ่มย้อนกลับ
+        document.getElementById('prevButton').addEventListener('click', () => {
+            saveAnswer();
+            if (currentPage > 0) {
+                currentPage--;
+                loadQuestion(currentPage);
+            }
+        });
+
+        // ส่ง Flex Message (ไม่เปลี่ยนแปลง)
+        async function sendFlexMessage(totalScore) {
+            const level = totalScore <= 4 ? "ต่ำ" : totalScore <= 7 ? "ปานกลาง" : totalScore <= 9 ? "สูง" : "สูงมาก";
+            let vbackgroundColor = level === "ต่ำ" ? "#45fa36" : level === "ปานกลาง" ? "#FFA500" : level === "สูง" ? "#ff0000" : "#8B0000";
             const stressLevelDescription = {
-                "ต่ำ": `ระดับคะแนน 0 - 4 รู้สึกเครียดเล็กน้อย\nท่านมีความเครียดอยู่ในระดับน้อยและหายไปได้ในระยะเวลาสั้นๆ เป็นความเครียดที่เกิดขึ้นได้ในชีวิตประจำวัน และสามารถปรับตัวกับสถานการณ์ต่างๆ ได้อย่างเหมาะสม ความเครียดในระดับนี้ถือว่ามีประโยชน์ในการดำเนินชีวิตประจำวัน เป็นแรงจูงใจที่นำไปสู่ความสำเร็จในชีวิตได้`,
-                "ปานกลาง": `ระดับคะแนน 5 - 7 รู้สึกเครียดปานกลาง\nท่านมีความเครียดในระดับปานกลาง เกิดขึ้นได้ในชีวิตประจำวัน เนื่องจากมีสิ่งคุกคามหรือเหตุการณ์ที่ทำให้เครียด อาจรู้สึกวิตกกังวลหรือกลัว ถือว่าอยู่ในเกณฑ์ปกติ ความเครียดระดับนี้ไม่ก่อให้เกิดอันตรายหรือเป็นผลเสียต่อการดำเนินชีวิต ท่านสามารถผ่อนคลายความเครียดด้วยการออกกำลังกาย เล่นกีฬา ทำสิ่งที่สนุกสนานเพลิดเพลิน เช่น อ่านหนังสือ ฟังเพลง ทำงานอดิเรก หรือพูดคุยระบายความไม่สบายใจกับผู้ที่ไว้วางใจ`,
-                "สูง": `ระดับคะแนน 8 - 9 รู้สึกเครียดมาก\nท่านมีความเครียดในระดับมาก เป็นระดับที่ท่านได้รับความเดือดร้อนจากสิ่งต่างๆ หรือเหตุการณ์รอบตัว ทำให้วิตกกังวล กลัว รู้สึกขัดแย้งหรืออยู่ในสถานการณ์ที่แก้ไข / จัดการปัญหานั้นไม่ได้ ปรับความรู้สึกด้วยความลำบากจะส่งผลต่อการใช้ชีวิตประจำวัน และการเจ็บป่วย เช่น ความดันโลหิตสูง เป็นแผลในกระเพาะอาหาร ฯลฯ สิ่งที่ท่านต้องรีบทำเมื่อมีความเครียดในระดับนี้คือคลายเครียดด้วยวิธีที่ทำได้ง่ายแต่ได้ผลดีคือ การฝึกหายใจคลายเครียด พูดคุยระบายความเครียดกับผู้ที่ไว้วางใจ หาสาเหตุหรือปัญหาที่ทำให้เกิดความเครียดและหาวิธีแก้ไข หากท่านไม่สามารถจัดการคลายเครียดด้วยตนเอง ควรปรึกษากับผู้ให้การปรึกษาในหน่วยงานต่างๆ`,
-                "สูงมาก": `ระดับคะแนน 10 - 15 รู้สึกเครียดมากที่สุด\nท่านมีความเครียดในระดับมากที่สุด เป็นความเครียดระดับสูงที่เกิดขึ้นต่อเนื่องหรือท่านกำลังเผชิญกับวิกฤตของชีวิต เช่น เจ็บป่วยรุนแรง / เรื้อรัง มีความพิการ สูญเสียคนรัก ทรัพย์สิน หรือสิ่งที่รัก ความเครียดระดับนี้ส่งผลทำให้เจ็บป่วยทางกายและสุขภาพจิต ชีวิตไม่มีความสุข ความคิดฟุ้งซ่าน การตัดสินใจไม่ดี ยับยั้งอารมณ์ไม่ได้ ความเครียดระดับนี้ถ้าปล่อยไว้จะเกิดผลเสียทั้งต่อตนเองและคนใกล้ชิด ควรได้รับการช่วยเหลือจากผู้ให้การปรึกษาอย่างรวดเร็ว เช่น ทางโทรศัพท์ หรือผู้ให้การปรึกษาในหน่วยงานต่างๆ`,
+                "ต่ำ": `ระดับคะแนน 0 - 4 รู้สึกเครียดเล็กน้อย\n ท่านอยู่ในจุดที่ความเครียดมาแวะทักทายเพียงเบาๆ เหมือนลมพัดผ่าน ซึ่งเป็นเรื่องปกติในชีวิตประจำวันเลยค่ะ ความเครียดระดับนี้ไม่ได้น่ากังวล แถมยังเป็นเหมือนแรงกระตุ้นเล็กๆ ที่ช่วยให้ท่านก้าวไปข้างหน้าได้อย่างดี ด้วยความสามารถในการปรับตัวของท่านเอง ความรู้สึกนี้จะค่อยๆ จางไปอย่างเป็นธรรมชาติ ทุกอย่างยังอยู่ในมือของท่านค่ะ`,
+                "ปานกลาง": `ระดับคะแนน 5 - 7 รู้สึกเครียดปานกลาง\n ท่านอาจรู้สึกถึงความเครียดที่เข้ามาทักทายบ้างในบางจังหวะ ซึ่งเป็นสิ่งที่เกิดขึ้นได้กับทุกคนค่ะ บางครั้งอาจมีเรื่องให้คิดมากหรือกังวลใจนิดหน่อย แต่ท่านยังอยู่ในจุดที่จัดการได้ดี ความเครียดระดับนี้ไม่ได้เป็นอุปสรรคใหญ่ ลองหาเวลาผ่อนคลายในแบบที่ท่านชอบ เช่น เดินเล่น ฟังเพลง หรือพูดคุยกับคนที่ท่านไว้ใจ ทุกอย่างจะค่อยๆ เบาขึ้นด้วยวิธีที่เหมาะกับท่านเองค่ะ`,
+                "สูง": `ระดับคะแนน 8 - 9 รู้สึกเครียดมาก\n ช่วงนี้ท่านอาจรู้สึกว่ามีอะไรหนักๆ อยู่บนบ่า ซึ่งเป็นสัญญาณว่าท่านกำลังเผชิญกับสิ่งที่ท้าทายอยู่ค่ะ ไม่เป็นไรเลยนะคะ ความรู้สึกแบบนี้บอกว่าท่านใส่ใจและพยายามอย่างเต็มที่ ลองเริ่มจากอะไรเล็กๆ ที่ช่วยให้รู้สึกดีขึ้นได้ เช่น หายใจลึกๆ ช้าๆ หรือเล่าเรื่องในใจให้คนใกล้ตัวฟัง ถ้าท่านอยากหาทางออกเพิ่มเติม การพูดคุยกับคนที่พร้อมรับฟัง เช่น เพื่อนหรือผู้ให้คำปรึกษา อาจช่วยให้ท่านรู้สึกเบาขึ้นได้เยอะเลยค่ะ ท่านไม่ได้อยู่คนเดียวนะคะ`,
+                "สูงมาก": `ระดับคะแนน 10 - 15 รู้สึกเครียดมากที่สุด\n ตอนนี้ท่านอาจรู้สึกเหมือนแบกอะไรหนักๆ ไว้เยอะเลย ซึ่งเป็นเรื่องที่เข้าใจได้ค่ะ โดยเฉพาะถ้าท่านกำลังผ่านช่วงเวลาที่ยากลำบาก ท่านเก่งมากที่เดินมาถึงจุดนี้ และสิ่งสำคัญคือท่านไม่ต้องฝ่าฟันทุกอย่างเพียงลำพัง ลองหยุดพักสักนิด หายใจให้เต็มที่ หรือติดต่อคนที่พร้อมจะฟังท่าน ไม่ว่าจะเป็นเพื่อน ครอบครัว หรือผู้ให้คำปรึกษาที่พร้อมช่วยเหลือ การขอความช่วยเหลือคือพลังที่ยิ่งใหญ่ และท่านสมควรได้รับการสนับสนุนในตอนนี้ค่ะ เราเดินไปด้วยกันนะคะ`
             }[level];
 
             const flexMessage = {
@@ -292,130 +175,46 @@ document.getElementById('submitButton').addEventListener('click', async () => {
                         type: "box",
                         layout: "vertical",
                         contents: [
+                            { type: "image", url: profilePictureUrl, size: "full", aspectMode: "cover", aspectRatio: "1:1" },
                             {
                                 type: "box",
                                 layout: "vertical",
                                 contents: [
+                                    { type: "text", text: "ผลคะแนนความเครียด", size: "xl", weight: "bold", align: "center", margin: "md" },
                                     {
                                         type: "box",
                                         layout: "vertical",
                                         contents: [
-                                            {
-                                                type: "image",
-                                                url: profilePictureUrl,
-                                                aspectMode: "cover",
-                                                size: "full",
-                                                align: "center",
-                                            },
+                                            { type: "text", text: `${totalScore}`, size: "5xl", color: "#111111", align: "center" },
+                                            { type: "text", text: "คะแนน", size: "lg", color: "#444444", align: "center" },
+                                            { type: "text", text: `ระดับความเครียด: ${level}`, size: "sm", align: "center", weight: "bold" },
+                                            { type: "separator", margin: "20px" }
                                         ],
-                                        cornerRadius: "100px",
-                                        width: "200px",
-                                        height: "200px",
+                                        backgroundColor: vbackgroundColor,
+                                        cornerRadius: "xxl",
+                                        margin: "md"
                                     },
                                     {
                                         type: "box",
                                         layout: "vertical",
-                                        contents: [
-                                            {
-                                                type: "box",
-                                                layout: "baseline",
-                                                contents: [
-                                                    {
-                                                        type: "text",
-                                                        text: "ผลคะแนนความเครียด",
-                                                        size: "xl",
-                                                        weight: "bold",
-                                                        align: "center",
-                                                    },
-                                                ],
-                                                spacing: "sm",
-                                                margin: "md",
-                                            },
-                                            {
-                                                type: "box",
-                                                layout: "vertical",
-                                                contents: [
-                                                    {
-                                                        type: "text",
-                                                        text: `${totalScore}`,
-                                                        size: "5xl",
-                                                        color: "#111111",
-                                                        align: "center",
-                                                    },
-                                                    {
-                                                        type: "text",
-                                                        text: "คะแนน",
-                                                        size: "lg",
-                                                        color: "#444444",
-                                                        align: "center",
-                                                    },
-                                                    {
-                                                        type: "text",
-                                                        text: `ระดับความเครียด: ${level}`,
-                                                        size: "sm",
-                                                        align: "center",
-                                                        weight: "bold",
-                                                    },
-                                                    {
-                                                        type: "separator",
-                                                        margin: "20px",
-                                                    },
-                                                ],
-                                                spacing: "sm",
-                                                margin: "md",
-                                                backgroundColor: vbackgroundColor,
-                                                cornerRadius: "xxl",
-                                            },
-                                            {
-                                                type: "box",
-                                                layout: "vertical",
-                                                contents: [
-                                                    {
-                                                        type: "text",
-                                                        text: stressLevelDescription,
-                                                        wrap: true,
-                                                        size: "md",
-                                                    },
-                                                ],
-                                                paddingAll: "10px",
-                                                backgroundColor: "#afffff",
-                                                cornerRadius: "20px",
-                                                margin: "lg",
-                                            },
-                                        ],
-                                        paddingAll: "sm",
-                                        width: "250px",
-                                    },
-                                ],
-                                spacing: "xl",
-                                paddingAll: "20px",
-                                alignItems: "center",
-                            },
+                                        contents: [{ type: "text", text: stressLevelDescription, wrap: true, size: "md" }],
+                                        paddingAll: "10px",
+                                        backgroundColor: "#afffff",
+                                        cornerRadius: "20px",
+                                        margin: "lg"
+                                    }
+                                ]
+                            }
                         ],
-                        paddingAll: "0px",
-                        backgroundColor: "#f6f6f6",
-                    },
-                },
+                        backgroundColor: "#f6f6f6"
+                    }
+                }
             };
 
-            try {
-                await liff.sendMessages([flexMessage]);
-            } catch (error) {
-                console.error('Flex Message Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ไม่สามารถส่งผลลัพธ์',
-                    text: 'กรุณาลองใหม่',
-                    showCancelButton: true,
-                    confirmButtonText: 'ลองใหม่',
-                    cancelButtonText: 'ยกเลิก'
-                }).then((result) => {
-                    if (result.isConfirmed) sendFlexMessage(totalScore);
-                });
-            }
+            await liff.sendMessages([flexMessage]);
         }
 
-        // เริ่มต้น LIFF
+        // เริ่มต้น
         initializeLiff();
     </script>
 </body>
