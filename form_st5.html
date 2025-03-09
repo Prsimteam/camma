@@ -161,14 +161,18 @@
 
                 // ตรวจสอบสถานะการล็อกอิน
                 if (!liff.isLoggedIn()) {
-                    liff.login(); // Redirect ไปยังหน้าล็อกอินของ LINE
-                }else if (!liff.isInClient()) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'กรุณาเปิดใน LINE',
-                        text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
-                    });
-                }
+                        liff.login();
+                    } else {
+                        const profile = await liff.getProfile();
+                        profilePictureUrl = profile.pictureUrl || 'https://via.placeholder.com/200';
+                        if (!liff.isInClient()) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'กรุณาเปิดใน LINE',
+                                text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
+                            });
+                        }
+                    }
 
             } catch (error) {
                 console.error('Error initializing LIFF:', error);
@@ -289,7 +293,7 @@
                                         contents: [
                                             {
                                                 type: "image",
-                                                url: "https://via.placeholder.com/200", // รูปโปรไฟล์ (สามารถเปลี่ยนเป็น URL จริงได้)
+                                                url: profilePictureUrl,
                                                 aspectMode: "cover",
                                                 size: "full",
                                                 align: "center",
