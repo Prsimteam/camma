@@ -11,9 +11,9 @@
     <div class="container mx-auto p-4">
         <h1 class="text-2xl font-bold text-center mb-6">แบบประเมินความเครียด (ST-5)</h1>
         
-        <!-- คำถามทั้ง 5 ข้อ จะแสดงทีละหน้า -->
+        <!-- คำถามหรือหน้าแนะนำ -->
         <div id="question-container" class="bg-white p-6 rounded-lg shadow-md">
-            <!-- คำถามจะถูก inject ด้วย JavaScript -->
+            <!-- เนื้อหาจะถูก inject ด้วย JavaScript -->
         </div>
 
         <!-- ปุ่มนำทาง -->
@@ -35,35 +35,48 @@
             { id: "question5", text: "ท่านรู้สึกเหนื่อยล้า อ่อนเพลีย" }
         ];
 
-        let currentPage = 0; // หน้าเริ่มต้น
+        let currentPage = -1; // เริ่มจากหน้าแนะนำ (-1)
         const answers = {}; // เก็บคำตอบ
 
-        // โหลดคำถามตามหน้า
-        function loadQuestion(page) {
-            const question = questions[page];
+        // โหลดหน้าแนะนำหรือคำถาม
+        function loadPage(page) {
             const container = document.getElementById('question-container');
-            container.innerHTML = `
-                <h2 class="text-lg font-semibold mb-4">ข้อที่ ${page + 1}: ${question.text}</h2>
-                <div class="space-y-2">
-                    <label class="block"><input type="radio" name="${question.id}" value="0" class="mr-2"> ไม่เลย </label>
-                    <label class="block"><input type="radio" name="${question.id}" value="1" class="mr-2"> เล็กน้อย </label>
-                    <label class="block"><input type="radio" name="${question.id}" value="2" class="mr-2"> ปานกลาง </label>
-                    <label class="block"><input type="radio" name="${question.id}" value="3" class="mr-2"> มาก </label>
-                </div>
-            `;
-
-            // อัปเดตปุ่ม
-            document.getElementById('prevButton').disabled = page === 0;
             const nextButton = document.getElementById('nextButton');
-            nextButton.textContent = page === questions.length - 1 ? 'ส่งคำตอบ' : 'ถัดไป';
+            const prevButton = document.getElementById('prevButton');
+
+            if (page === -1) {
+                // หน้าแนะนำ
+                container.innerHTML = `
+                    <h2 class="text-lg font-semibold mb-4">คำชี้แจง</h2>
+                    <p class="text-gray-700">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกอย่างไร?...<br>โดยเลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด</p>
+                `;
+                nextButton.textContent = 'เริ่มต้น';
+                prevButton.disabled = true;
+            } else {
+                // หน้าคำถาม
+                const question = questions[page];
+                container.innerHTML = `
+                    <h2 class="text-lg font-semibold mb-4">ข้อที่ ${page + 1}: ${question.text}</h2>
+                    <div class="space-y-2">
+                        <label class="block"><input type="radio" name="${question.id}" value="0" class="mr-2"> ไม่เลย </label>
+                        <label class="block"><input type="radio" name="${question.id}" value="1" class="mr-2"> เล็กน้อย </label>
+                        <label class="block"><input type="radio" name="${question.id}" value="2" class="mr-2"> ปานกลาง </label>
+                        <label class="block"><input type="radio" name="${question.id}" value="3" class="mr-2"> มาก </label>
+                    </div>
+                `;
+                nextButton.textContent = page === questions.length - 1 ? 'ส่งคำตอบ' : 'ถัดไป';
+                prevButton.disabled = page === 0; // ปิดปุ่มย้อนกลับที่คำถามแรก
+            }
         }
 
         // บันทึกคำตอบ
         function saveAnswer() {
-            const questionId = questions[currentPage].id;
-            const selected = document.querySelector(`input[name="${questionId}"]:checked`);
-            if (selected) {
-                answers[questionId] = parseInt(selected.value);
+            if (currentPage >= 0) {
+                const questionId = questions[currentPage].id;
+                const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+                if (selected) {
+                    answers[questionId] = parseInt(selected.value);
+                }
             }
         }
 
@@ -84,7 +97,7 @@
                             text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
                         });
                     }
-                    loadQuestion(currentPage); // โหลดคำถามแรก
+                    loadPage(currentPage); // โหลดหน้าแนะนำ
                 }
             } catch (error) {
                 console.error('LIFF Error:', error);
@@ -94,20 +107,22 @@
 
         // ปุ่มถัดไป
         document.getElementById('nextButton').addEventListener('click', async () => {
-            saveAnswer();
-            if (!answers[questions[currentPage].id] && answers[questions[currentPage].id] !== 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'กรุณาตอบคำถาม',
-                    text: 'คุณยังไม่ได้เลือกคำตอบ'
-                });
-                return;
+            if (currentPage >= 0) {
+                saveAnswer();
+                if (!answers[questions[currentPage].id] && answers[questions[currentPage].id] !== 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'กรุณาตอบคำถาม',
+                        text: 'คุณยังไม่ได้เลือกคำตอบ'
+                    });
+                    return;
+                }
             }
 
             if (currentPage < questions.length - 1) {
                 currentPage++;
-                loadQuestion(currentPage);
-            } else {
+                loadPage(currentPage);
+            } else if (currentPage === questions.length - 1) {
                 // ส่งข้อมูลเมื่อถึงหน้าสุดท้าย
                 const totalScore = Object.values(answers).reduce((sum, val) => sum + val, 0);
                 const data = {
@@ -149,16 +164,16 @@
         // ปุ่มย้อนกลับ
         document.getElementById('prevButton').addEventListener('click', () => {
             saveAnswer();
-            if (currentPage > 0) {
+            if (currentPage > -1) {
                 currentPage--;
-                loadQuestion(currentPage);
+                loadPage(currentPage);
             }
         });
 
         // ส่ง Flex Message (ไม่เปลี่ยนแปลง)
         async function sendFlexMessage(totalScore) {
             const level = totalScore <= 4 ? "ต่ำ" : totalScore <= 7 ? "ปานกลาง" : totalScore <= 9 ? "สูง" : "สูงมาก";
-            let vbackgroundColor = level === "ต่ำ" ? "#45fa36" : level === "ปานกลาง" ? "#FFA500" : level === "สูง" ? "#ff0000" : "#8B0000";
+            let vbackgroundColor = level === "ต่ำ" ? "#45fa36" : level === "ปานกลาง" ? "#FFA500" : level === "สูง" ? "#9f0000" : "#8B0000";
             const stressLevelDescription = {
                 "ต่ำ": `ระดับคะแนน 0 - 4 รู้สึกเครียดเล็กน้อย\n ท่านอยู่ในจุดที่ความเครียดมาแวะทักทายเพียงเบาๆ เหมือนลมพัดผ่าน ซึ่งเป็นเรื่องปกติในชีวิตประจำวันเลยค่ะ ความเครียดระดับนี้ไม่ได้น่ากังวล แถมยังเป็นเหมือนแรงกระตุ้นเล็กๆ ที่ช่วยให้ท่านก้าวไปข้างหน้าได้อย่างดี ด้วยความสามารถในการปรับตัวของท่านเอง ความรู้สึกนี้จะค่อยๆ จางไปอย่างเป็นธรรมชาติ ทุกอย่างยังอยู่ในมือของท่านค่ะ`,
                 "ปานกลาง": `ระดับคะแนน 5 - 7 รู้สึกเครียดปานกลาง\n ท่านอาจรู้สึกถึงความเครียดที่เข้ามาทักทายบ้างในบางจังหวะ ซึ่งเป็นสิ่งที่เกิดขึ้นได้กับทุกคนค่ะ บางครั้งอาจมีเรื่องให้คิดมากหรือกังวลใจนิดหน่อย แต่ท่านยังอยู่ในจุดที่จัดการได้ดี ความเครียดระดับนี้ไม่ได้เป็นอุปสรรคใหญ่ ลองหาเวลาผ่อนคลายในแบบที่ท่านชอบ เช่น เดินเล่น ฟังเพลง หรือพูดคุยกับคนที่ท่านไว้ใจ ทุกอย่างจะค่อยๆ เบาขึ้นด้วยวิธีที่เหมาะกับท่านเองค่ะ`,
