@@ -6,23 +6,66 @@
     <title>แบบประเมินความเครียด (ST-5)</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+<style>
+    /* กำหนดธีมสีใหม่ */
+    body {
+        background-color: #ADD8E6; /* พื้นหลังสีฟ้าอ่อน */
+        color: white; /* อักษรสีขาว */
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        background-color: rgba(255, 255, 255, 0.1); /* เพิ่มความโปร่งใสเล็กน้อย */
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    h1, h2 {
+        color: white; /* หัวข้อเป็นสีขาว */
+    }
+
+    button {
+        background-color: #4CAF50; /* สีปุ่มเขียว */
+        color: white; /* ข้อความบนปุ่มสีขาว */
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:disabled {
+        background-color: #ccc; /* สีปุ่มเมื่อถูกปิดใช้งาน */
+    }
+
+    label {
+        color: white; /* ข้อความในตัวเลือกสีขาว */
+    }
+
+    input[type="radio"] {
+        accent-color: white; /* สีจุดใน radio button */
+    }
+
+    .bg-white {
+        background-color: rgba(255, 255, 255, 0.1); /* ปรับความโปร่งใสของพื้นหลัง */
+    }
+</style>
 </head>
 <body class="bg-gray-100 font-sans">
+    
     <div class="container mx-auto p-4">
         <h1 class="text-2xl font-bold text-center mb-6">แบบประเมินความเครียด (ST-5)</h1>
-        
-        <!-- คำถามหรือหน้าแนะนำ -->
-        <div id="question-container" class="bg-white p-6 rounded-lg shadow-md">
+    
+        <!-- คำถามหรือหน้าแนะนำ -->    
+        <div id="question-container" class="bg-transparent p-6 rounded-lg shadow-md">
             <!-- เนื้อหาจะถูก inject ด้วย JavaScript -->
         </div>
-
         <!-- ปุ่มนำทาง -->
         <div class="flex justify-between mt-6">
-            <button id="prevButton" class="bg-gray-300 text-gray-700 px-4 py-2 rounded disabled:opacity-50" disabled>ย้อนกลับ</button>
-            <button id="nextButton" class="bg-blue-500 text-white px-4 py-2 rounded">ถัดไป</button>
+            <button id="prevButton" class="bg-gray-300 text-white px-4 py-2 rounded disabled:opacity-50" disabled>ย้อนกลับ</button>
+            <button id="nextButton" class="bg-green-500 text-white px-4 py-2 rounded">ถัดไป</button>
         </div>
     </div>
-
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
