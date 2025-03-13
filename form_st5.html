@@ -15,28 +15,75 @@
     /* กำหนดธีมสีใหม่ */
     body {
         background-color: #90EE90; /* พื้นหลังสีฟ้าอ่อน */
-        color: white; /* อักษรสีขาว */
-        font-family: Arial, sans-serif;
+        color: #000000; /* อักษรสีขาว */
+        font-family: 'Quicksand', sans-serif;
+        
     }
+
+    h1, h2 {
+        color: #003366; /* หัวข้อสีฟ้าเข้ม */
+    }
+
+    a {
+        color: #8B0000; /* ลิงก์สีแดงเข้ม */
+    }
+
     button {
-        background-color: #4CAF50; /* สีปุ่มเขียว */
-        color: white; /* ข้อความบนปุ่มสีขาว */
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
+        background-color: #005A9C; /* ปุ่มสีฟ้าเข้ม */
+        color: #FFFFFF; /* ข้อความบนปุ่มสีขาว */
     }
-
-    button:disabled {
-        background-color: #ccc; /* สีปุ่มเมื่อถูกปิดใช้งาน */
-    }
-
-
+        /* ซ่อน radio button เดิม */
     input[type="radio"] {
-        accent-color: white; /* สีจุดใน radio button */
+        display: none;
     }
 
+    /* สร้าง custom radio button */
+    label {
+        position: relative;
+        padding-left: 30px;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 24px;
+    }
 
+    label::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid #4CAF50; /* สีขอบ */
+        border-radius: 50%; /* ทำให้เป็นวงกลม */
+        background-color: transparent;
+        transition: all 0.3s ease;
+    }
+
+    /* เมื่อ radio button ถูกเลือก */
+    input[type="radio"]:checked + label::before {
+        background-color: #4CAF50; /* สีพื้นหลังเมื่อถูกเลือก */
+        border-color: #4CAF50; /* สีขอบเมื่อถูกเลือก */
+    }
+
+    /* เพิ่มจุดตรงกลาง */
+    input[type="radio"]:checked + label::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: white; /* สีจุดตรงกลาง */
+    }
+
+    /* เอฟเฟกต์ hover */
+    label:hover::before {
+        border-color: #45a049; /* สีขอบเมื่อ hover */
+    }
+</style>
 </style>
 </head>
 <body class="bg-[#90EE90] font-quicksand">
