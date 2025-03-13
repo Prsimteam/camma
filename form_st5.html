@@ -119,10 +119,18 @@
 }
 
 
-        h1, h2, h3, p, label, button {
+         h2, h3, label, button {
             font-family: 'Kanit', sans-serif;
             color: #003366; /* หัวข้อสีฟ้าเข้ม */
         }
+    h1 {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+}
+p {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 400;
+}
     /* กำหนดธีมสีใหม่ */
     body {
         background-color: #90EE90; /* พื้นหลังสีฟ้าอ่อน */
@@ -137,57 +145,64 @@
     }
 
 
-        /* ซ่อน radio button เดิม */
-    input[type="radio"] {
-        display: none;
-    }
+input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+/* ซ่อน radio button เดิม */
+input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
 
-    /* สร้าง custom radio button */
-    label {
-        position: relative;
-        padding-left: 30px;
-        cursor: pointer;
-        font-size: 16px;
-        line-height: 24px;
-    }
+/* สร้าง custom radio button */
+label {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 24px;
+}
 
-    label::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 20px;
-        height: 20px;
-        border: 2px solid #4CAF50; /* สีขอบ */
-        border-radius: 50%; /* ทำให้เป็นวงกลม */
-        background-color: transparent;
-        transition: all 0.3s ease;
-    }
+label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #4CAF50; /* สีขอบ */
+    border-radius: 50%; /* ทำให้เป็นวงกลม */
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
 
-    /* เมื่อ radio button ถูกเลือก */
-    input[type="radio"]:checked + label::before {
-        background-color: #4CAF50; /* สีพื้นหลังเมื่อถูกเลือก */
-        border-color: #4CAF50; /* สีขอบเมื่อถูกเลือก */
-    }
+/* เมื่อ radio button ถูกเลือก */
+input[type="radio"]:checked + label::before {
+    background-color: #4CAF50; /* สีพื้นหลังเมื่อถูกเลือก */
+    border-color: #4CAF50; /* สีขอบเมื่อถูกเลือก */
+}
 
-    /* เพิ่มจุดตรงกลาง */
-    input[type="radio"]:checked + label::after {
-        content: "";
-        position: absolute;
-        left: 6px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: white; /* สีจุดตรงกลาง */
-    }
+/* เพิ่มจุดตรงกลาง */
+input[type="radio"]:checked + label::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white; /* สีจุดตรงกลาง */
+}
 
-    /* เอฟเฟกต์ hover */
-    label:hover::before {
-        border-color: #45a049; /* สีขอบเมื่อ hover */
-    }
+/* เอฟเฟกต์ hover */
+label:hover::before {
+    border-color: #45a049; /* สีขอบเมื่อ hover */
+}
 </style>
 </style>
 </head>
