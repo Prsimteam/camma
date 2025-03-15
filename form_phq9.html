@@ -149,7 +149,20 @@ p {
   box-shadow: #000 2px 2px 1px;
   border-radius: 0.75em;
 }
+.c-loader{
+  animation: is-rotating 1s infinite;
+  width: 50px;
+  height: 50px;
+  border: solid 10px #dddddd;
+  border-top-color: #07e0ae;
+  border-radius: 50%;
+}
 
+@keyframes is-rotating {
+  to{
+    transform: rotate(1turn);
+  }
+}
 </style>
 </head>
 
@@ -158,12 +171,12 @@ p {
         <h1 class="text-2xl font-bold text-center mb-6">แบบประเมินภาวะซึมเศร้า (PHQ-9) </h1>
         <!-- คำถามหรือหน้าแนะนำ -->
         <div id="question-container" class="bg-white p-6 rounded-lg shadow-md">
-            <!-- เนื้อหาจะถูก inject ด้วย JavaScript -->
+            <!-- เนื้อหาจะถูก inject ด้วย JavaScript --><div class="c-loader"></div>
         </div>
         <!-- ปุ่มนำทาง -->
         <div class="flex justify-between mt-6">
             <button id="prevButton" class="bg-gray-300 bt-custom px-4 py-2 disabled:opacity-50" disabled>ย้อนกลับ</button>
-            <button id="nextButton" class="bt-custom px-4 py-2 rounded">ถัดไป</button>
+            <button id="nextButton" class="bt-custom px-4 py-2 ">ถัดไป</button>
         </div>
     </div>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
