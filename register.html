@@ -5,75 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ลงทะเบียนสมาชิก</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Prompt', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- เพิ่มฟอนต์ Quicksand --><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+.kanit-thin {
+  font-family: "Kanit", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.kanit-extralight {
+  font-family: "Kanit", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.kanit-light {
+  font-family: "Kanit", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.kanit-regular {
+  font-family: "Kanit", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.kanit-medium {
+  font-family: "Kanit", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.kanit-semibold {
+  font-family: "Kanit", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.kanit-bold {
+  font-family: "Kanit", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.kanit-extrabold {
+  font-family: "Kanit", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.kanit-black {
+  font-family: "Kanit", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.kanit-thin-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.kanit-extralight-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.kanit-light-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.kanit-regular-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.kanit-medium-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.kanit-semibold-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.kanit-bold-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.kanit-extrabold-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.kanit-black-italic {
+  font-family: "Kanit", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+
+         h2, h3, label, button {
+            font-family: 'Kanit', sans-serif;
+            color: #003366; /* หัวข้อสีฟ้าเข้ม */
         }
-        .container {
-            max-width: 400px;
-            background: white;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .container:hover {
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            transform: scale(1.02);
-        }
-        .header-gradient {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-        }
-        .profile-section {
-            background: linear-gradient(to right, #f0f4ff, #e6e9f0);
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        #profileImage {
-            border: 3px solid white;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-        .time-display {
-            background-color: #2c3e50;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none; /* ซ่อน overlay เริ่มต้น */
-        }
-        .loading-spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    h1 {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+}
+p {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 400;
+}
+    /* กำหนดธีมสีใหม่ */
+    body {
+        background-color: #90EE90; /* พื้นหลังสีฟ้าอ่อน */
+        color: #000000; /* อักษรสีขาว */
+        font-family: 'Kanit', sans-serif;
+        
+    }
+
+
+    a {
+        color: #8B0000; /* ลิงก์สีแดงเข้ม */
+    }
+.bt-custom {
+  color: #000;
+  border: solid 2px #fff;
+  box-shadow: #000 2px 2px 1px;
+  border-radius: 0.75em;
+}
+.c-loader{
+  animation: is-rotating 1s infinite;
+  width: 50px;
+  height: 50px;
+  border: solid 10px #dddddd;
+  border-top-color: #07e0ae;
+  border-radius: 50%;
+}
+
+@keyframes is-rotating {
+  to{
+    transform: rotate(1turn);
+  }
+}
+</style>
+
+
+    
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="container mx-auto">
@@ -122,7 +215,7 @@
                     <input type="text" id="department" name="department" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="flex items-center justify-center">
-                    <button type="submit" class="bg-gray-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">ลงทะเบียน</button>
+                    <button type="submit" class="bt_custom hover:bg-green-700 py-2 px-4  focus:outline-none focus:shadow-outline">ลงทะเบียน</button>
                 </div>
             </form>
         </div>
