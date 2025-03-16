@@ -329,7 +329,7 @@ p {
         // ส่ง Flex Message (ไม่เปลี่ยนแปลง)
         async function sendFlexMessage(totalScore) {
             const level = totalScore <= 4 ? "ต่ำ" : totalScore <= 7 ? "ปานกลาง" : totalScore <= 9 ? "สูง" : "สูงมาก";
-            let vbackgroundColor = level === "ต่ำ" ? "#45fa36" : level === "ปานกลาง" ? "#FFA500" : level === "สูง" ? "#9f0000" : "#8B0000";
+            let vbackgroundColor = level === "ต่ำ" ? "#90EE90" : level === "ปานกลาง" ? "#FFC100" : level === "สูง" ? "#FF4A4A" : "#E10606";
             const stressLevelDescription = {
                 "ต่ำ": `ระดับคะแนน 0 - 4 รู้สึกเครียดเล็กน้อย\n คุณอยู่ในจุดที่ความเครียดมาแวะทักทายเพียงเบาๆ เหมือนลมพัดผ่าน ซึ่งเป็นเรื่องปกติในชีวิตประจำวันเลยค่ะ ความเครียดระดับนี้ไม่ได้น่ากังวล แถมยังเป็นเหมือนแรงกระตุ้นเล็กๆ ที่ช่วยให้ท่านก้าวไปข้างหน้าได้อย่างดี ด้วยความสามารถในการปรับตัวของท่านเอง ความรู้สึกนี้จะค่อยๆ จางไปอย่างเป็นธรรมชาติ ทุกอย่างยังอยู่ในมือของคุณค่ะ`,
                 "ปานกลาง": `ระดับคะแนน 5 - 7 รู้สึกเครียดปานกลาง\n คุณอาจรู้สึกถึงความเครียดที่เข้ามาทักทายบ้างในบางจังหวะ ซึ่งเป็นสิ่งที่เกิดขึ้นได้กับทุกคนค่ะ บางครั้งอาจมีเรื่องให้คิดมากหรือกังวลใจนิดหน่อย แต่ท่านยังอยู่ในจุดที่จัดการได้ดี ความเครียดระดับนี้ไม่ได้เป็นอุปสรรคใหญ่ ลองหาเวลาผ่อนคลายในแบบที่ท่านชอบ เช่น เดินเล่น ฟังเพลง หรือพูดคุยกับคนที่ท่านไว้ใจ ทุกอย่างจะค่อยๆ เบาขึ้นด้วยวิธีที่เหมาะกับคุณเองค่ะ`,
@@ -338,49 +338,108 @@ p {
             }[level];
 
             const flexMessage = {
-                type: "flex",
-                altText: "ผลคะแนนความเครียดของคุณ",
-                contents: {
-                    type: "bubble",
-                    body: {
-                        type: "box",
-                        layout: "vertical",
-                        contents: [
-                            { type: "image", url: profilePictureUrl, size: "full", aspectMode: "cover", aspectRatio: "1:1" },
-                            {
-                                type: "box",
-                                layout: "vertical",
-                                contents: [
-                                    { type: "text", text: "ผลคะแนนความเครียด", size: "xl", weight: "bold", align: "center", margin: "md" },
-                                    {
-                                        type: "box",
-                                        layout: "vertical",
-                                        contents: [
-                                            { type: "text", text: `${totalScore}`, size: "5xl", color: "#111111", align: "center" },
-                                            { type: "text", text: "คะแนน", size: "lg", color: "#444444", align: "center" },
-                                            { type: "text", text: `ระดับความเครียด: ${level}`, size: "sm", align: "center", weight: "bold" },
-                                            { type: "separator", margin: "20px" }
-                                        ],
-                                        backgroundColor: vbackgroundColor,
-                                        cornerRadius: "xxl",
-                                        margin: "md"
-                                    },
-                                    {
-                                        type: "box",
-                                        layout: "vertical",
-                                        contents: [{ type: "text", text: stressLevelDescription, wrap: true, size: "md" }],
-                                        paddingAll: "10px",
-                                        backgroundColor: "#afffff",
-                                        cornerRadius: "20px",
-                                        margin: "lg"
-                                    }
-                                ]
-                            }
-                        ],
-                        backgroundColor: "#f6f6f6"
+    type: "flex",
+    altText: "ผลคะแนนความเครียดของคุณ",
+    contents: {
+        "type": "bubble",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "contents": [
+                    {
+                      "type": "image",
+                      "url": profilePictureUrl,
+                      "size": "full",
+                      "aspectMode": "cover",
+                      "action": {
+                        "type": "uri",
+                        "uri": "https://line.me/"
+                      },
+                      "aspectRatio": "1:1"
                     }
+                  ],
+                  "justifyContent": "center",
+                  "cornerRadius": "100px",
+                  "width": "50px",
+                  "height": "50px"
+                },
+                {
+                  "type": "text",
+                  "text": "ผลคะแนนของคุณ",
+                  "weight": "bold",
+                  "size": "lg",
+                  "align": "center"
                 }
-            };
+              ],
+              "position": "relative",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "backgroundColor": "#FFFACD",
+              "paddingAll": "5px",
+              "cornerRadius": "10px",
+              "borderWidth": "2px",
+              "borderColor": "#ffffff"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "margin": "md",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "horizontal",
+                  "contents": [
+                    {"type": "text","text": `${totalScore}`,"weight": "bold","size": "5xl","align": "center"},
+                    {
+                      "type": "box",
+                      "layout": "vertical",
+                      "contents": [
+                        {"type": "text","text": "คะแนน","weight": "bold","size": "xl"}
+                      ],
+                      "justifyContent": "center",
+                      "width": "80px"
+                    }
+                  ],
+                  "width": "180px"
+                },
+                {"type": "text","text": `ระดับความเครียด: ${level}`,"weight": "bold","size": "lg","align": "center"}
+              ],
+              "backgroundColor": vbackgroundColor,
+              "paddingAll": "5px",
+              "cornerRadius": "10px",
+              "alignItems": "center",
+              "borderWidth": "2px",
+              "borderColor": "#ffffff"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "margin": "md",
+              "contents": [
+                {"type": "text","text": stressLevelDescription,"size": "sm","wrap": true}
+              ],
+              "backgroundColor": "#FADADD",
+              "paddingAll": "5px",
+              "cornerRadius": "10px",
+              "borderWidth": "2px",
+              "borderColor": "#ffffff"
+            }
+          ],
+          "backgroundColor": "#90EE90",
+          "paddingAll": "10px"
+        },
+        "size": "kilo"
+      }
+};
 
             await liff.sendMessages([flexMessage]);
         }
