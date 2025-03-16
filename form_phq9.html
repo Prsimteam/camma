@@ -168,7 +168,7 @@ p {
 
 <body class="bg-[#90EE90]">
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold text-center mb-6">แบบประเมินภาวะซึมเศร้า (PHQ-9) </h1>
+        <h1 class="text-2xl font-bold text-center mb-6">ประเมินภาวะซึมเศร้า (PHQ-9) </h1>
         <!-- คำถามหรือหน้าแนะนำ -->
         <div id="question-container" class="bg-white p-6 rounded-lg shadow-md">
             <!-- เนื้อหาจะถูก inject ด้วย JavaScript --><div class="c-loader"></div>
@@ -207,7 +207,7 @@ p {
                 // หน้าแนะนำ
                 container.innerHTML = `
                     <h2 class="text-lg font-semibold mb-4">คำชี้แจง</h2>
-                    <p class="text-gray-700">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึกอย่างไร?...<br>โดยเลือกคำตอบที่ตรงกับความรู้สึกของท่านมากที่สุด</p>
+                    <p class="text-gray-700">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ คุณรู้สึกอย่างไร?...<br>โดยเลือกคำตอบที่ตรงกับความรู้สึกของคุณมากที่สุด</p>
                 `;
                 nextButton.textContent = 'เริ่มต้น';
                 prevButton.disabled = true;
@@ -347,7 +347,7 @@ p {
 
             const flexMessage = {
                 type: "flex",
-                altText: "ผลคะแนนความเครียดของคุณ",
+                altText: "ผลคะแนนของคุณ",
                 contents: {
                     type: "bubble",
                     body: {
@@ -359,14 +359,14 @@ p {
                                 type: "box",
                                 layout: "vertical",
                                 contents: [
-                                    { type: "text", text: "ผลคะแนนความเครียด", size: "xl", weight: "bold", align: "center", margin: "md" },
+                                    { type: "text", text: "ผลคะแนน", size: "xl", weight: "bold", align: "center", margin: "md" },
                                     {
                                         type: "box",
                                         layout: "vertical",
                                         contents: [
                                             { type: "text", text: `${totalScore}`, size: "5xl", color: "#111111", align: "center" },
                                             { type: "text", text: "คะแนน", size: "lg", color: "#444444", align: "center" },
-                                            { type: "text", text: `ระดับความเครียด: ${level}`, size: "sm", align: "center", weight: "bold" },
+                                            { type: "text", text: `อยู่ในระดับ: ${level}`, size: "sm", align: "center", weight: "bold" },
                                             { type: "separator", margin: "20px" }
                                         ],
                                         backgroundColor: vbackgroundColor,
