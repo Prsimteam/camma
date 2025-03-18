@@ -313,29 +313,30 @@
                 const scriptURL = 'https://script.google.com/macros/s/AKfycbxiunGNFoAZ_PaRoyqgO2iSN5n-Ql86J0vHhGu1WpUN24tsZnJnz4XX-0v_Zmy7s2xCBQ/exec';
 
 
-                try {
-                    await fetch(scriptURL, {
-                        method: 'POST',
-                        mode: 'no-cors', // กลับมาใช้ no-cors
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
+
+                fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).then(() => {
                     console.log('Data sent to Google Sheets (no-cors mode)');
-                    // ถ้าถึงจุดนี้โดยไม่โยน Error ถือว่าส่งสำเร็จ
-                    await sendFlexMessage(totalScore);
+                    // ถือว่าส่งสำเร็จ
+                    return sendFlexMessage(totalScore);
+                }).then(() => {
                     Swal.fire({
                         icon: 'success',
                         title: 'ส่งคำตอบสำเร็จ!',
                         text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
                     }).then(() => liff.closeWindow());
-                } catch (error) {
-                    console.error('Fetch Error:', error);
+                }).catch(error => {
+                    console.error('Error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'เกิดข้อผิดพลาด',
                         text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
                     });
-                }
+                });
 
 
             }
