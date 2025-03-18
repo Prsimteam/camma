@@ -1,217 +1,233 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ประเมินความเครียด (ST-5)</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ประเมินความเครียด (ST-5)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-<style>
-.kanit-thin {
-  font-family: "Kanit", sans-serif;
-  font-weight: 100;
-  font-style: normal;
-}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <style>
+    .kanit-thin {
+      font-family: "Kanit", sans-serif;
+      font-weight: 100;
+      font-style: normal;
+    }
 
-.kanit-extralight {
-  font-family: "Kanit", sans-serif;
-  font-weight: 200;
-  font-style: normal;
-}
+    .kanit-extralight {
+      font-family: "Kanit", sans-serif;
+      font-weight: 200;
+      font-style: normal;
+    }
 
-.kanit-light {
-  font-family: "Kanit", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-}
+    .kanit-light {
+      font-family: "Kanit", sans-serif;
+      font-weight: 300;
+      font-style: normal;
+    }
 
-.kanit-regular {
-  font-family: "Kanit", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
+    .kanit-regular {
+      font-family: "Kanit", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
 
-.kanit-medium {
-  font-family: "Kanit", sans-serif;
-  font-weight: 500;
-  font-style: normal;
-}
+    .kanit-medium {
+      font-family: "Kanit", sans-serif;
+      font-weight: 500;
+      font-style: normal;
+    }
 
-.kanit-semibold {
-  font-family: "Kanit", sans-serif;
-  font-weight: 600;
-  font-style: normal;
-}
+    .kanit-semibold {
+      font-family: "Kanit", sans-serif;
+      font-weight: 600;
+      font-style: normal;
+    }
 
-.kanit-bold {
-  font-family: "Kanit", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
+    .kanit-bold {
+      font-family: "Kanit", sans-serif;
+      font-weight: 700;
+      font-style: normal;
+    }
 
-.kanit-extrabold {
-  font-family: "Kanit", sans-serif;
-  font-weight: 800;
-  font-style: normal;
-}
+    .kanit-extrabold {
+      font-family: "Kanit", sans-serif;
+      font-weight: 800;
+      font-style: normal;
+    }
 
-.kanit-black {
-  font-family: "Kanit", sans-serif;
-  font-weight: 900;
-  font-style: normal;
-}
+    .kanit-black {
+      font-family: "Kanit", sans-serif;
+      font-weight: 900;
+      font-style: normal;
+    }
 
-.kanit-thin-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 100;
-  font-style: italic;
-}
+    .kanit-thin-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 100;
+      font-style: italic;
+    }
 
-.kanit-extralight-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 200;
-  font-style: italic;
-}
+    .kanit-extralight-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 200;
+      font-style: italic;
+    }
 
-.kanit-light-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
+    .kanit-light-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 300;
+      font-style: italic;
+    }
 
-.kanit-regular-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
+    .kanit-regular-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 400;
+      font-style: italic;
+    }
 
-.kanit-medium-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 500;
-  font-style: italic;
-}
+    .kanit-medium-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 500;
+      font-style: italic;
+    }
 
-.kanit-semibold-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 600;
-  font-style: italic;
-}
+    .kanit-semibold-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 600;
+      font-style: italic;
+    }
 
-.kanit-bold-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
+    .kanit-bold-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 700;
+      font-style: italic;
+    }
 
-.kanit-extrabold-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 800;
-  font-style: italic;
-}
+    .kanit-extrabold-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 800;
+      font-style: italic;
+    }
 
-.kanit-black-italic {
-  font-family: "Kanit", sans-serif;
-  font-weight: 900;
-  font-style: italic;
-}
+    .kanit-black-italic {
+      font-family: "Kanit", sans-serif;
+      font-weight: 900;
+      font-style: italic;
+    }
 
 
-         h2, h3, label, button {
-            font-family: 'Kanit', sans-serif;
-            color: #003366; /* หัวข้อสีฟ้าเข้ม */
-        }
+    h2,
+    h3,
+    label,
+    button {
+      font-family: 'Kanit', sans-serif;
+      color: #003366;
+      /* หัวข้อสีฟ้าเข้ม */
+    }
+
     h1 {
-    font-family: 'Kanit', sans-serif;
-    font-weight: 700;
-}
-p {
-    font-family: 'Kanit', sans-serif;
-    font-weight: 400;
-}
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+    }
+
+    p {
+      font-family: 'Kanit', sans-serif;
+      font-weight: 400;
+    }
+
     /* กำหนดธีมสีใหม่ */
     body {
-        background-color: #90EE90; /* พื้นหลังสีฟ้าอ่อน */
-        color: #000000; /* อักษรสีขาว */
-        font-family: 'Kanit', sans-serif;
-        
+      background-color: #90EE90;
+      /* พื้นหลังสีฟ้าอ่อน */
+      color: #000000;
+      /* อักษรสีขาว */
+      font-family: 'Kanit', sans-serif;
+
     }
 
 
     a {
-        color: #8B0000; /* ลิงก์สีแดงเข้ม */
+      color: #8B0000;
+      /* ลิงก์สีแดงเข้ม */
     }
-.bt-custom {
-  color: #000;
-  border: solid 2px #fff;
-  box-shadow: #000 2px 2px 1px;
-  border-radius: 0.75em;
-}
-.c-loader{
-  animation: is-rotating 1s infinite;
-  width: 50px;
-  height: 50px;
-  border: solid 10px #dddddd;
-  border-top-color: #07e0ae;
-  border-radius: 50%;
-}
 
-@keyframes is-rotating {
-  to{
-    transform: rotate(1turn);
-  }
-}
-</style>
+    .bt-custom {
+      color: #000;
+      border: solid 2px #fff;
+      box-shadow: #000 2px 2px 1px;
+      border-radius: 0.75em;
+    }
+
+    .c-loader {
+      animation: is-rotating 1s infinite;
+      width: 50px;
+      height: 50px;
+      border: solid 10px #dddddd;
+      border-top-color: #07e0ae;
+      border-radius: 50%;
+    }
+
+    @keyframes is-rotating {
+      to {
+        transform: rotate(1turn);
+      }
+    }
+  </style>
 </head>
 
 <body class="bg-[#90EE90]">
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl text-center mb-6">ประเมินความเครียด (ST-5)</h1>
-        <!-- คำถามหรือหน้าแนะนำ -->
-        <div id="question-container" class="bg-white p-6 rounded-lg shadow-md">
-            <!-- เนื้อหาจะถูก inject ด้วย JavaScript -->
-        </div>
-        <!-- ปุ่มนำทาง -->
-        <div class="flex justify-between mt-6">
-            <button id="prevButton" class="bg-gray-300 text-gray-700 px-4 py-2 bt-custom disabled:opacity-50" disabled>ย้อนกลับ</button>
-            <button id="nextButton" class="bt-custom text-black px-4 py-2 ">ถัดไป</button>
-        </div>
+  <div class="container mx-auto p-4">
+    <h1 class="text-2xl text-center mb-6">ประเมินความเครียด (ST-5)</h1>
+    <!-- คำถามหรือหน้าแนะนำ -->
+    <div id="question-container" class="bg-white p-6 rounded-lg shadow-md">
+      <!-- เนื้อหาจะถูก inject ด้วย JavaScript -->
     </div>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        // คำถามทั้ง 5 ข้อ
-        const questions = [
-            { id: "question1", text: "คุณรู้สึกหงุดหงิด โกรธง่าย" },
-            { id: "question2", text: "คุณรู้สึกท้อแท้ เบื่อหน่าย" },
-            { id: "question3", text: "คุณรู้สึกเครียดหรือกังวล" },
-            { id: "question4", text: "คุณนอนหลับยากกว่าปกติ" },
-            { id: "question5", text: "คุณรู้สึกเหนื่อยล้า อ่อนเพลีย" }
-        ];
+    <!-- ปุ่มนำทาง -->
+    <div class="flex justify-between mt-6">
+      <button id="prevButton" class="bg-gray-300 text-gray-700 px-4 py-2 bt-custom disabled:opacity-50"
+        disabled>ย้อนกลับ</button>
+      <button id="nextButton" class="bt-custom text-black px-4 py-2 ">ถัดไป</button>
+    </div>
+  </div>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    // คำถามทั้ง 5 ข้อ
+    const questions = [
+      { id: "question1", text: "คุณรู้สึกหงุดหงิด โกรธง่าย" },
+      { id: "question2", text: "คุณรู้สึกท้อแท้ เบื่อหน่าย" },
+      { id: "question3", text: "คุณรู้สึกเครียดหรือกังวล" },
+      { id: "question4", text: "คุณนอนหลับยากกว่าปกติ" },
+      { id: "question5", text: "คุณรู้สึกเหนื่อยล้า อ่อนเพลีย" }
+    ];
 
-        let currentPage = -1; // เริ่มจากหน้าแนะนำ (-1)
-        const answers = {}; // เก็บคำตอบ
+    let currentPage = -1; // เริ่มจากหน้าแนะนำ (-1)
+    const answers = {}; // เก็บคำตอบ
 
-        // โหลดหน้าแนะนำหรือคำถาม
-        function loadPage(page) {
-            const container = document.getElementById('question-container');
-            const nextButton = document.getElementById('nextButton');
-            const prevButton = document.getElementById('prevButton');
+    // โหลดหน้าแนะนำหรือคำถาม
+    function loadPage(page) {
+      const container = document.getElementById('question-container');
+      const nextButton = document.getElementById('nextButton');
+      const prevButton = document.getElementById('prevButton');
 
-            if (page === -1) {
-                // หน้าแนะนำ
-                container.innerHTML = `
+      if (page === -1) {
+        // หน้าแนะนำ
+        container.innerHTML = `
                     <h2 class="text-lg font-semibold mb-4">คำชี้แจง</h2>
                     <p class="text-gray-700">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ คุณรู้สึกอย่างไร?...<br>โดยเลือกคำตอบที่ตรงกับความรู้สึกของคุณมากที่สุด</p>
                 `;
-                nextButton.textContent = 'เริ่มต้น';
-                prevButton.disabled = true;
-            } else {
-                // หน้าคำถาม
-                const question = questions[page];
-                container.innerHTML = `
+        nextButton.textContent = 'เริ่มต้น';
+        prevButton.disabled = true;
+      } else {
+        // หน้าคำถาม
+        const question = questions[page];
+        container.innerHTML = `
                     <h2 class="text-lg font-semibold mb-4">ข้อที่ ${page + 1}: ${question.text}</h2>
                     <div class="space-y-2">
                         <label class="block"><input type="radio" name="${question.id}" value="0" class="mr-2"> ไม่เลย </label>
@@ -220,233 +236,234 @@ p {
                         <label class="block"><input type="radio" name="${question.id}" value="3" class="mr-2"> มาก </label>
                     </div>
                 `;
-                nextButton.textContent = page === questions.length - 1 ? 'ส่งคำตอบ' : 'ถัดไป';
-                prevButton.disabled = page === 0; // ปิดปุ่มย้อนกลับที่คำถามแรก
-            }
-        }
-
-        // บันทึกคำตอบ
-        function saveAnswer() {
-            if (currentPage >= 0) {
-                const questionId = questions[currentPage].id;
-                const selected = document.querySelector(`input[name="${questionId}"]:checked`);
-                if (selected) {
-                    answers[questionId] = parseInt(selected.value);
-                }
-            }
-        }
-
-        // เริ่มต้น LIFF
-        let profilePictureUrl = 'https://via.placeholder.com/200';
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: '2006670422-3b8vmOqK' });
-                if (!liff.isLoggedIn()) {
-                    liff.login();
-                } else {
-                    const profile = await liff.getProfile();
-                    profilePictureUrl = profile.pictureUrl || 'https://via.placeholder.com/200';
-                    if (!liff.isInClient()) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'กรุณาเปิดใน LINE',
-                            text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
-                        });
-                    }
-                    loadPage(currentPage); // โหลดหน้าแนะนำ
-                }
-            } catch (error) {
-                console.error('LIFF Error:', error);
-                Swal.fire({ icon: 'error', title: 'ไม่สามารถเชื่อมต่อ LINE ได้', text: error.message });
-            }
-        }
-
-        // ปุ่มถัดไป
-        document.getElementById('nextButton').addEventListener('click', async () => {
-            if (currentPage >= 0) {
-                saveAnswer();
-                if (!answers[questions[currentPage].id] && answers[questions[currentPage].id] !== 0) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'กรุณาตอบคำถาม',
-                        text: 'คุณยังไม่ได้เลือกคำตอบ'
-                    });
-                    return;
-                }
-            }
-
-            if (currentPage < questions.length - 1) {
-                currentPage++;
-                loadPage(currentPage);
-            } else if (currentPage === questions.length - 1) {
-                // ส่งข้อมูลเมื่อถึงหน้าสุดท้าย
-                const totalScore = Object.values(answers).reduce((sum, val) => sum + val, 0);
-                const data = {
-                    userId: liff.getDecodedIDToken()?.sub || 'unknown',
-                    question1: answers.question1,
-                    question2: answers.question2,
-                    question3: answers.question3,
-                    question4: answers.question4,
-                    question5: answers.question5,
-                    totalScore: totalScore
-                };
-
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbxm2PlUDvQ8RmYTH-l-g6Gi_J3hwgHmhByQ1y3q4fIWEgNZPotzfj7jkMwohBzxkvm4tg/exec';
-
-                try {
-                    await fetch(scriptURL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-                    sendFlexMessage(totalScore);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'ส่งคำตอบสำเร็จ!',
-                        text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
-                    }).then(() => liff.closeWindow());
-                } catch (error) {
-                    console.error('Fetch Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'เกิดข้อผิดพลาด',
-                        text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
-                    });
-                }
-            }
-        });
-
-        // ปุ่มย้อนกลับ
-        document.getElementById('prevButton').addEventListener('click', () => {
-            saveAnswer();
-            if (currentPage > -1) {
-                currentPage--;
-                loadPage(currentPage);
-            }
-        });
-
-        // ส่ง Flex Message (ไม่เปลี่ยนแปลง)
-        async function sendFlexMessage(totalScore) {
-            const level = totalScore <= 4 ? "ต่ำ" : totalScore <= 7 ? "ปานกลาง" : totalScore <= 9 ? "สูง" : "สูงมาก";
-            let vbackgroundColor = level === "ต่ำ" ? "#90EE90" : level === "ปานกลาง" ? "#FFC100" : level === "สูง" ? "#FF4A4A" : "#E10606";
-            const stressLevelDescription = {
-                "ต่ำ": `ระดับคะแนน 0 - 4 รู้สึกเครียดเล็กน้อย\n คุณอยู่ในจุดที่ความเครียดมาแวะทักทายเพียงเบาๆ เหมือนลมพัดผ่าน ซึ่งเป็นเรื่องปกติในชีวิตประจำวันเลยค่ะ ความเครียดระดับนี้ไม่ได้น่ากังวล แถมยังเป็นเหมือนแรงกระตุ้นเล็กๆ ที่ช่วยให้ท่านก้าวไปข้างหน้าได้อย่างดี ด้วยความสามารถในการปรับตัวของท่านเอง ความรู้สึกนี้จะค่อยๆ จางไปอย่างเป็นธรรมชาติ ทุกอย่างยังอยู่ในมือของคุณค่ะ`,
-                "ปานกลาง": `ระดับคะแนน 5 - 7 รู้สึกเครียดปานกลาง\n คุณอาจรู้สึกถึงความเครียดที่เข้ามาทักทายบ้างในบางจังหวะ ซึ่งเป็นสิ่งที่เกิดขึ้นได้กับทุกคนค่ะ บางครั้งอาจมีเรื่องให้คิดมากหรือกังวลใจนิดหน่อย แต่ท่านยังอยู่ในจุดที่จัดการได้ดี ความเครียดระดับนี้ไม่ได้เป็นอุปสรรคใหญ่ ลองหาเวลาผ่อนคลายในแบบที่ท่านชอบ เช่น เดินเล่น ฟังเพลง หรือพูดคุยกับคนที่ท่านไว้ใจ ทุกอย่างจะค่อยๆ เบาขึ้นด้วยวิธีที่เหมาะกับคุณเองค่ะ`,
-                "สูง": `ระดับคะแนน 8 - 9 รู้สึกเครียดมาก\n ช่วงนี้คุณอาจรู้สึกกำลังเผชิญกับสิ่งที่ท้าทายอยู่ค่ะ ไม่เป็นไรเลยนะคะ ความรู้สึกแบบนี้บอกว่าท่านใส่ใจและพยายามอย่างเต็มที่ ลองเริ่มจากอะไรเล็กๆ ที่ช่วยให้รู้สึกดีขึ้นได้ เช่น หางานอดิเรกทำ ออกกำลังกายเบาๆ พักผ่อนให้เพียงพอ หายใจลึกๆ ช้าๆ เล่าเรื่องในใจให้คนใกล้ตัวฟัง หรือคนที่พร้อมรับฟัง เช่น เพื่อน หรือผู้ให้คำปรึกษา และการให้กำลังใจตัวเองว่าเราจะฝ่าฟันอุปสรรค์ครั้งนี้ไปได้ จะช่วยให้ท่านรู้สึกเบาขึ้นได้เยอะเลยค่ะ คุณไม่ได้อยู่คนเดียวนะคะ`,
-                "สูงมาก": `ระดับคะแนน 10 - 15 รู้สึกเครียดมากที่สุด\n ความเครียดนี้เกิดขึ้นได้กับทุกคนที่กำลังเผชิญกับความยากลำบากต่างๆ แต่สามารถดูแลเยียวยาให้หายได้ด้วยการปฏิบัติตัวง่ายๆ เช่น ลองหยุดพักสัดนิด หายใจให้เต็มที่ หางานอดิเรกทำ ออกกำลังกายเบาๆ หรือฝึกสมาธิ เป็นต้น ไม่ควรอยู่แต่กับตัวเอง ควรพบปะสโมสรกับผู้คนที่สนิทสนม หรือติดต่อคนที่พร้อมจะฟังท่าน หรือผู้ให้คำปรึกษาในหน่วยงานต่างๆ ที่พร้อมช่วยเหลือ หากมีอาการนอนไม่หลับ สมุนไพรที่ช่วยให้หลับได้ เช่น แกงขี้เหล็ก การเล่นหรือรับฟังดนตรีที่ผ่อนคลาย หากมีปัญหาถึงขั้นปวดศีรษะรุนแรงอย่างต่อเนื่อง นอนไม่หลับติดต่อกันหลายวัน หรือมีอาการความดันโลหิตสูงร่วมด้วยควรจะไปพบแพทย์ ท่านสมควรได้รับการสนับสนุนในตอนนี้ เราเดินไปด้วยกันนะคะ`
-            }[level];
-
-
-            const flexMessage = {
-    type: "flex",
-    altText: "ผลคะแนนความเครียดของคุณ",
-    contents: {
-        "type": "bubble",
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "margin": "md",
-              "contents": [
-                {
-                  "type": "box",
-                  "layout": "vertical",
-                  "contents": [
-                    {
-                      "type": "image",
-                      "url": profilePictureUrl,
-                      "size": "full",
-                      "aspectMode": "cover",
-                      "action": {
-                        "type": "uri",
-                        "uri": "https://line.me/"
-                      },
-                      "aspectRatio": "1:1"
-                    }
-                  ],
-                  "justifyContent": "center",
-                  "cornerRadius": "100px",
-                  "width": "50px",
-                  "height": "50px"
-                },
-                {
-                  "type": "text",
-                  "text": "ผลคะแนนของคุณ",
-                  "weight": "bold",
-                  "size": "lg",
-                  "align": "center"
-                }
-              ],
-              "position": "relative",
-              "justifyContent": "center",
-              "alignItems": "center",
-              "backgroundColor": "#FFFACD",
-              "paddingAll": "5px",
-              "cornerRadius": "10px",
-              "borderWidth": "2px",
-              "borderColor": "#ffffff"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "margin": "md",
-              "contents": [
-                {
-                  "type": "box",
-                  "layout": "horizontal",
-                  "contents": [
-                    {"type": "text","text": `${totalScore}`,"weight": "bold","size": "5xl","align": "center"},
-                    {
-                      "type": "box",
-                      "layout": "vertical",
-                      "contents": [
-                        {"type": "text","text": "คะแนน","weight": "bold","size": "xl"}
-                      ],
-                      "justifyContent": "center",
-                      "width": "80px"
-                    }
-                  ],
-                  "width": "180px"
-                },
-                {"type": "text","text": `ระดับความเครียด: ${level}`,"weight": "bold","size": "lg","align": "center"}
-              ],
-              "backgroundColor": vbackgroundColor,
-              "paddingAll": "5px",
-              "cornerRadius": "10px",
-              "alignItems": "center",
-              "borderWidth": "2px",
-              "borderColor": "#ffffff"
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "margin": "md",
-              "contents": [
-                {"type": "text","text": stressLevelDescription,"size": "sm","wrap": true}
-              ],
-              "backgroundColor": "#FADADD",
-              "paddingAll": "5px",
-              "cornerRadius": "10px",
-              "borderWidth": "2px",
-              "borderColor": "#ffffff"
-            }
-          ],
-          "backgroundColor": "#90EE90",
-          "paddingAll": "10px"
-        },
-        "size": "kilo"
+        nextButton.textContent = page === questions.length - 1 ? 'ส่งคำตอบ' : 'ถัดไป';
+        prevButton.disabled = page === 0; // ปิดปุ่มย้อนกลับที่คำถามแรก
       }
-};
+    }
 
-            await liff.sendMessages([flexMessage]);
+    // บันทึกคำตอบ
+    function saveAnswer() {
+      if (currentPage >= 0) {
+        const questionId = questions[currentPage].id;
+        const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+        if (selected) {
+          answers[questionId] = parseInt(selected.value);
         }
+      }
+    }
 
-        // เริ่มต้น
-        initializeLiff();
-    </script>
+    // เริ่มต้น LIFF
+    let profilePictureUrl = 'https://via.placeholder.com/200';
+    async function initializeLiff() {
+      try {
+        await liff.init({ liffId: '2006670422-3b8vmOqK' });
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          const profile = await liff.getProfile();
+          profilePictureUrl = profile.pictureUrl || 'https://via.placeholder.com/200';
+          if (!liff.isInClient()) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'กรุณาเปิดใน LINE',
+              text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
+            });
+          }
+          loadPage(currentPage); // โหลดหน้าแนะนำ
+        }
+      } catch (error) {
+        console.error('LIFF Error:', error);
+        Swal.fire({ icon: 'error', title: 'ไม่สามารถเชื่อมต่อ LINE ได้', text: error.message });
+      }
+    }
+
+    // ปุ่มถัดไป
+    document.getElementById('nextButton').addEventListener('click', async () => {
+      if (currentPage >= 0) {
+        saveAnswer();
+        if (!answers[questions[currentPage].id] && answers[questions[currentPage].id] !== 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'กรุณาตอบคำถาม',
+            text: 'คุณยังไม่ได้เลือกคำตอบ'
+          });
+          return;
+        }
+      }
+
+      if (currentPage < questions.length - 1) {
+        currentPage++;
+        loadPage(currentPage);
+      } else if (currentPage === questions.length - 1) {
+        // ส่งข้อมูลเมื่อถึงหน้าสุดท้าย
+        const totalScore = Object.values(answers).reduce((sum, val) => sum + val, 0);
+        const data = {
+          userId: liff.getDecodedIDToken()?.sub || 'unknown',
+          question1: answers.question1,
+          question2: answers.question2,
+          question3: answers.question3,
+          question4: answers.question4,
+          question5: answers.question5,
+          totalScore: totalScore
+        };
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxm2PlUDvQ8RmYTH-l-g6Gi_J3hwgHmhByQ1y3q4fIWEgNZPotzfj7jkMwohBzxkvm4tg/exec';
+
+        try {
+          await fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          sendFlexMessage(totalScore);
+          Swal.fire({
+            icon: 'success',
+            title: 'ส่งคำตอบสำเร็จ!',
+            text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
+          }).then(() => liff.closeWindow());
+        } catch (error) {
+          console.error('Fetch Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
+          });
+        }
+      }
+    });
+
+    // ปุ่มย้อนกลับ
+    document.getElementById('prevButton').addEventListener('click', () => {
+      saveAnswer();
+      if (currentPage > -1) {
+        currentPage--;
+        loadPage(currentPage);
+      }
+    });
+
+    // ส่ง Flex Message (ไม่เปลี่ยนแปลง)
+    async function sendFlexMessage(totalScore) {
+      const level = totalScore <= 4 ? "ต่ำ" : totalScore <= 7 ? "ปานกลาง" : totalScore <= 9 ? "สูง" : "สูงมาก";
+      let vbackgroundColor = level === "ต่ำ" ? "#90EE90" : level === "ปานกลาง" ? "#FFC100" : level === "สูง" ? "#FF4A4A" : "#E10606";
+      const stressLevelDescription = {
+        "ต่ำ": `ระดับคะแนน 0 - 4 รู้สึกเครียดเล็กน้อย\n คุณอยู่ในจุดที่ความเครียดมาแวะทักทายเพียงเบาๆ เหมือนลมพัดผ่าน ซึ่งเป็นเรื่องปกติในชีวิตประจำวันเลยค่ะ ความเครียดระดับนี้ไม่ได้น่ากังวล แถมยังเป็นเหมือนแรงกระตุ้นเล็กๆ ที่ช่วยให้ท่านก้าวไปข้างหน้าได้อย่างดี ด้วยความสามารถในการปรับตัวของท่านเอง ความรู้สึกนี้จะค่อยๆ จางไปอย่างเป็นธรรมชาติ ทุกอย่างยังอยู่ในมือของคุณค่ะ`,
+        "ปานกลาง": `ระดับคะแนน 5 - 7 รู้สึกเครียดปานกลาง\n คุณอาจรู้สึกถึงความเครียดที่เข้ามาทักทายบ้างในบางจังหวะ ซึ่งเป็นสิ่งที่เกิดขึ้นได้กับทุกคนค่ะ บางครั้งอาจมีเรื่องให้คิดมากหรือกังวลใจนิดหน่อย แต่ท่านยังอยู่ในจุดที่จัดการได้ดี ความเครียดระดับนี้ไม่ได้เป็นอุปสรรคใหญ่ ลองหาเวลาผ่อนคลายในแบบที่ท่านชอบ เช่น เดินเล่น ฟังเพลง หรือพูดคุยกับคนที่ท่านไว้ใจ ทุกอย่างจะค่อยๆ เบาขึ้นด้วยวิธีที่เหมาะกับคุณเองค่ะ`,
+        "สูง": `ระดับคะแนน 8 - 9 รู้สึกเครียดมาก\n ช่วงนี้คุณอาจรู้สึกกำลังเผชิญกับสิ่งที่ท้าทายอยู่ค่ะ ไม่เป็นไรเลยนะคะ ความรู้สึกแบบนี้บอกว่าท่านใส่ใจและพยายามอย่างเต็มที่ ลองเริ่มจากอะไรเล็กๆ ที่ช่วยให้รู้สึกดีขึ้นได้ เช่น หางานอดิเรกทำ ออกกำลังกายเบาๆ พักผ่อนให้เพียงพอ หายใจลึกๆ ช้าๆ เล่าเรื่องในใจให้คนใกล้ตัวฟัง หรือคนที่พร้อมรับฟัง เช่น เพื่อน หรือผู้ให้คำปรึกษา และการให้กำลังใจตัวเองว่าเราจะฝ่าฟันอุปสรรค์ครั้งนี้ไปได้ จะช่วยให้ท่านรู้สึกเบาขึ้นได้เยอะเลยค่ะ คุณไม่ได้อยู่คนเดียวนะคะ`,
+        "สูงมาก": `ระดับคะแนน 10 - 15 รู้สึกเครียดมากที่สุด\n ความเครียดนี้เกิดขึ้นได้กับทุกคนที่กำลังเผชิญกับความยากลำบากต่างๆ แต่สามารถดูแลเยียวยาให้หายได้ด้วยการปฏิบัติตัวง่ายๆ เช่น ลองหยุดพักสัดนิด หายใจให้เต็มที่ หางานอดิเรกทำ ออกกำลังกายเบาๆ หรือฝึกสมาธิ เป็นต้น ไม่ควรอยู่แต่กับตัวเอง ควรพบปะสโมสรกับผู้คนที่สนิทสนม หรือติดต่อคนที่พร้อมจะฟังท่าน หรือผู้ให้คำปรึกษาในหน่วยงานต่างๆ ที่พร้อมช่วยเหลือ หากมีอาการนอนไม่หลับ สมุนไพรที่ช่วยให้หลับได้ เช่น แกงขี้เหล็ก การเล่นหรือรับฟังดนตรีที่ผ่อนคลาย หากมีปัญหาถึงขั้นปวดศีรษะรุนแรงอย่างต่อเนื่อง นอนไม่หลับติดต่อกันหลายวัน หรือมีอาการความดันโลหิตสูงร่วมด้วยควรจะไปพบแพทย์ ท่านสมควรได้รับการสนับสนุนในตอนนี้ เราเดินไปด้วยกันนะคะ`
+      }[level];
+
+
+      const flexMessage = {
+        type: "flex",
+        altText: "ผลคะแนนความเครียดของคุณ",
+        contents: {
+          "type": "bubble",
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "margin": "md",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                      {
+                        "type": "image",
+                        "url": profilePictureUrl,
+                        "size": "full",
+                        "aspectMode": "cover",
+                        "action": {
+                          "type": "uri",
+                          "uri": "https://line.me/R/oaMessage/@466kmqzg/?การประเมินตนเอง"
+                        },
+                        "aspectRatio": "1:1"
+                      }
+                    ],
+                    "justifyContent": "center",
+                    "cornerRadius": "100px",
+                    "width": "50px",
+                    "height": "50px"
+                  },
+                  {
+                    "type": "text",
+                    "text": "ผลคะแนนของคุณ",
+                    "weight": "bold",
+                    "size": "lg",
+                    "align": "center"
+                  }
+                ],
+                "position": "relative",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "backgroundColor": "#FFFACD",
+                "paddingAll": "5px",
+                "cornerRadius": "10px",
+                "borderWidth": "2px",
+                "borderColor": "#ffffff"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "md",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      { "type": "text", "text": `${totalScore}`, "weight": "bold", "size": "5xl", "align": "center" },
+                      {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                          { "type": "text", "text": "คะแนน", "weight": "bold", "size": "xl" }
+                        ],
+                        "justifyContent": "center",
+                        "width": "80px"
+                      }
+                    ],
+                    "width": "180px"
+                  },
+                  { "type": "text", "text": `ระดับความเครียด: ${level}`, "weight": "bold", "size": "lg", "align": "center" }
+                ],
+                "backgroundColor": vbackgroundColor,
+                "paddingAll": "5px",
+                "cornerRadius": "10px",
+                "alignItems": "center",
+                "borderWidth": "2px",
+                "borderColor": "#ffffff"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "md",
+                "contents": [
+                  { "type": "text", "text": stressLevelDescription, "size": "sm", "wrap": true }
+                ],
+                "backgroundColor": "#FADADD",
+                "paddingAll": "5px",
+                "cornerRadius": "10px",
+                "borderWidth": "2px",
+                "borderColor": "#ffffff"
+              }
+            ],
+            "backgroundColor": "#90EE90",
+            "paddingAll": "10px"
+          },
+          "size": "kilo"
+        }
+      };
+
+      await liff.sendMessages([flexMessage]);
+    }
+
+    // เริ่มต้น
+    initializeLiff();
+  </script>
 </body>
+
 </html>
