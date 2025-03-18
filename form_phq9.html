@@ -194,6 +194,7 @@
             <button id="prevButton" class="bg-gray-300 bt-custom px-4 py-2 disabled:opacity-50"
                 disabled>ย้อนกลับ</button>
             <button id="nextButton" class="bt-custom px-4 py-2 ">ถัดไป</button>
+            <button id="testMessage" class="bt-custom px-4 py-2">ทดสอบส่งข้อความ</button>
         </div>
     </div>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -287,6 +288,23 @@
             }
         }
 
+// Begin
+
+document.getElementById('testMessage').addEventListener('click', async () => {
+    if (!liff.isInClient()) {
+        Swal.fire({ icon: 'warning', title: 'กรุณาเปิดใน LINE' });
+        return;
+    }
+    try {
+        await liff.sendMessages([{ type: "text", text: "ทดสอบการส่งข้อความ" }]);
+        Swal.fire({ icon: 'success', title: 'ส่งข้อความสำเร็จ' });
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({ icon: 'error', title: 'ไม่สามารถส่งได้', text: error.message });
+    }
+});
+
+// End
         // ปุ่มถัดไป
         document.getElementById('nextButton').addEventListener('click', async () => {
             if (currentPage >= 0) {
