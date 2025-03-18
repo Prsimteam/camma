@@ -311,30 +311,27 @@
                 };
 
                 const scriptURL = 'https://script.google.com/macros/s/AKfycbxiunGNFoAZ_PaRoyqgO2iSN5n-Ql86J0vHhGu1WpUN24tsZnJnz4XX-0v_Zmy7s2xCBQ/exec';
+
                 try {
-                    await fetch(scriptURL, {
+                    const response = await fetch(scriptURL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
                     });
-                    console.log('Data sent to Google Sheets');
-                    try {
-                        await sendFlexMessage(totalScore); // แยก Error Handling
+                    const result = await response.json(); // อ่าน Response
+                    console.log('Response from Google Script:', result);
+                    if (response.ok) {
+                        await sendFlexMessage(totalScore);
                         Swal.fire({
                             icon: 'success',
                             title: 'ส่งคำตอบสำเร็จ!',
                             text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
                         }).then(() => liff.closeWindow());
-                    } catch (sendError) {
-                        console.error('Send Message Error:', sendError);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'ส่งข้อมูลสำเร็จ แต่ส่งข้อความ LINE ล้มเหลว',
-                            text: sendError.message
-                        });
+                    } else {
+                        throw new Error('Server returned an error');
                     }
-                } catch (fetchError) {
-                    console.error('Fetch Error:', fetchError);
+                } catch (error) {
+                    console.error('Fetch Error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'เกิดข้อผิดพลาด',
