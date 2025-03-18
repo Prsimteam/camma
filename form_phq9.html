@@ -333,62 +333,122 @@ p {
                 loadPage(currentPage);
             }
         });
-
         // ส่ง Flex Message (ไม่เปลี่ยนแปลง)
         async function sendFlexMessage(totalScore) {
-            const level = totalScore <= 4 ? "ต่ำ" : totalScore <= 7 ? "ปานกลาง" : totalScore <= 9 ? "สูง" : "สูงมาก";
-            let vbackgroundColor = level === "ต่ำ" ? "#45fa36" : level === "ปานกลาง" ? "#FFA500" : level === "สูง" ? "#9f0000" : "#8B0000";
+            const level = totalScore <= 6 ? "ต่ำ" : totalScore <= 12 ? "ปานกลาง" : totalScore <= 18 ? "สูง" : "สูงมาก";
+            let vbackgroundColor = level === "ต่ำ" ? "#90EE90" : level === "ปานกลาง" ? "#FFC100" : level === "สูง" ? "#FF4A4A" : "#E10606";
+
             const stressLevelDescription = {
                 "คะแนน 0-6": `ผลการประเมินของคุณอยู่ในระดับที่ไม่มีภาวะซึมเศร้า ซึ่งเป็นเรื่องที่น่ายินดีมากค่ะ คุณสามารถดูแลสุขภาพจิตใจของคุณได้เป็นอย่างดี`,
                 "คะแนน 7-12": `ผลการประเมินของคุณบ่งชี้ว่าคุณมีภาวะซึมเศร้าระดับน้อย ซึ่งเป็นสัญญาณเตือนให้คุณหันมาดูแลสุขภาพจิตใจของตัวเองมากขึ้น ลองหากิจกรรมที่ช่วยผ่อนคลายความเครียด เช่น การออกกำลังกาย การฟังเพลง หรือการพูดคุยกับคนที่คุณไว้ใจ หากคุณรู้สึกว่าความเครียดเริ่มส่งผลกระทบต่อการใช้ชีวิตประจำวัน ลองปรึกษาผู้เชี่ยวชาญเพื่อขอคำแนะนำเพิ่มเติมนะคะ`,
                 "คะแนน 13-18": `ผลการประเมินของคุณบ่งชี้ว่าคุณมีภาวะซึมเศร้าระดับปานกลาง ซึ่งอาจส่งผลต่อการใช้ชีวิตประจำวันของคุณได้ ดิฉันแนะนำให้คุณปรึกษาผู้เชี่ยวชาญด้านสุขภาพจิต เพื่อรับการวินิจฉัยและการรักษาที่เหมาะสม การขอความช่วยเหลือไม่ใช่เรื่องน่าอาย และเป็นสัญญาณของความเข้มแข็งนะคะ`,
-                "คะแนน ≥19": `ผลการประเมินของคุณบ่งชี้ว่าคุณมีภาวะซึมเศร้าระดับปานกลาง ซึ่งอาจส่งผลต่อการใช้ชีวิตประจำวันของคุณได้ ดิฉันแนะนำให้คุณปรึกษาผู้เชี่ยวชาญด้านสุขภาพจิต เพื่อรับการวินิจฉัยและการรักษาที่เหมาะสม การขอความช่วยเหลือไม่ใช่เรื่องน่าอาย และเป็นสัญญาณของความเข้มแข็งนะคะ`
+                "คะแนน ≥19": `ผลการประเมินของคุณบ่งชี้ว่าคุณมีภาวะซึมเศร้าระดับรุนแรง ซึ่งจำเป็นต้องได้รับการดูแลจากผู้เชี่ยวชาญโดยเร็วที่สุด ดิฉันแนะนำให้คุณปรึกษาจิตแพทย์หรือผู้ให้คำปรึกษา เพื่อรับการวินิจฉัยและการรักษาที่เหมาะสม การขอความช่วยเหลือเป็นสิ่งสำคัญอย่างยิ่งในการดูแลสุขภาพจิตใจของคุณ`
             }[level];
 
             const flexMessage = {
-                type: "flex",
-                altText: "ผลคะแนนของคุณ",
-                contents: {
-                    type: "bubble",
-                    body: {
-                        type: "box",
-                        layout: "vertical",
-                        contents: [
-                            { type: "image", url: profilePictureUrl, size: "full", aspectMode: "cover", aspectRatio: "1:1" },
-                            {
-                                type: "box",
-                                layout: "vertical",
-                                contents: [
-                                    { type: "text", text: "ผลคะแนน", size: "xl", weight: "bold", align: "center", margin: "md" },
-                                    {
-                                        type: "box",
-                                        layout: "vertical",
-                                        contents: [
-                                            { type: "text", text: `${totalScore}`, size: "5xl", color: "#111111", align: "center" },
-                                            { type: "text", text: "คะแนน", size: "lg", color: "#444444", align: "center" },
-                                            { type: "text", text: `อยู่ในระดับ: ${level}`, size: "sm", align: "center", weight: "bold" },
-                                            { type: "separator", margin: "20px" }
-                                        ],
-                                        backgroundColor: vbackgroundColor,
-                                        cornerRadius: "xxl",
-                                        margin: "md"
-                                    },
-                                    {
-                                        type: "box",
-                                        layout: "vertical",
-                                        contents: [{ type: "text", text: stressLevelDescription, wrap: true, size: "md" }],
-                                        paddingAll: "10px",
-                                        backgroundColor: "#afffff",
-                                        cornerRadius: "20px",
-                                        margin: "lg"
-                                    }
-                                ]
-                            }
+        type: "flex",
+        altText: "ผลคะแนนความเครียดของคุณ",
+        contents: {
+          "type": "bubble",
+          "body": {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "horizontal",
+                "margin": "md",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                      {
+                        "type": "image",
+                        "url": profilePictureUrl,
+                        "size": "full",
+                        "aspectMode": "cover",
+                        "action": {
+                          "type": "uri",
+                          "uri": "https://line.me/R/oaMessage/@466kmqzg/?การประเมินตนเอง"
+                        },
+                        "aspectRatio": "1:1"
+                      }
+                    ],
+                    "justifyContent": "center",
+                    "cornerRadius": "100px",
+                    "width": "50px",
+                    "height": "50px"
+                  },
+                  {
+                    "type": "text",
+                    "text": "ผลคะแนนของคุณ",
+                    "weight": "bold",
+                    "size": "lg",
+                    "align": "center"
+                  }
+                ],
+                "position": "relative",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "backgroundColor": "#FFFACD",
+                "paddingAll": "5px",
+                "cornerRadius": "10px",
+                "borderWidth": "2px",
+                "borderColor": "#ffffff"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "md",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "horizontal",
+                    "contents": [
+                      { "type": "text", "text": `${totalScore}`, "weight": "bold", "size": "5xl", "align": "center" },
+                      {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                          { "type": "text", "text": "คะแนน", "weight": "bold", "size": "xl" }
                         ],
-                        backgroundColor: "#f6f6f6"
-                    }
-                }
-            };
+                        "justifyContent": "center",
+                        "width": "80px"
+                      }
+                    ],
+                    "width": "180px"
+                  },
+                  { "type": "text", "text": `ระดับความเครียด: ${level}`, "weight": "bold", "size": "lg", "align": "center" }
+                ],
+                "backgroundColor": vbackgroundColor,
+                "paddingAll": "5px",
+                "cornerRadius": "10px",
+                "alignItems": "center",
+                "borderWidth": "2px",
+                "borderColor": "#ffffff"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "margin": "md",
+                "contents": [
+                  { "type": "text", "text": stressLevelDescription, "size": "sm", "wrap": true }
+                ],
+                "backgroundColor": "#FADADD",
+                "paddingAll": "5px",
+                "cornerRadius": "10px",
+                "borderWidth": "2px",
+                "borderColor": "#ffffff"
+              }
+            ],
+            "backgroundColor": "#90EE90",
+            "paddingAll": "10px"
+          },
+          "size": "kilo"
+        }
+      };
+
 
             await liff.sendMessages([flexMessage]);
         }
