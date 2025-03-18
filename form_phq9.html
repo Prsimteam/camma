@@ -294,6 +294,8 @@
                 loadPage(currentPage);
             } else if (currentPage === questions.length - 1) {
                 const totalScore = Object.values(answers).reduce((sum, val) => sum + val, 0);
+                const profile = await liff.getProfile();
+                const userId = profile.userId;
                 const data = {
                     userId: userId,
                     question1: answers.question1,
