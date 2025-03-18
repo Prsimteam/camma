@@ -295,7 +295,7 @@
             } else if (currentPage === questions.length - 1) {
                 const totalScore = Object.values(answers).reduce((sum, val) => sum + val, 0);
                 const profile = await liff.getProfile();
-                    const userId = profile.userId;
+                const userId = profile.userId;
                 const data = {
                     userId: userId,
                     question1: answers.question1,
@@ -311,7 +311,6 @@
                 };
 
                 const scriptURL = 'https://script.google.com/macros/s/AKfycbxiunGNFoAZ_PaRoyqgO2iSN5n-Ql86J0vHhGu1WpUN24tsZnJnz4XX-0v_Zmy7s2xCBQ/exec';
-
                 try {
                     await fetch(scriptURL, {
                         method: 'POST',
@@ -319,24 +318,32 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
                     });
-                    
-                    // เรียก sendFlexMessage หลังจากส่งข้อมูลสำเร็จ
-                    await sendFlexMessage(totalScore);
-                    console.log('Flex message sent successfully');
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'ส่งคำตอบสำเร็จ!',
-                        text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
-                    }).then(() => liff.closeWindow());
-                } catch (error) {
-                    console.error('Fetch Error:', error);
+                    console.log('Data sent to Google Sheets');
+                    try {
+                        await sendFlexMessage(totalScore); // แยก Error Handling
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ส่งคำตอบสำเร็จ!',
+                            text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
+                        }).then(() => liff.closeWindow());
+                    } catch (sendError) {
+                        console.error('Send Message Error:', sendError);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'ส่งข้อมูลสำเร็จ แต่ส่งข้อความ LINE ล้มเหลว',
+                            text: sendError.message
+                        });
+                    }
+                } catch (fetchError) {
+                    console.error('Fetch Error:', fetchError);
                     Swal.fire({
                         icon: 'error',
                         title: 'เกิดข้อผิดพลาด',
                         text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
                     });
                 }
+
+
             }
         });
 
