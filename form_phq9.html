@@ -309,10 +309,6 @@
                 const totalScore = Object.values(answers).reduce((sum, val) => sum + val, 0);
                 const profile = await liff.getProfile();
                 const userId = profile.userId;
-                const userId2 = liff.getDecodedIDToken()?.sub || 'unknown';
-                    if (userId2 === 'unknown') {
-                        console.warn('User ID is unknown. Check LIFF login or ID Token.');
-                    }
                 const data = {
                     userId: userId || 'unknown',
                     question1: answers.question1,
@@ -478,7 +474,8 @@
             };
 
 
-            await liff.sendMessages([flexMessage]);
+            //await liff.sendMessages([flexMessage]);
+            await liff.sendMessages([{ type: "text", text: "ทดสอบการส่งข้อความ" }]);
         }
 
         // เริ่มต้น
