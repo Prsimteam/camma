@@ -312,31 +312,48 @@
 
                 const scriptURL = 'https://script.google.com/macros/s/AKfycbxiunGNFoAZ_PaRoyqgO2iSN5n-Ql86J0vHhGu1WpUN24tsZnJnz4XX-0v_Zmy7s2xCBQ/exec';
 
-
-
-                fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                }).then(() => {
-                    console.log('Data sent to Google Sheets (no-cors mode)');
-                    // ถือว่าส่งสำเร็จ
-                    return sendFlexMessage(totalScore);
-                }).then(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'ส่งคำตอบสำเร็จ!',
-                        text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
-                    }).then(() => liff.closeWindow());
-                }).catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'เกิดข้อผิดพลาด',
-                        text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
+                let fetchSuccess = false;
+                try {
+                    await fetch(scriptURL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
                     });
-                });
+                    console.log('Data sent to Google Sheets (no-cors mode)');
+                    fetchSuccess = true; // ถ้าถึงจุดนี้ ถือว่าส่งข้อมูลสำเร็จ
+                } catch (fetchError) {
+                    console.error('Fetch Error:', fetchError);
+                }
+
+                // ดำเนินการต่อไม่ว่าส่งข้อมูลสำเร็จหรือไม่
+                try {
+                    await sendFlexMessage(totalScore);
+                    if (fetchSuccess) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ส่งคำตอบสำเร็จ!',
+                            text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
+                        }).then(() => liff.closeWindow());
+                    } else {
+                        throw new Error('ข้อมูลไม่ถึง Google Sheets');
+                    }
+                } catch (sendError) {
+                    console.error('Send Message Error:', sendError);
+                    if (fetchSuccess) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'บันทึกข้อมูลสำเร็จ แต่ส่งข้อความ LINE ล้มเหลว',
+                            text: sendError.message
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เกิดข้อผิดพลาด',
+                            text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
+                        });
+                    }
+                }
 
 
             }
