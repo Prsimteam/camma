@@ -15,7 +15,6 @@
             border: solid 2px #fff;
             box-shadow: #000 2px 2px 1px;
             border-radius: 0.75em;
-            background-color: #90EE90;
         }
         .loading-overlay {
             position: fixed;
@@ -52,7 +51,7 @@
     <!-- Input Name -->
     <div id="nameInput" class="hidden w-full max-w-lg">
         <h1 class="text-2xl font-bold text-center mb-6">กรุณากรอกข้อมูล</h1>
-        <div class=" p-6 rounded-lg shadow-lg bg-white">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
             <label class="block mb-2 text-lg">ชื่อ-สกุล ผู้สูงอายุหรือผู้ป่วย:</label>
             <input id="fullName" type="text" class="w-full p-2 border rounded mb-4" placeholder="กรอกชื่อ-สกุล">
             <button onclick="startAssessment()" class="bt-custom w-full px-6 py-2 ">เริ่มประเมิน</button>
@@ -64,7 +63,7 @@
         <h1 class="text-2xl font-bold text-center mb-6">แบบประเมิน ADL</h1>
 
         <!-- Question Pages -->
-        <div id="page1" class="question-page">
+        <div id="page1" class="question-page bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">1. การรับประทานอาหาร</h3>
             <label class="block mb-2"><input type="radio" name="q1" value="0" class="mr-2"> ไม่สามารถตักอาหารเข้าปากได้</label>
             <label class="block mb-2"><input type="radio" name="q1" value="1" class="mr-2"> ตักอาหารเองได้แต่ต้องมีคนช่วย</label>
@@ -72,7 +71,7 @@
             <button onclick="nextPage(1)" class="bt-custom mt-4 px-6 py-2 ">ถัดไป</button>
         </div>
 
-        <div id="page2" class="question-page hidden">
+        <div id="page2" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">2. การดูแลตนเอง (ล้างหน้า หวีผม แปรงฟัน โกนหนวด)</h3>
             <label class="block mb-2"><input type="radio" name="q2" value="0" class="mr-2"> ต้องการความช่วยเหลือ</label>
             <label class="block mb-2"><input type="radio" name="q2" value="1" class="mr-2"> ทำเองได้</label>
@@ -82,7 +81,7 @@
             </div>
         </div>
 
-        <div id="page3" class="question-page hidden">
+        <div id="page3" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">3. การลุกนั่งจากที่นอนหรือเตียงไปเก้าอี้</h3>
             <label class="block mb-2"><input type="radio" name="q3" value="0" class="mr-2"> ไม่สามารถนั่งได้</label>
             <label class="block mb-2"><input type="radio" name="q3" value="1" class="mr-2"> ต้องการความช่วยเหลืออย่างมาก</label>
@@ -94,7 +93,7 @@
             </div>
         </div>
 
-        <div id="page4" class="question-page hidden">
+        <div id="page4" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">4. การใช้ห้องน้ำ</h3>
             <label class="block mb-2"><input type="radio" name="q4" value="0" class="mr-2"> ช่วยตัวเองไม่ได้</label>
             <label class="block mb-2"><input type="radio" name="q4" value="1" class="mr-2"> ทำเองได้บ้าง (ทำความสะอาดตัวเองได้หลังเสร็จธุระ)</label>
@@ -105,7 +104,7 @@
             </div>
         </div>
 
-        <div id="page5" class="question-page hidden">
+        <div id="page5" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">5. การเคลื่อนที่ภายในห้องหรือบ้าน</h3>
             <label class="block mb-2"><input type="radio" name="q5" value="0" class="mr-2"> เคลื่อนที่ไปไหนไม่ได้</label>
             <label class="block mb-2"><input type="radio" name="q5" value="1" class="mr-2"> ต้องใช้รถเข็นช่วยและเคลื่อนที่ได้เอง</label>
@@ -117,7 +116,7 @@
             </div>
         </div>
 
-        <div id="page6" class="question-page hidden">
+        <div id="page6" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">6. การสวมใส่เสื้อผ้า</h3>
             <label class="block mb-2"><input type="radio" name="q6" value="0" class="mr-2"> ต้องมีคนสวมใส่ให้</label>
             <label class="block mb-2"><input type="radio" name="q6" value="1" class="mr-2"> ช่วยตัวเองได้ประมาณ 50%</label>
@@ -128,7 +127,7 @@
             </div>
         </div>
 
-        <div id="page7" class="question-page hidden">
+        <div id="page7" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">7. การขึ้นลงบันได 1 ชั้น</h3>
             <label class="block mb-2"><input type="radio" name="q7" value="0" class="mr-2"> ไม่สามารถทำได้</label>
             <label class="block mb-2"><input type="radio" name="q7" value="1" class="mr-2"> ต้องการคนช่วย</label>
@@ -139,7 +138,7 @@
             </div>
         </div>
 
-        <div id="page8" class="question-page hidden">
+        <div id="page8" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">8. การอาบน้ำ</h3>
             <label class="block mb-2"><input type="radio" name="q8" value="0" class="mr-2"> ต้องมีคนช่วยหรือทำให้</label>
             <label class="block mb-2"><input type="radio" name="q8" value="1" class="mr-2"> อาบน้ำเองได้</label>
@@ -149,7 +148,7 @@
             </div>
         </div>
 
-        <div id="page9" class="question-page hidden">
+        <div id="page9" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">9. การกลั้นการถ่ายอุจจาระ (ใน 1 สัปดาห์)</h3>
             <label class="block mb-2"><input type="radio" name="q9" value="0" class="mr-2"> กลั้นไม่ได้ หรือต้องสวนอุจจาระ</label>
             <label class="block mb-2"><input type="radio" name="q9" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1 ครั้ง/สัปดาห์)</label>
@@ -160,7 +159,7 @@
             </div>
         </div>
 
-        <div id="page10" class="question-page hidden">
+        <div id="page10" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">10. การกลั้นปัสสาวะ (ใน 1 สัปดาห์)</h3>
             <label class="block mb-2"><input type="radio" name="q10" value="0" class="mr-2"> กลั้นไม่ได้ หรือใช้สายสวน</label>
             <label class="block mb-2"><input type="radio" name="q10" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1 ครั้ง/วัน)</label>
@@ -317,6 +316,22 @@
                                     }
                                 ],
                                 backgroundColor: '#90EE90'
+                            },
+                            footer: {
+                                type: 'box',
+                                layout: 'vertical',
+                                contents: [
+                                    {
+                                        type: 'button',
+                                        action: {
+                                            type: 'uri',
+                                            label: 'ดูรายละเอียดเพิ่มเติม',
+                                            uri: 'https://example.com'
+                                        },
+                                        style: 'primary',
+                                        color: '#00C300'
+                                    }
+                                ]
                             }
                         }
                     };
