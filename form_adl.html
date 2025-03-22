@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบประเมิน ADL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Kanit', sans-serif; }
+        .bt-custom {
+            color: #000;
+            border: solid 2px #fff;
+            box-shadow: #000 2px 2px 1px;
+            border-radius: 0.75em;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #00C300;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-[#90EE90] min-h-screen flex flex-col items-center justify-center p-4">
+    <!-- Loading Animation -->
+    <div id="loading" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Input Name -->
+    <div id="nameInput" class="hidden w-full max-w-lg">
+        <h1 class="text-2xl font-bold text-center mb-6">กรุณากรอกข้อมูล</h1>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <label class="block mb-2 text-lg">ชื่อ-สกุล ผู้สูงอายุหรือผู้ป่วย:</label>
+            <input id="fullName" type="text" class="w-full p-2 border rounded mb-4" placeholder="กรอกชื่อ-สกุล">
+            <button onclick="startAssessment()" class="bt-custom w-full px-6 py-2 bg-white">เริ่มประเมิน</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="content" class="hidden w-full max-w-lg">
+        <h1 class="text-2xl font-bold text-center mb-6">แบบประเมิน ADL</h1>
+
+        <!-- Question Pages -->
+        <div id="page1" class="question-page">
+            <h3 class="text-lg font-semibold mb-4">1. การรับประทานอาหาร</h3>
+            <label class="block mb-2"><input type="radio" name="q1" value="0" class="mr-2"> ไม่สามารถตักอาหารเข้าปากได้</label>
+            <label class="block mb-2"><input type="radio" name="q1" value="1" class="mr-2"> ตักอาหารเองได้แต่ต้องมีคนช่วย</label>
+            <label class="block mb-2"><input type="radio" name="q1" value="2" class="mr-2"> ตักอาหารและช่วยตัวเองได้เป็นปกติ</label>
+            <button onclick="nextPage(1)" class="bt-custom mt-4 px-6 py-2 bg-white">ถัดไป</button>
+        </div>
+
+        <div id="page2" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">2. การดูแลตนเอง (ล้างหน้า หวีผม แปรงฟัน โกนหนวด)</h3>
+            <label class="block mb-2"><input type="radio" name="q2" value="0" class="mr-2"> ต้องการความช่วยเหลือ</label>
+            <label class="block mb-2"><input type="radio" name="q2" value="1" class="mr-2"> ทำเองได้</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(2)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="nextPage(2)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+            </div>
+        </div>
+
+        <div id="page3" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">3. การลุกนั่งจากที่นอนหรือเตียงไปเก้าอี้</h3>
+            <label class="block mb-2"><input type="radio" name="q3" value="0" class="mr-2"> ไม่สามารถนั่งได้</label>
+            <label class="block mb-2"><input type="radio" name="q3" value="1" class="mr-2"> ต้องการความช่วยเหลืออย่างมาก</label>
+            <label class="block mb-2"><input type="radio" name="q3" value="2" class="mr-2"> ต้องการความช่วยเหลือบ้าง</label>
+            <label class="block mb-2"><input type="radio" name="q3" value="3" class="mr-2"> ทำได้เอง</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(3)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="nextPage(3)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+            </div>
+        </div>
+
+        <div id="page4" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">4. การใช้ห้องน้ำ</h3>
+            <label class="block mb-2"><input type="radio" name="q4" value="0" class="mr-2"> ช่วยตัวเองไม่ได้</label>
+            <label class="block mb-2"><input type="radio" name="q4" value="1" class="mr-2"> ทำเองได้บ้าง (ทำความสะอาดตัวเองได้หลังเสร็จธุระ)</label>
+            <label class="block mb-2"><input type="radio" name="q4" value="2" class="mr-2"> ช่วยตัวเองได้ดี (ขึ้นนั่ง/ลงจากโถส้วมได้เอง)</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(4)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="nextPage(4)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+            </div>
+        </div>
+
+        <div id="page5" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">5. การเคลื่อนที่ภายในห้องหรือบ้าน</h3>
+            <label class="block mb-2"><input type="radio" name="q5" value="0" class="mr-2"> เคลื่อนที่ไปไหนไม่ได้</label>
+            <label class="block mb-2"><input type="radio" name="q5" value="1" class="mr-2"> ต้องใช้รถเข็นช่วยและเคลื่อนที่ได้เอง</label>
+            <label class="block mb-2"><input type="radio" name="q5" value="2" class="mr-2"> เดินหรือเคลื่อนที่โดยมีคนช่วย</label>
+            <label class="block mb-2"><input type="radio" name="q5" value="3" class="mr-2"> เดินหรือเคลื่อนที่ได้เอง</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(5)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="nextPage(5)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+            </div>
+        </div>
+
+        <div id="page6" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">6. การสวมใส่เสื้อผ้า</h3>
+            <label class="block mb-2"><input type="radio" name="q6" value="0" class="mr-2"> ต้องมีคนสวมใส่ให้</label>
+            <label class="block mb-2"><input type="radio" name="q6" value="1" class="mr-2"> ช่วยตัวเองได้ประมาณ 50%</label>
+            <label class="block mb-2"><input type="radio" name="q6" value="2" class="mr-2"> ช่วยตัวเองได้ดี (รวมถึงติดกระดุม/รูดซิบ)</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(6)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="nextPage(6)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+            </div>
+        </div>
+
+        <div id="page7" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">7. การขึ้นลงบันได 1 ชั้น</h3>
+            <label class="block mb-2"><input type="radio" name="q7" value="0" class="mr-2"> ไม่สามารถทำได้</label>
+            <label class="block mb-2"><input type="radio" name="q7" value="1" class="mr-2"> ต้องการคนช่วย</label>
+            <label class="block mb-2"><input type="radio" name="q7" value="2" class="mr-2"> ขึ้นลงได้เอง (รวมถึงใช้เครื่องช่วยเดิน)</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(7)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="nextPage(7)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+            </div>
+        </div>
+
+        <div id="page8" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">8. การอาบน้ำ</h3>
+            <label class="block mb-2"><input type="radio" name="q8" value="0" class="mr-2"> ต้องมีคนช่วยหรือทำให้</label>
+            <label class="block mb-2"><input type="radio" name="q8" value="1" class="mr-2"> อาบน้ำเองได้</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(8)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="nextPage(8)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+            </div>
+        </div>
+
+        <div id="page9" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">9. การกลั้นการถ่ายอุจจาระ (ใน 1 สัปดาห์)</h3>
+            <label class="block mb-2"><input type="radio" name="q9" value="0" class="mr-2"> กลั้นไม่ได้ หรือต้องสวนอุจจาระ</label>
+            <label class="block mb-2"><input type="radio" name="q9" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1 ครั้ง/สัปดาห์)</label>
+            <label class="block mb-2"><input type="radio" name="q9" value="2" class="mr-2"> กลั้นได้เป็นปกติ</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(9)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="nextPage(9)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+            </div>
+        </div>
+
+        <div id="page10" class="question-page hidden">
+            <h3 class="text-lg font-semibold mb-4">10. การกลั้นปัสสาวะ (ใน 1 สัปดาห์)</h3>
+            <label class="block mb-2"><input type="radio" name="q10" value="0" class="mr-2"> กลั้นไม่ได้ หรือใช้สายสวน</label>
+            <label class="block mb-2"><input type="radio" name="q10" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1 ครั้ง/วัน)</label>
+            <label class="block mb-2"><input type="radio" name="q10" value="2" class="mr-2"> กลั้นได้เป็นปกติ</label>
+            <div class="flex justify-between mt-4">
+                <button onclick="prevPage(10)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
+                <button onclick="submitForm()" class="bt-custom px-6 py-2 bg-white">ส่งแบบประเมิน</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let liffId = '2006670422-2lW1Qb9n'; // LIFF ID ของคุณ
+        let fullName = '';
+
+        // แสดง Loading Animation และไปหน้า Input ชื่อ
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('nameInput').classList.remove('hidden');
+            }, 2000);
+        };
+
+        // เริ่มประเมินหลังกรอกชื่อ
+        function startAssessment() {
+            fullName = document.getElementById('fullName').value.trim();
+            if (!fullName) {
+                Swal.fire('กรุณากรอกชื่อ-สกุล', '', 'warning');
+                return;
+            }
+            document.getElementById('nameInput').classList.add('hidden');
+            document.getElementById('content').classList.remove('hidden');
+        }
+
+        // การเปลี่ยนหน้า
+        function nextPage(current) {
+            const selected = document.querySelector(`input[name="q${current}"]:checked`);
+            if (!selected) {
+                Swal.fire('กรุณาเลือกคำตอบก่อนไปหน้าถัดไป', '', 'warning');
+                return;
+            }
+            document.getElementById(`page${current}`).classList.add('hidden');
+            document.getElementById(`page${current + 1}`).classList.remove('hidden');
+        }
+
+        function prevPage(current) {
+            document.getElementById(`page${current}`).classList.add('hidden');
+            document.getElementById(`page${current - 1}`).classList.remove('hidden');
+        }
+
+        // ส่งแบบประเมิน
+        async function submitForm() {
+            let totalScore = 0;
+            let scores = {};
+            for (let i = 1; i <= 10; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected) {
+                    const score = parseInt(selected.value);
+                    scores[`q${i}`] = score;
+                    totalScore += score;
+                } else {
+                    scores[`q${i}`] = null;
+                }
+            }
+
+            let group = '';
+            if (totalScore >= 12) group = 'กลุ่มที่ 1: ติดสังคม';
+            else if (totalScore >= 5) group = 'กลุ่มที่ 2: ติดบ้าน';
+            else group = 'กลุ่มที่ 3: ติดเตียง';
+
+            Swal.fire({
+                title: 'ผลการประเมิน',
+                text: `ชื่อ: ${fullName}\nคะแนนรวม: ${totalScore}\nกลุ่ม: ${group}`,
+                icon: 'success'
+            }).then(async () => {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbzTCByxmbCWJw9qP13QJb5g_TnI5ekm11f8aidYh-BThIOLU35S16hgfLHsmcUE4Z3XOw/exec', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: fullName,
+                        score: totalScore,
+                        group: group,
+                        date: new Date().toLocaleString(),
+                        scores: scores
+                    })
+                });
+
+                if (liff.isInClient()) {
+                    const flexMessage = {
+                        type: 'flex',
+                        altText: 'ผลการประเมิน ADL',
+                        contents: {
+                            type: 'bubble',
+                            body: {
+                                type: 'box',
+                                layout: 'vertical',
+                                contents: [
+                                    {
+                                        type: 'text',
+                                        text: 'ผลการประเมิน ADL',
+                                        weight: 'bold',
+                                        size: 'xl',
+                                        color: '#000000',
+                                        align: 'center'
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'vertical',
+                                        margin: 'lg',
+                                        spacing: 'sm',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: `ชื่อ: ${fullName}`,
+                                                size: 'lg',
+                                                color: '#000000'
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: `คะแนนรวม: ${totalScore}`,
+                                                size: 'lg',
+                                                color: '#000000'
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: `กลุ่ม: ${group}`,
+                                                size: 'lg',
+                                                color: '#000000'
+                                            }
+                                        ],
+                                        backgroundColor: '#FFFFFF',
+                                        paddingAll: 'md',
+                                        cornerRadius: 'md'
+                                    },
+                                    {
+                                        type: 'text',
+                                        text: `วันที่: ${new Date().toLocaleDateString('th-TH')}`,
+                                        size: 'sm',
+                                        color: '#555555',
+                                        align: 'center',
+                                        margin: 'md'
+                                    }
+                                ],
+                                backgroundColor: '#90EE90'
+                            }
+                        }
+                    };
+
+                    liff.sendMessages([flexMessage])
+                        .then(() => liff.closeWindow())
+                        .catch(err => console.error(err));
+                }
+            });
+        }
+
+        // เริ่มต้น LIFF
+        liff.init({ liffId: liffId }).catch(err => console.error(err));
+    </script>
+</body>
+</html>
