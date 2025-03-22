@@ -52,10 +52,10 @@
     <!-- Input Name -->
     <div id="nameInput" class="hidden w-full max-w-lg">
         <h1 class="text-2xl font-bold text-center mb-6">กรุณากรอกข้อมูล</h1>
-        <div class="bg-white p-6 rounded-lg shadow-lg">
+        <div class=" p-6 rounded-lg shadow-lg">
             <label class="block mb-2 text-lg">ชื่อ-สกุล ผู้สูงอายุหรือผู้ป่วย:</label>
             <input id="fullName" type="text" class="w-full p-2 border rounded mb-4" placeholder="กรอกชื่อ-สกุล">
-            <button onclick="startAssessment()" class="bt-custom w-full px-6 py-2 bg-white">เริ่มประเมิน</button>
+            <button onclick="startAssessment()" class="bt-custom w-full px-6 py-2 ">เริ่มประเมิน</button>
         </div>
     </div>
 
@@ -69,7 +69,7 @@
             <label class="block mb-2"><input type="radio" name="q1" value="0" class="mr-2"> ไม่สามารถตักอาหารเข้าปากได้</label>
             <label class="block mb-2"><input type="radio" name="q1" value="1" class="mr-2"> ตักอาหารเองได้แต่ต้องมีคนช่วย</label>
             <label class="block mb-2"><input type="radio" name="q1" value="2" class="mr-2"> ตักอาหารและช่วยตัวเองได้เป็นปกติ</label>
-            <button onclick="nextPage(1)" class="bt-custom mt-4 px-6 py-2 bg-white">ถัดไป</button>
+            <button onclick="nextPage(1)" class="bt-custom mt-4 px-6 py-2 ">ถัดไป</button>
         </div>
 
         <div id="page2" class="question-page hidden">
@@ -77,8 +77,8 @@
             <label class="block mb-2"><input type="radio" name="q2" value="0" class="mr-2"> ต้องการความช่วยเหลือ</label>
             <label class="block mb-2"><input type="radio" name="q2" value="1" class="mr-2"> ทำเองได้</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(2)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="nextPage(2)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+                <button onclick="prevPage(2)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="nextPage(2)" class="bt-custom px-6 py-2 ">ถัดไป</button>
             </div>
         </div>
 
@@ -89,8 +89,8 @@
             <label class="block mb-2"><input type="radio" name="q3" value="2" class="mr-2"> ต้องการความช่วยเหลือบ้าง</label>
             <label class="block mb-2"><input type="radio" name="q3" value="3" class="mr-2"> ทำได้เอง</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(3)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="nextPage(3)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+                <button onclick="prevPage(3)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="nextPage(3)" class="bt-custom px-6 py-2 ">ถัดไป</button>
             </div>
         </div>
 
@@ -100,8 +100,8 @@
             <label class="block mb-2"><input type="radio" name="q4" value="1" class="mr-2"> ทำเองได้บ้าง (ทำความสะอาดตัวเองได้หลังเสร็จธุระ)</label>
             <label class="block mb-2"><input type="radio" name="q4" value="2" class="mr-2"> ช่วยตัวเองได้ดี (ขึ้นนั่ง/ลงจากโถส้วมได้เอง)</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(4)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="nextPage(4)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+                <button onclick="prevPage(4)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="nextPage(4)" class="bt-custom px-6 py-2 ">ถัดไป</button>
             </div>
         </div>
 
@@ -112,8 +112,8 @@
             <label class="block mb-2"><input type="radio" name="q5" value="2" class="mr-2"> เดินหรือเคลื่อนที่โดยมีคนช่วย</label>
             <label class="block mb-2"><input type="radio" name="q5" value="3" class="mr-2"> เดินหรือเคลื่อนที่ได้เอง</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(5)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="nextPage(5)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+                <button onclick="prevPage(5)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="nextPage(5)" class="bt-custom px-6 py-2 ">ถัดไป</button>
             </div>
         </div>
 
@@ -123,8 +123,8 @@
             <label class="block mb-2"><input type="radio" name="q6" value="1" class="mr-2"> ช่วยตัวเองได้ประมาณ 50%</label>
             <label class="block mb-2"><input type="radio" name="q6" value="2" class="mr-2"> ช่วยตัวเองได้ดี (รวมถึงติดกระดุม/รูดซิบ)</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(6)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="nextPage(6)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+                <button onclick="prevPage(6)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="nextPage(6)" class="bt-custom px-6 py-2 ">ถัดไป</button>
             </div>
         </div>
 
@@ -134,8 +134,8 @@
             <label class="block mb-2"><input type="radio" name="q7" value="1" class="mr-2"> ต้องการคนช่วย</label>
             <label class="block mb-2"><input type="radio" name="q7" value="2" class="mr-2"> ขึ้นลงได้เอง (รวมถึงใช้เครื่องช่วยเดิน)</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(7)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="nextPage(7)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+                <button onclick="prevPage(7)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="nextPage(7)" class="bt-custom px-6 py-2 ">ถัดไป</button>
             </div>
         </div>
 
@@ -144,8 +144,8 @@
             <label class="block mb-2"><input type="radio" name="q8" value="0" class="mr-2"> ต้องมีคนช่วยหรือทำให้</label>
             <label class="block mb-2"><input type="radio" name="q8" value="1" class="mr-2"> อาบน้ำเองได้</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(8)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="nextPage(8)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+                <button onclick="prevPage(8)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="nextPage(8)" class="bt-custom px-6 py-2 ">ถัดไป</button>
             </div>
         </div>
 
@@ -155,8 +155,8 @@
             <label class="block mb-2"><input type="radio" name="q9" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1 ครั้ง/สัปดาห์)</label>
             <label class="block mb-2"><input type="radio" name="q9" value="2" class="mr-2"> กลั้นได้เป็นปกติ</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(9)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="nextPage(9)" class="bt-custom px-6 py-2 bg-white">ถัดไป</button>
+                <button onclick="prevPage(9)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="nextPage(9)" class="bt-custom px-6 py-2 ">ถัดไป</button>
             </div>
         </div>
 
@@ -166,8 +166,8 @@
             <label class="block mb-2"><input type="radio" name="q10" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1 ครั้ง/วัน)</label>
             <label class="block mb-2"><input type="radio" name="q10" value="2" class="mr-2"> กลั้นได้เป็นปกติ</label>
             <div class="flex justify-between mt-4">
-                <button onclick="prevPage(10)" class="bt-custom px-6 py-2 bg-white">ย้อนกลับ</button>
-                <button onclick="submitForm()" class="bt-custom px-6 py-2 bg-white">ส่งแบบประเมิน</button>
+                <button onclick="prevPage(10)" class="bt-custom px-6 py-2 ">ย้อนกลับ</button>
+                <button onclick="submitForm()" class="bt-custom px-6 py-2 ">ส่งแบบประเมิน</button>
             </div>
         </div>
     </div>
