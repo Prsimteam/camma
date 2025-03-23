@@ -64,9 +64,16 @@
     <script>
         let answers = {};
         let fullName = '';
+        let userId = '';
 
         window.onload = async () => {
             await liff.init({ liffId: '2006670422-0kMjgGbR' });
+            if (liff.isLoggedIn()) {
+                const profile = await liff.getProfile();
+                userId = profile.userId;
+            } else {
+                liff.login();
+            }
             setTimeout(() => {
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('name-form').classList.remove('hidden');
@@ -105,6 +112,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    userId: userId,
                     name: fullName,
                     q1: answers[1],
                     q2: answers[2],
