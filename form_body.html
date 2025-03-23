@@ -182,12 +182,62 @@
                     body: {
                         type: 'box',
                         layout: 'vertical',
+                        spacing: 'sm',
                         contents: [
-                            { type: 'text', text: `ผลประเมินของ ${fullName}`, weight: 'bold', size: 'xl' },
-                            { type: 'text', text: `User ID: ${userId}`, size: 'sm' },
-                            { type: 'text', text: `${bodyPart}: คะแนน ${maxScore}` },
-                            { type: 'text', text: `ระดับ: ${result.level}` },
-                            { type: 'text', text: result.description, wrap: true }
+                            {
+                                type: 'text',
+                                text: 'ผลประเมินของคุณ',
+                                weight: 'bold',
+                                size: 'xl',
+                                align: 'center',
+                                margin: 'md'
+                            },
+                            {
+                                type: 'text',
+                                text: fullName,
+                                size: 'lg',
+                                align: 'center',
+                                margin: 'sm'
+                            },
+                            {
+                                type: 'separator',
+                                margin: 'md'
+                            },
+                            {
+                                type: 'box',
+                                layout: 'vertical',
+                                contents: [
+                                    {
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: `ระดับความเมื่อยล้าระดับ ${result.level}`,
+                                                size: 'md',
+                                                weight: 'bold'
+                                            }
+                                        ],
+                                        paddingAll: 'md'
+                                    },
+                                    {
+                                        type: 'separator'
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'vertical',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: `${bodyPart}ของคุณ ${result.description}`,
+                                                size: 'sm',
+                                                wrap: true
+                                            }
+                                        ],
+                                        paddingAll: 'md'
+                                    }
+                                ]
+                            }
                         ],
                         backgroundColor: '#90EE90'
                     }
@@ -200,11 +250,11 @@
         }
 
         function getResult(score, bodyPart) {
-            if (score === 0) return { level: 0, description: `${bodyPart}ของคุณ ไม่รู้สึกเมื่อยหรือปวดเมื่อย` };
-            if (score === 1) return { level: 1, description: `${bodyPart}ของคุณ รู้สึกปวดเมื่อยนิดหน่อยไม่เป็นอุปสรรคต่อการทำงาน โดยไม่ต้องหยุดพัก` };
-            if (score === 2) return { level: 2, description: `${bodyPart}ของคุณ รู้สึกปวดเมื่อยปานกลาง (ต้องมีการหยุดพักหรือเปลี่ยนท่าพักเพื่อให้หาย เหนื่อย)` };
-            if (score === 3) return { level: 3, description: `${bodyPart}ของคุณ รู้สึกปวดเมื่อยหรือล้ามาก เมื่อพักแล้วก็ไม่หายเหนื่อย` };
-            return { level: 4, description: `${bodyPart}ของคุณ รู้สึกปวดเมื่อยหรือล้ามากจนทนทำงานต่อไปไม่ไหว หมดแรงต้องรับประทานยา หรือพบแพทย์มากกว่า 1 วัน` };
+            if (score === 0) return { level: 0, description: `ไม่รู้สึกเมื่อยหรือปวดเมื่อย` };
+            if (score === 1) return { level: 1, description: `รู้สึกปวดเมื่อยนิดหน่อยไม่เป็นอุปสรรคต่อการทำงาน โดยไม่ต้องหยุดพัก` };
+            if (score === 2) return { level: 2, description: `รู้สึกปวดเมื่อยปานกลาง (ต้องมีการหยุดพักหรือเปลี่ยนท่าพักเพื่อให้หาย เหนื่อย)` };
+            if (score === 3) return { level: 3, description: `รู้สึกปวดเมื่อยหรือล้ามาก เมื่อพักแล้วก็ไม่หายเหนื่อย` };
+            return { level: 4, description: `รู้สึกปวดเมื่อยหรือล้ามากจนทนทำงานต่อไปไม่ไหว หมดแรงต้องรับประทานยา หรือพบแพทย์มากกว่า 1 วัน` };
         }
     </script>
 </body>
