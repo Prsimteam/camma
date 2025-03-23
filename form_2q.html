@@ -266,8 +266,28 @@
                         layout: 'vertical',
                         backgroundColor: '#90EE90',
                         contents: [
-                            { type: 'text', text: `ผลประเมินของ ${fullName}`, weight: 'bold', size: 'xl' },
-                            { type: 'text', text: `สถานะ: ${result}`, size: 'lg', margin: 'md' }
+                            { 
+                                type: 'text', 
+                                text: `ผลประเมินของ`, 
+                                weight: 'bold', 
+                                size: 'xl',
+                                align: 'center'
+                            },
+                            { 
+                                type: 'text', 
+                                text: `${fullName}`, 
+                                weight: 'bold', 
+                                size: 'xl',
+                                align: 'center',
+                                margin: 'md'
+                            },
+                            { 
+                                type: 'text', 
+                                text: `สถานะ: ${result}`, 
+                                size: 'lg', 
+                                margin: 'md',
+                                align: 'center'
+                            }
                         ]
                     }
                 }
@@ -283,10 +303,23 @@
                         layout: 'vertical',
                         backgroundColor: '#90EE90',
                         contents: [
-                            { type: 'text', text: 'ผู้มีความเสี่ยง', weight: 'bold', size: 'lg' },
-                            { type: 'button', 
-                              action: { type: 'uri', label: 'ทำ 9Q ต่อ', uri: 'https://liff.line.me/2006670422-P9AYeln9' },
-                              style: 'primary' }
+                            { 
+                                type: 'text', 
+                                text: 'ผู้มีความเสี่ยง', 
+                                weight: 'bold', 
+                                size: 'lg',
+                                align: 'center'
+                            },
+                            { 
+                                type: 'button', 
+                                action: { 
+                                    type: 'uri', 
+                                    label: 'ให้คุณทำแบบสอบถามนี้', 
+                                    uri: 'https://liff.line.me/2006670422-P9AYeln9' 
+                                },
+                                style: 'primary',
+                                margin: 'md'
+                            }
                         ]
                     }
                 }
