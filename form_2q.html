@@ -67,17 +67,27 @@
         let userId = '';
 
         window.onload = async () => {
-            await liff.init({ liffId: '2006670422-0kMjgGbR' });
-            if (liff.isLoggedIn()) {
+            try {
+                // 初始化 LIFF
+                await liff.init({ liffId: '2006670422-0kMjgGbR' });
+                
+                // ตรวจสอบการล็อกอิน
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                    return; // หยุดการทำงานจนกว่าผู้ใช้จะล็อกอิน
+                }
+
+                // ดึง User ID
                 const profile = await liff.getProfile();
                 userId = profile.userId;
-            } else {
-                liff.login();
-            }
-            setTimeout(() => {
+
+                // ซ่อน loading และแสดงฟอร์มชื่อ
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('name-form').classList.remove('hidden');
-            }, 2000);
+            } catch (error) {
+                console.error('LIFF Error:', error);
+                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถโหลด LIFF ได้: ' + error.message, 'error');
+            }
         };
 
         function startAssessment() {
@@ -104,24 +114,28 @@
             const score = (answers[1] ? 1 : 0) + (answers[2] ? 1 : 0);
             const result = score > 0 ? 'มีความเสี่ยง' : 'ปกติ';
             
-            // Save to Google Sheet
-            await fetch('https://script.google.com/macros/s/AKfycbyYCAvl35ROY2D4AVDQRCHEr84iBwzAtPXIBuUNoRyBZbpujvftw7FKNszKso4MTlFJQw/exec', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    userId: userId,
-                    name: fullName,
-                    q1: answers[1],
-                    q2: answers[2],
-                    score: score,
-                    result: result
-                })
-            });
+            // ส่งข้อมูลไป Google Sheet
+            try {
+                await fetch('https://script.google.com/macros/s/AKfycbyYCAvl35ROY2D4AVDQRCHEr84iBwzAtPXIBuUNoRyBZbpujvftw7FKNszKso4MTlFJQw/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        name: fullName,
+                        q1: answers[1],
+                        q2: answers[2],
+                        score: score,
+                        result: result
+                    })
+                });
+            } catch (error) {
+                console.error('Fetch Error:', error);
+            }
 
-            // Send LINE Flex Message
+            // ส่ง Flex Message ไป LINE
             const flexMessage1 = {
                 type: 'flex',
                 altText: 'ผลการประเมิน 2Q',
@@ -158,9 +172,13 @@
                 }
             } : null;
 
-            await liff.sendMessages(flexMessage2 ? [flexMessage1, flexMessage2] : [flexMessage1]);
-            Swal.fire('สำเร็จ!', 'ผลการประเมินถูกส่งไปยัง LINE แล้ว', 'success');
-            liff.closeWindow();
+            try {
+                await liff.sendMessages(flexMessage2 ? [flexMessage1, flexMessage2] : [flexMessage1]);
+                Swal.fire('สำเร็จ!', 'ผลการประเมินถูกส่งไปยัง LINE แล้ว', 'success');
+                liff.closeWindow();
+            } catch (error) {
+                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถส่งข้อความ LINE ได้: ' + error.message, 'error');
+            }
         }
     </script>
 </body>
