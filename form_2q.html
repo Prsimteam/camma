@@ -8,7 +8,6 @@
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Tailwind Base และ Utilities ที่จำเป็น */
         *, ::before, ::after {
             box-sizing: border-box;
             margin: 0;
@@ -17,8 +16,6 @@
         body {
             font-family: 'Kanit', sans-serif;
         }
-
-        /* Custom Styles */
         .bt-custom {
             color: #000;
             border: solid 2px #fff;
@@ -88,26 +85,43 @@
         let fullName = '';
         let userId = '';
 
-        window.onload = async () => {
+        async function initializeApp() {
             const loadingElement = document.getElementById('loading');
             try {
+                console.log('เริ่มต้น LIFF...');
                 await liff.init({ liffId: '2006670422-0kMjgGbR' });
-                
-                if (!liff.isLoggedIn()) {
-                    liff.login();
+                console.log('LIFF init สำเร็จ');
+
+                if (!liff.isInClient()) {
+                    console.log('ไม่ได้อยู่ใน LINE Client');
+                    loadingElement.classList.add('hidden');
+                    Swal.fire('ข้อผิดพลาด', 'กรุณาเปิดผ่าน LINE เท่านั้น', 'error');
                     return;
                 }
 
+                if (!liff.isLoggedIn()) {
+                    console.log('ยังไม่ล็อกอิน เรียก login');
+                    liff.login();
+                    return; // รอให้ผู้ใช้ล็อกอิน
+                }
+
+                console.log('ดึงโปรไฟล์...');
                 const profile = await liff.getProfile();
                 userId = profile.userId;
+                console.log('User ID:', userId);
 
                 loadingElement.classList.add('hidden');
                 document.getElementById('name-form').classList.remove('hidden');
+                console.log('แสดงฟอร์มชื่อ');
             } catch (error) {
                 console.error('LIFF Error:', error);
                 loadingElement.classList.add('hidden');
                 Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถโหลด LIFF ได้: ' + error.message, 'error');
             }
+        }
+
+        window.onload = () => {
+            initializeApp();
         };
 
         function startAssessment() {
@@ -150,6 +164,7 @@
                         result: result
                     })
                 });
+                console.log('ส่งข้อมูลไป Google Sheet สำเร็จ');
             } catch (error) {
                 console.error('Fetch Error:', error);
             }
