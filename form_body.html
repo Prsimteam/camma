@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบประเมินความเมื่อยล้า</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background-color: #90EE90;
+            font-family: 'Kanit', sans-serif;
+        }
+        .bt-custom {
+            color: #000;
+            border: solid 2px #fff;
+            box-shadow: #000 2px 2px 1px;
+            border-radius: 0.75em;
+        }
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #90EE90;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="loader"></div>
+    </div>
+    
+    <div id="nameInput" class="container mx-auto p-4 hidden">
+        <h1 class="text-2xl text-center mb-4">กรุณากรอกข้อมูล</h1>
+        <input id="fullName" type="text" placeholder="ชื่อ-สกุล ผู้สูงอายุ/ผู้ป่วย" 
+               class="w-full p-2 mb-4 border rounded">
+        <button onclick="startAssessment()" class="bt-custom w-full p-2">เริ่มประเมิน</button>
+    </div>
+
+    <div id="assessment" class="container mx-auto p-4 hidden">
+        <div id="question1">
+            <h2 class="text-xl mb-4">1. แขน มีระดับความเมื่อยล้า</h2>
+            <div class="flex justify-around">
+                <button onclick="selectAnswer(1, 0)" class="bt-custom p-2">0</button>
+                <button onclick="selectAnswer(1, 1)" class="bt-custom p-2">1</button>
+                <button onclick="selectAnswer(1, 2)" class="bt-custom p-2">2</button>
+                <button onclick="selectAnswer(1, 3)" class="bt-custom p-2">3</button>
+                <button onclick="selectAnswer(1, 4)" class="bt-custom p-2">4</button>
+            </div>
+        </div>
+
+        <div id="question2" class="hidden">
+            <h2 class="text-xl mb-4">2. คอ มีระดับความเมื่อยล้า</h2>
+            <div class="flex justify-around">
+                <button onclick="selectAnswer(2, 0)" class="bt-custom p-2">0</button>
+                <button onclick="selectAnswer(2, 1)" class="bt-custom p-2">1</button>
+                <button onclick="selectAnswer(2, 2)" class="bt-custom p-2">2</button>
+                <button onclick="selectAnswer(2, 3)" class="bt-custom p-2">3</button>
+                <button onclick="selectAnswer(2, 4)" class="bt-custom p-2">4</button>
+            </div>
+        </div>
+
+        <div id="question3" class="hidden">
+            <h2 class="text-xl mb-4">3. ไหล่/บ่า มีระดับความเมื่อยล้า</h2>
+            <div class="flex justify-around">
+                <button onclick="selectAnswer(3, 0)" class="bt-custom p-2">0</button>
+                <button onclick="selectAnswer(3, 1)" class="bt-custom p-2">1</button>
+                <button onclick="selectAnswer(3, 2)" class="bt-custom p-2">2</button>
+                <button onclick="selectAnswer(3, 3)" class="bt-custom p-2">3</button>
+                <button onclick="selectAnswer(3, 4)" class="bt-custom p-2">4</button>
+            </div>
+        </div>
+
+        <div id="question4" class="hidden">
+            <h2 class="text-xl mb-4">4. หลัง มีระดับความเมื่อยล้า</h2>
+            <div class="flex justify-around">
+                <button onclick="selectAnswer(4, 0)" class="bt-custom p-2">0</button>
+                <button onclick="selectAnswer(4, 1)" class="bt-custom p-2">1</button>
+                <button onclick="selectAnswer(4, 2)" class="bt-custom p-2">2</button>
+                <button onclick="selectAnswer(4, 3)" class="bt-custom p-2">3</button>
+                <button onclick="selectAnswer(4, 4)" class="bt-custom p-2">4</button>
+            </div>
+        </div>
+
+        <div id="question5" class="hidden">
+            <h2 class="text-xl mb-4">5. ขา มีระดับความเมื่อยล้า</h2>
+            <div class="flex justify-around">
+                <button onclick="selectAnswer(5, 0)" class="bt-custom p-2">0</button>
+                <button onclick="selectAnswer(5, 1)" class="bt-custom p-2">1</button>
+                <button onclick="selectAnswer(5, 2)" class="bt-custom p-2">2</button>
+                <button onclick="selectAnswer(5, 3)" class="bt-custom p-2">3</button>
+                <button onclick="selectAnswer(5, 4)" class="bt-custom p-2">4</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        let answers = {};
+        let fullName = '';
+        let userId = '';
+
+        window.onload = async () => {
+            await liff.init({ liffId: '2006670422-oyNB0Q5x' });
+            try {
+                const profile = await liff.getProfile();
+                userId = profile.userId;
+            } catch (error) {
+                console.error('Error getting profile:', error);
+                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถดึงข้อมูลผู้ใช้ได้', 'error');
+                return;
+            }
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('nameInput').classList.remove('hidden');
+            }, 2000);
+        };
+
+        function startAssessment() {
+            fullName = document.getElementById('fullName').value;
+            if (!fullName) {
+                Swal.fire('กรุณากรอกชื่อ-สกุล');
+                return;
+            }
+            document.getElementById('nameInput').classList.add('hidden');
+            document.getElementById('assessment').classList.remove('hidden');
+        }
+
+        function selectAnswer(question, score) {
+            answers[`q${question}`] = score;
+            if (question < 5) {
+                document.getElementById(`question${question}`).classList.add('hidden');
+                document.getElementById(`question${question + 1}`).classList.remove('hidden');
+                currentQuestion++;
+            } else {
+                submitAssessment();
+            }
+        }
+
+        async function submitAssessment() {
+            const scores = Object.values(answers);
+            const maxScore = Math.max(...scores);
+            const maxQuestion = Object.keys(answers).find(key => answers[key] === maxScore);
+            const questionNum = parseInt(maxQuestion.replace('q', ''));
+            
+            const bodyParts = ['แขน', 'คอ', 'ไหล่/บ่า', 'หลัง', 'ขา'];
+            const bodyPart = bodyParts[questionNum - 1];
+            const result = getResult(maxScore, bodyPart);
+
+            // Send to Google Sheet
+            await fetch('https://script.google.com/macros/s/AKfycbzuNXdFkqYjKf_cSjM42wumTbO29oWxuuzzlykwjmycgMa_bJ0Odk8LbJyPObPNZE-6/exec', {
+                method: 'POST',
+                body: JSON.stringify({ userId, fullName, ...answers, maxScore, bodyPart })
+            });
+
+            // Send LINE Flex Message
+            const flexMessage = {
+                type: 'flex',
+                altText: 'ผลการประเมินความเมื่อยล้า',
+                contents: {
+                    type: 'bubble',
+                    body: {
+                        type: 'box',
+                        layout: 'vertical',
+                        contents: [
+                            { type: 'text', text: `ผลประเมินของ ${fullName}`, weight: 'bold', size: 'xl' },
+                            { type: 'text', text: `User ID: ${userId}`, size: 'sm' },
+                            { type: 'text', text: `${bodyPart}: คะแนน ${maxScore}` },
+                            { type: 'text', text: `ระดับ: ${result.level}` },
+                            { type: 'text', text: result.description, wrap: true }
+                        ],
+                        backgroundColor: '#90EE90'
+                    }
+                }
+            };
+
+            await liff.sendMessages([flexMessage]);
+            Swal.fire('สำเร็จ!', 'ส่งผลการประเมินเรียบร้อยแล้ว', 'success');
+            liff.closeWindow();
+        }
+
+        function getResult(score, bodyPart) {
+            if (score === 0) return { level: 0, description: `${bodyPart}ของคุณ ไม่รู้สึกเมื่อยหรือปวดเมื่อย` };
+            if (score === 1) return { level: 1, description: `${bodyPart}ของคุณ รู้สึกปวดเมื่อยนิดหน่อยไม่เป็นอุปสรรคต่อการทำงาน โดยไม่ต้องหยุดพัก` };
+            if (score === 2) return { level: 2, description: `${bodyPart}ของคุณ รู้สึกปวดเมื่อยปานกลาง (ต้องมีการหยุดพักหรือเปลี่ยนท่าพักเพื่อให้หาย เหนื่อย)` };
+            if (score === 3) return { level: 3, description: `${bodyPart}ของคุณ รู้สึกปวดเมื่อยหรือล้ามาก เมื่อพักแล้วก็ไม่หายเหนื่อย` };
+            return { level: 4, description: `${bodyPart}ของคุณ รู้สึกปวดเมื่อยหรือล้ามากจนทนทำงานต่อไปไม่ไหว หมดแรงต้องรับประทานยา หรือพบแพทย์มากกว่า 1 วัน` };
+        }
+    </script>
+</body>
+</html>
