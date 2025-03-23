@@ -103,16 +103,8 @@
                 await liff.init({ liffId: '2006670422-0kMjgGbR' });
                 console.log('LIFF init สำเร็จ');
 
-                if (!liff.isInClient()) {
-                    console.log('ไม่ได้อยู่ใน LINE Client');
-                    loadingElement.classList.add('hidden');
-                    Swal.fire({
-                        title: 'ข้อผิดพลาด',
-                        text: 'กรุณาเปิดผ่าน LINE เท่านั้น โดยใช้ URL: https://liff.line.me/2006670422-0kMjgGbR',
-                        icon: 'error'
-                    });
-                    return;
-                }
+                // ข้ามการตรวจสอบ liff.isInClient() ชั่วคราวเพื่อทดสอบ
+                console.log('ข้ามการตรวจสอบ LINE Client ชั่วคราว');
 
                 if (!liff.isLoggedIn()) {
                     console.log('ยังไม่ล็อกอิน เรียก liff.login()');
