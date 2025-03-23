@@ -46,6 +46,9 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="bg-[#90EE90]">
@@ -53,7 +56,7 @@
         <div class="loader"></div>
     </div>
     
-    <div id="name-form" class="hidden p-4">
+    <div id="name-form" style="display: none;" class="p-4">
         <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-xl mb-4">กรุณากรอกข้อมูล</h2>
             <input id="fullName" type="text" placeholder="ชื่อ-สกุล ผู้สูงอายุ/ผู้ป่วย" 
@@ -62,7 +65,7 @@
         </div>
     </div>
 
-    <div id="question1" class="hidden p-4">
+    <div id="question1" style="display: none;" class="p-4">
         <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-xl mb-4">ข้อที่ 1</h2>
             <p class="mb-4">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึก หดหู่ เศร้า หรือท้อแท้สิ้นหวัง หรือไม่</p>
@@ -71,7 +74,7 @@
         </div>
     </div>
 
-    <div id="question2" class="hidden p-4">
+    <div id="question2" style="display: none;" class="p-4">
         <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-xl mb-4">ข้อที่ 2</h2>
             <p class="mb-4">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึก เบื่อ ทำอะไรก็ไม่เพลิดเพลิน หรือไม่</p>
@@ -89,11 +92,17 @@
 
         async function initializeApp() {
             const loadingElement = document.getElementById('loading');
+            const nameFormElement = document.getElementById('name-form');
             console.log('เข้าสู่ initializeApp');
+
+            if (!loadingElement || !nameFormElement) {
+                console.error('ไม่พบ DOM element: loading หรือ name-form');
+                return;
+            }
 
             if (typeof liff === 'undefined') {
                 console.error('LIFF SDK ไม่โหลด');
-                loadingElement.classList.add('hidden');
+                loadingElement.style.display = 'none';
                 Swal.fire('ข้อผิดพลาด', 'ไม่สามารถโหลด LIFF SDK ได้', 'error');
                 return;
             }
@@ -103,7 +112,6 @@
                 await liff.init({ liffId: '2006670422-0kMjgGbR' });
                 console.log('LIFF init สำเร็จ');
 
-                // ข้ามการตรวจสอบ liff.isInClient() ชั่วคราวเพื่อทดสอบ
                 console.log('ข้ามการตรวจสอบ LINE Client ชั่วคราว');
 
                 if (!liff.isLoggedIn()) {
@@ -117,12 +125,14 @@
                 userId = profile.userId;
                 console.log('User ID:', userId);
 
-                loadingElement.classList.add('hidden');
-                document.getElementById('name-form').classList.remove('hidden');
-                console.log('แสดงฟอร์มชื่อ');
+                setTimeout(() => {
+                    loadingElement.style.display = 'none';
+                    nameFormElement.style.display = 'block';
+                    console.log('แสดงฟอร์มชื่อ');
+                }, 100); // หน่วงเวลาเล็กน้อยเพื่อให้แน่ใจว่า DOM พร้อม
             } catch (error) {
                 console.error('LIFF Error:', error.message);
-                loadingElement.classList.add('hidden');
+                loadingElement.style.display = 'none';
                 Swal.fire('เกิดข้อผิดพลาด', 'LIFF ล้มเหลว: ' + error.message, 'error');
             }
         }
@@ -136,16 +146,16 @@
                 Swal.fire('กรุณากรอกชื่อ-สกุล');
                 return;
             }
-            document.getElementById('name-form').classList.add('hidden');
-            document.getElementById('question1').classList.remove('hidden');
+            document.getElementById('name-form').style.display = 'none';
+            document.getElementById('question1').style.display = 'block';
             console.log('เริ่มคำถามข้อ 1');
         }
 
         async function answer(question, value) {
             answers[question] = value;
             if (question === 1) {
-                document.getElementById('question1').classList.add('hidden');
-                document.getElementById('question2').classList.remove('hidden');
+                document.getElementById('question1').style.display = 'none';
+                document.getElementById('question2').style.display = 'block';
                 console.log('ไปคำถามข้อ 2');
             } else {
                 await submitAssessment();
