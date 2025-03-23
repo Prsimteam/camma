@@ -81,7 +81,7 @@
     </div>
 
     <script>
-        console.log('เริ่มต้นโค้ด JavaScript'); // ตรวจสอบว่าโค้ดรันถึงจุดนี้หรือไม่
+        console.log('เริ่มต้นโค้ด JavaScript');
 
         let answers = {};
         let fullName = '';
@@ -91,7 +91,6 @@
             const loadingElement = document.getElementById('loading');
             console.log('เข้าสู่ initializeApp');
 
-            // ตรวจสอบว่า LIFF SDK โหลดหรือไม่
             if (typeof liff === 'undefined') {
                 console.error('LIFF SDK ไม่โหลด');
                 loadingElement.classList.add('hidden');
@@ -107,14 +106,18 @@
                 if (!liff.isInClient()) {
                     console.log('ไม่ได้อยู่ใน LINE Client');
                     loadingElement.classList.add('hidden');
-                    Swal.fire('ข้อผิดพลาด', 'กรุณาเปิดผ่าน LINE เท่านั้น', 'error');
+                    Swal.fire({
+                        title: 'ข้อผิดพลาด',
+                        text: 'กรุณาเปิดผ่าน LINE เท่านั้น โดยใช้ URL: https://liff.line.me/2006670422-0kMjgGbR',
+                        icon: 'error'
+                    });
                     return;
                 }
 
                 if (!liff.isLoggedIn()) {
                     console.log('ยังไม่ล็อกอิน เรียก liff.login()');
                     liff.login();
-                    return; // รอผู้ใช้ล็อกอิน
+                    return;
                 }
 
                 console.log('ดึงโปรไฟล์...');
@@ -132,7 +135,6 @@
             }
         }
 
-        // เรียกทันทีเมื่อโหลดหน้า
         console.log('เรียก initializeApp');
         initializeApp();
 
