@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แบบคัดกรองโรคซึมเศร้า 2Q</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600" rel="stylesheet">
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -15,12 +15,11 @@
         }
         body {
             font-family: 'Kanit', sans-serif;
-        }
-        .bt-custom {
-            color: #000;
-            border: solid 2px #fff;
-            box-shadow: #000 2px 2px 1px;
-            border-radius: 0.75em;
+            background: linear-gradient(135deg, #90EE90 0%, #66BB6A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #loading {
             position: fixed;
@@ -28,58 +27,129 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #90EE90;
+            background: rgba(144, 238, 144, 0.9);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
         }
         .loader {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
+            width: 80px;
+            height: 80px;
+            border: 10px solid #f3f3f3;
+            border-top: 10px solid #3498db;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 2s linear infinite;
+            animation: spin 1.5s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            animation: fade 2s infinite;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .hidden {
-            display: none !important;
+        @keyframes fade {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            font-family: 'Kanit', sans-serif;
+        }
+        input {
+            border: 2px solid #E0E0E0;
+            font-size: 1rem;
+            color: #333;
+        }
+        input:focus {
+            outline: none;
+            border-color: #66BB6A;
+            box-shadow: 0 0 5px rgba(102, 187, 106, 0.5);
+        }
+        button {
+            background: #66BB6A;
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background: #4CAF50;
+            transform: scale(1.02);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center;
         }
     </style>
 </head>
-<body class="bg-[#90EE90]">
+<body>
     <div id="loading">
         <div class="loader"></div>
+        <div class="loading-text">กำลังโหลด...</div>
     </div>
     
-    <div id="name-form" style="display: none;" class="p-4">
-        <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-xl mb-4">กรุณากรอกข้อมูล</h2>
-            <input id="fullName" type="text" placeholder="ชื่อ-สกุล ผู้สูงอายุ/ผู้ป่วย" 
-                   class="w-full p-2 mb-4 border rounded">
-            <button onclick="startAssessment()" class="bt-custom w-full p-2 bg-white">เริ่มทำแบบประเมิน</button>
+    <div id="name-form" style="display: none;" class="container">
+        <div class="card">
+            <h2>กรุณากรอกข้อมูล</h2>
+            <input id="fullName" type="text" placeholder="ชื่อ-สกุล ผู้สูงอายุ/ผู้ป่วย">
+            <button onclick="startAssessment()">เริ่มทำแบบประเมิน</button>
         </div>
     </div>
 
-    <div id="question1" style="display: none;" class="p-4">
-        <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-xl mb-4">ข้อที่ 1</h2>
-            <p class="mb-4">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึก หดหู่ เศร้า หรือท้อแท้สิ้นหวัง หรือไม่</p>
-            <button onclick="answer(1, true)" class="bt-custom w-full p-2 mb-2 bg-white">มี</button>
-            <button onclick="answer(1, false)" class="bt-custom w-full p-2 bg-white">ไม่มี</button>
+    <div id="question1" style="display: none;" class="container">
+        <div class="card">
+            <h2>ข้อที่ 1</h2>
+            <p>ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้<br>ท่านรู้สึก หดหู่ เศร้า หรือท้อแท้สิ้นหวัง หรือไม่</p>
+            <button onclick="answer(1, true)">มี</button>
+            <button onclick="answer(1, false)">ไม่มี</button>
         </div>
     </div>
 
-    <div id="question2" style="display: none;" class="p-4">
-        <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-xl mb-4">ข้อที่ 2</h2>
-            <p class="mb-4">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ ท่านรู้สึก เบื่อ ทำอะไรก็ไม่เพลิดเพลิน หรือไม่</p>
-            <button onclick="answer(2, true)" class="bt-custom w-full p-2 mb-2 bg-white">มี</button>
-            <button onclick="answer(2, false)" class="bt-custom w-full p-2 bg-white">ไม่มี</button>
+    <div id="question2" style="display: none;" class="container">
+        <div class="card">
+            <h2>ข้อที่ 2</h2>
+            <p>ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้<br>ท่านรู้สึก เบื่อ ทำอะไรก็ไม่เพลิดเพลิน หรือไม่</p>
+            <button onclick="answer(2, true)">มี</button>
+            <button onclick="answer(2, false)">ไม่มี</button>
         </div>
     </div>
 
@@ -112,8 +182,6 @@
                 await liff.init({ liffId: '2006670422-0kMjgGbR' });
                 console.log('LIFF init สำเร็จ');
 
-                console.log('ข้ามการตรวจสอบ LINE Client ชั่วคราว');
-
                 if (!liff.isLoggedIn()) {
                     console.log('ยังไม่ล็อกอิน เรียก liff.login()');
                     liff.login();
@@ -129,7 +197,7 @@
                     loadingElement.style.display = 'none';
                     nameFormElement.style.display = 'block';
                     console.log('แสดงฟอร์มชื่อ');
-                }, 100); // หน่วงเวลาเล็กน้อยเพื่อให้แน่ใจว่า DOM พร้อม
+                }, 100);
             } catch (error) {
                 console.error('LIFF Error:', error.message);
                 loadingElement.style.display = 'none';
