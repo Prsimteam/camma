@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Kanit', sans-serif; }
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+
         .bt-custom {
             color: #000;
             border: solid 2px #fff;
@@ -17,6 +21,7 @@
             border-radius: 0.75em;
             background: #90ee90;
         }
+
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -29,6 +34,7 @@
             align-items: center;
             z-index: 9999;
         }
+
         .spinner {
             border: 8px solid #f3f3f3;
             border-top: 8px solid #00C300;
@@ -37,12 +43,19 @@
             height: 60px;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
+
 <body class="bg-[#90EE90] min-h-screen flex flex-col items-center justify-center p-4">
     <!-- Loading Animation -->
     <div id="loading" class="loading-overlay">
@@ -66,9 +79,12 @@
         <!-- Question Pages -->
         <div id="page1" class="question-page bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">1. การรับประทานอาหาร</h3>
-            <label class="block mb-2"><input type="radio" name="q1" value="0" class="mr-2"> ไม่สามารถตักอาหารเข้าปากได้</label>
-            <label class="block mb-2"><input type="radio" name="q1" value="1" class="mr-2"> ตักอาหารเองได้แต่ต้องมีคนช่วย</label>
-            <label class="block mb-2"><input type="radio" name="q1" value="2" class="mr-2"> ตักอาหารและช่วยตัวเองได้เป็นปกติ</label>
+            <label class="block mb-2"><input type="radio" name="q1" value="0" class="mr-2">
+                ไม่สามารถตักอาหารเข้าปากได้</label>
+            <label class="block mb-2"><input type="radio" name="q1" value="1" class="mr-2">
+                ตักอาหารเองได้แต่ต้องมีคนช่วย</label>
+            <label class="block mb-2"><input type="radio" name="q1" value="2" class="mr-2">
+                ตักอาหารและช่วยตัวเองได้เป็นปกติ</label>
             <button onclick="nextPage(1)" class="bt-custom px-6 py-2 mt-4">ถัดไป</button>
         </div>
 
@@ -85,8 +101,10 @@
         <div id="page3" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">3. การลุกนั่งจากที่นอนหรือเตียงไปเก้าอี้</h3>
             <label class="block mb-2"><input type="radio" name="q3" value="0" class="mr-2"> ไม่สามารถนั่งได้</label>
-            <label class="block mb-2"><input type="radio" name="q3" value="1" class="mr-2"> ต้องการความช่วยเหลืออย่างมาก</label>
-            <label class="block mb-2"><input type="radio" name="q3" value="2" class="mr-2"> ต้องการความช่วยเหลือบ้าง</label>
+            <label class="block mb-2"><input type="radio" name="q3" value="1" class="mr-2">
+                ต้องการความช่วยเหลืออย่างมาก</label>
+            <label class="block mb-2"><input type="radio" name="q3" value="2" class="mr-2">
+                ต้องการความช่วยเหลือบ้าง</label>
             <label class="block mb-2"><input type="radio" name="q3" value="3" class="mr-2"> ทำได้เอง</label>
             <div class="flex justify-between mt-4">
                 <button onclick="prevPage(3)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
@@ -97,8 +115,10 @@
         <div id="page4" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">4. การใช้ห้องน้ำ</h3>
             <label class="block mb-2"><input type="radio" name="q4" value="0" class="mr-2"> ช่วยตัวเองไม่ได้</label>
-            <label class="block mb-2"><input type="radio" name="q4" value="1" class="mr-2"> ทำเองได้บ้าง (ทำความสะอาดตัวเองได้หลังเสร็จธุระ)</label>
-            <label class="block mb-2"><input type="radio" name="q4" value="2" class="mr-2"> ช่วยตัวเองได้ดี (ขึ้นนั่ง/ลงจากโถส้วมได้เอง)</label>
+            <label class="block mb-2"><input type="radio" name="q4" value="1" class="mr-2"> ทำเองได้บ้าง
+                (ทำความสะอาดตัวเองได้หลังเสร็จธุระ)</label>
+            <label class="block mb-2"><input type="radio" name="q4" value="2" class="mr-2"> ช่วยตัวเองได้ดี
+                (ขึ้นนั่ง/ลงจากโถส้วมได้เอง)</label>
             <div class="flex justify-between mt-4">
                 <button onclick="prevPage(4)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
                 <button onclick="nextPage(4)" class="bt-custom px-6 py-2">ถัดไป</button>
@@ -107,10 +127,14 @@
 
         <div id="page5" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">5. การเคลื่อนที่ภายในห้องหรือบ้าน</h3>
-            <label class="block mb-2"><input type="radio" name="q5" value="0" class="mr-2"> เคลื่อนที่ไปไหนไม่ได้</label>
-            <label class="block mb-2"><input type="radio" name="q5" value="1" class="mr-2"> ต้องใช้รถเข็นช่วยและเคลื่อนที่ได้เอง</label>
-            <label class="block mb-2"><input type="radio" name="q5" value="2" class="mr-2"> เดินหรือเคลื่อนที่โดยมีคนช่วย</label>
-            <label class="block mb-2"><input type="radio" name="q5" value="3" class="mr-2"> เดินหรือเคลื่อนที่ได้เอง</label>
+            <label class="block mb-2"><input type="radio" name="q5" value="0" class="mr-2">
+                เคลื่อนที่ไปไหนไม่ได้</label>
+            <label class="block mb-2"><input type="radio" name="q5" value="1" class="mr-2">
+                ต้องใช้รถเข็นช่วยและเคลื่อนที่ได้เอง</label>
+            <label class="block mb-2"><input type="radio" name="q5" value="2" class="mr-2">
+                เดินหรือเคลื่อนที่โดยมีคนช่วย</label>
+            <label class="block mb-2"><input type="radio" name="q5" value="3" class="mr-2">
+                เดินหรือเคลื่อนที่ได้เอง</label>
             <div class="flex justify-between mt-4">
                 <button onclick="prevPage(5)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
                 <button onclick="nextPage(5)" class="bt-custom px-6 py-2">ถัดไป</button>
@@ -120,8 +144,10 @@
         <div id="page6" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">6. การสวมใส่เสื้อผ้า</h3>
             <label class="block mb-2"><input type="radio" name="q6" value="0" class="mr-2"> ต้องมีคนสวมใส่ให้</label>
-            <label class="block mb-2"><input type="radio" name="q6" value="1" class="mr-2"> ช่วยตัวเองได้ประมาณ 50%</label>
-            <label class="block mb-2"><input type="radio" name="q6" value="2" class="mr-2"> ช่วยตัวเองได้ดี (รวมถึงติดกระดุม/รูดซิบ)</label>
+            <label class="block mb-2"><input type="radio" name="q6" value="1" class="mr-2"> ช่วยตัวเองได้ประมาณ
+                50%</label>
+            <label class="block mb-2"><input type="radio" name="q6" value="2" class="mr-2"> ช่วยตัวเองได้ดี
+                (รวมถึงติดกระดุม/รูดซิบ)</label>
             <div class="flex justify-between mt-4">
                 <button onclick="prevPage(6)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
                 <button onclick="nextPage(6)" class="bt-custom px-6 py-2">ถัดไป</button>
@@ -132,7 +158,8 @@
             <h3 class="text-lg font-semibold mb-4">7. การขึ้นลงบันได 1 ชั้น</h3>
             <label class="block mb-2"><input type="radio" name="q7" value="0" class="mr-2"> ไม่สามารถทำได้</label>
             <label class="block mb-2"><input type="radio" name="q7" value="1" class="mr-2"> ต้องการคนช่วย</label>
-            <label class="block mb-2"><input type="radio" name="q7" value="2" class="mr-2"> ขึ้นลงได้เอง (รวมถึงใช้เครื่องช่วยเดิน)</label>
+            <label class="block mb-2"><input type="radio" name="q7" value="2" class="mr-2"> ขึ้นลงได้เอง
+                (รวมถึงใช้เครื่องช่วยเดิน)</label>
             <div class="flex justify-between mt-4">
                 <button onclick="prevPage(7)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
                 <button onclick="nextPage(7)" class="bt-custom px-6 py-2">ถัดไป</button>
@@ -141,7 +168,8 @@
 
         <div id="page8" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">8. การอาบน้ำ</h3>
-            <label class="block mb-2"><input type="radio" name="q8" value="0" class="mr-2"> ต้องมีคนช่วยหรือทำให้</label>
+            <label class="block mb-2"><input type="radio" name="q8" value="0" class="mr-2">
+                ต้องมีคนช่วยหรือทำให้</label>
             <label class="block mb-2"><input type="radio" name="q8" value="1" class="mr-2"> อาบน้ำเองได้</label>
             <div class="flex justify-between mt-4">
                 <button onclick="prevPage(8)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
@@ -151,24 +179,30 @@
 
         <div id="page9" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">9. การกลั้นการถ่ายอุจจาระ (ใน 1 สัปดาห์)</h3>
-            <label class="block mb-2"><input type="radio" name="q9" value="0" class="mr-2"> กลั้นไม่ได้ หรือต้องสวนอุจจาระ</label>
-            <label class="block mb-2"><input type="radio" name="q9" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1 ครั้ง/สัปดาห์)</label>
-            <label class="block mb-2"><input type="radio" name="q9" value="2" class="mr-2"> กลั้นได้เป็นปกติ</label>
-            <div class="flex justify-between mt-4">
-                <button onclick="prevPage(9)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
-                <button onclick="nextPage(9)" class="bt-custom px-6 py-2">ถัดไป</button>
-            </div>
+            <label class="block mb-2"><input type="radio" name="q9" value="0" class="mr-2"> กลั้นไม่ได้
+                หรือต้องสวนอุจจาระ</label>
+            <label class="block mb-2"><input type="radio" name="q9" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1
+                    ครั้ง/สัปดาห์)</label>
+                    <label class="block mb-2"><input type="radio" name="q9" value="2" class="mr-2">
+                        กลั้นได้เป็นปกติ</label>
+                    <div class="flex justify-between mt-4">
+                        <button onclick="prevPage(9)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
+                        <button onclick="nextPage(9)" class="bt-custom px-6 py-2">ถัดไป</button>
+                    </div>
         </div>
 
         <div id="page10" class="question-page hidden bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-semibold mb-4">10. การกลั้นปัสสาวะ (ใน 1 สัปดาห์)</h3>
-            <label class="block mb-2"><input type="radio" name="q10" value="0" class="mr-2"> กลั้นไม่ได้ หรือใช้สายสวน</label>
-            <label class="block mb-2"><input type="radio" name="q10" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1 ครั้ง/วัน)</label>
-            <label class="block mb-2"><input type="radio" name="q10" value="2" class="mr-2"> กลั้นได้เป็นปกติ</label>
-            <div class="flex justify-between mt-4">
-                <button onclick="prevPage(10)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
-                <button onclick="submitForm()" class="bt-custom px-6 py-2">ส่งแบบประเมิน</button>
-            </div>
+            <label class="block mb-2"><input type="radio" name="q10" value="0" class="mr-2"> กลั้นไม่ได้
+                หรือใช้สายสวน</label>
+            <label class="block mb-2"><input type="radio" name="q10" value="1" class="mr-2"> กลั้นไม่ได้บางครั้ง (<1
+                    ครั้ง/วัน)</label>
+                    <label class="block mb-2"><input type="radio" name="q10" value="2" class="mr-2">
+                        กลั้นได้เป็นปกติ</label>
+                    <div class="flex justify-between mt-4">
+                        <button onclick="prevPage(10)" class="bt-custom px-6 py-2">ย้อนกลับ</button>
+                        <button onclick="submitForm()" class="bt-custom px-6 py-2">ส่งแบบประเมิน</button>
+                    </div>
         </div>
     </div>
 
@@ -176,7 +210,10 @@
         let liffId = '2006670422-2lW1Qb9n'; // LIFF ID ของคุณ
         let fullName = '';
         let userId = '';
-
+        Swal.mixin({
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#90EE90'
+        });
         // แสดง Loading Animation และไปหน้า Input ชื่อ พร้อมดึง userId
         window.onload = async () => {
             try {
@@ -427,4 +464,5 @@
         }
     </script>
 </body>
+
 </html>

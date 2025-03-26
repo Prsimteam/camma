@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,14 @@
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        *, ::before, ::after {
+        *,
+        ::before,
+        ::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
             font-family: 'Kanit', sans-serif;
             background: linear-gradient(135deg, #90EE90 0%, #66BB6A 100%);
@@ -21,6 +25,7 @@
             justify-content: center;
             align-items: center;
         }
+
         #loading {
             position: fixed;
             top: 0;
@@ -34,6 +39,7 @@
             align-items: center;
             z-index: 9999;
         }
+
         .loader {
             width: 80px;
             height: 80px;
@@ -43,6 +49,7 @@
             animation: spin 1.5s ease-in-out infinite;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
+
         .loading-text {
             margin-top: 20px;
             font-size: 1.2rem;
@@ -50,19 +57,35 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             animation: fade 2s infinite;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         @keyframes fade {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
+
         .container {
             max-width: 400px;
             width: 100%;
             padding: 20px;
         }
+
         .card {
             background: white;
             border-radius: 20px;
@@ -70,9 +93,11 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
+
         .card:hover {
             transform: translateY(-5px);
         }
+
         h2 {
             font-size: 1.8rem;
             font-weight: 600;
@@ -80,23 +105,28 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        input, button {
+
+        input,
+        button {
             width: 100%;
             padding: 12px;
             margin-bottom: 15px;
             border-radius: 10px;
             font-family: 'Kanit', sans-serif;
         }
+
         input {
             border: 2px solid #E0E0E0;
             font-size: 1rem;
             color: #333;
         }
+
         input:focus {
             outline: none;
             border-color: #66BB6A;
             box-shadow: 0 0 5px rgba(102, 187, 106, 0.5);
         }
+
         button {
             background: #66BB6A;
             color: white;
@@ -106,13 +136,16 @@
             cursor: pointer;
             transition: background 0.3s ease, transform 0.2s ease;
         }
+
         button:hover {
             background: #4CAF50;
             transform: scale(1.02);
         }
+
         button:active {
             transform: scale(0.98);
         }
+
         p {
             font-size: 1.1rem;
             color: #555;
@@ -121,12 +154,13 @@
         }
     </style>
 </head>
+
 <body>
     <div id="loading">
         <div class="loader"></div>
         <div class="loading-text">กำลังโหลด...</div>
     </div>
-    
+
     <div id="name-form" style="display: none;" class="container">
         <div class="card">
             <h2>กรุณากรอกข้อมูล</h2>
@@ -173,7 +207,13 @@
             if (typeof liff === 'undefined') {
                 console.error('LIFF SDK ไม่โหลด');
                 loadingElement.style.display = 'none';
-                Swal.fire('ข้อผิดพลาด', 'ไม่สามารถโหลด LIFF SDK ได้', 'error');
+                Swal.fire({
+                    title: 'ข้อผิดพลาด',
+                    text: 'ไม่สามารถโหลด LIFF SDK ได้',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90'
+                });
                 return;
             }
 
@@ -211,7 +251,12 @@
         function startAssessment() {
             fullName = document.getElementById('fullName').value;
             if (!fullName) {
-                Swal.fire('กรุณากรอกชื่อ-สกุล');
+                Swal.fire({
+                    title: 'แจ้งเตือน',
+                    text: 'กรุณากรอกชื่อ-สกุล',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90'
+                });
                 return;
             }
             document.getElementById('name-form').style.display = 'none';
@@ -266,25 +311,25 @@
                         layout: 'vertical',
                         backgroundColor: '#90EE90',
                         contents: [
-                            { 
-                                type: 'text', 
-                                text: `ผลประเมินของ`, 
-                                weight: 'bold', 
+                            {
+                                type: 'text',
+                                text: `ผลประเมินของ`,
+                                weight: 'bold',
                                 size: 'xl',
                                 align: 'center'
                             },
-                            { 
-                                type: 'text', 
-                                text: `${fullName}`, 
-                                weight: 'bold', 
+                            {
+                                type: 'text',
+                                text: `${fullName}`,
+                                weight: 'bold',
                                 size: 'xl',
                                 align: 'center',
                                 margin: 'md'
                             },
-                            { 
-                                type: 'text', 
-                                text: `สถานะ: ${result}`, 
-                                size: 'lg', 
+                            {
+                                type: 'text',
+                                text: `สถานะ: ${result}`,
+                                size: 'lg',
                                 margin: 'md',
                                 align: 'center'
                             }
@@ -303,19 +348,19 @@
                         layout: 'vertical',
                         backgroundColor: '#90EE90',
                         contents: [
-                            { 
-                                type: 'text', 
-                                text: 'ผู้มีความเสี่ยง', 
-                                weight: 'bold', 
+                            {
+                                type: 'text',
+                                text: 'ผู้มีความเสี่ยง',
+                                weight: 'bold',
                                 size: 'lg',
                                 align: 'center'
                             },
-                            { 
-                                type: 'button', 
-                                action: { 
-                                    type: 'uri', 
-                                    label: 'ให้คุณทำแบบสอบถามนี้', 
-                                    uri: 'https://liff.line.me/2006670422-P9AYeln9' 
+                            {
+                                type: 'button',
+                                action: {
+                                    type: 'uri',
+                                    label: 'ให้คุณทำแบบสอบถามนี้',
+                                    uri: 'https://liff.line.me/2006670422-P9AYeln9'
                                 },
                                 style: 'primary',
                                 margin: 'md'
@@ -327,7 +372,13 @@
 
             try {
                 await liff.sendMessages(flexMessage2 ? [flexMessage1, flexMessage2] : [flexMessage1]);
-                Swal.fire('สำเร็จ!', 'ผลการประเมินถูกส่งไปยัง LINE แล้ว', 'success');
+                Swal.fire({
+                    title: 'สำเร็จ!',
+                    text: 'ผลการประเมินถูกส่งไปยัง LINE แล้ว',
+                    icon: 'success',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90'
+                });
                 liff.closeWindow();
                 console.log('ส่ง Flex Message สำเร็จ');
             } catch (error) {
@@ -337,4 +388,5 @@
         }
     </script>
 </body>
+
 </html>

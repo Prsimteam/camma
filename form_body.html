@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,12 +14,14 @@
             background-color: #90EE90;
             font-family: 'Kanit', sans-serif;
         }
+
         .bt-custom {
             color: #000;
             border: solid 2px #fff;
             box-shadow: #000 2px 2px 1px;
             border-radius: 0.75em;
         }
+
         #loading {
             position: fixed;
             top: 0;
@@ -31,6 +34,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .loader {
             border: 8px solid #f3f3f3;
             border-top: 8px solid #3498db;
@@ -39,21 +43,28 @@
             height: 60px;
             animation: spin 2s linear infinite;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
+
 <body>
     <div id="loading">
         <div class="loader"></div>
     </div>
-    
+
     <div id="nameInput" class="container mx-auto p-4 hidden">
         <h1 class="text-2xl text-center mb-4">กรุณากรอกข้อมูล</h1>
-        <input id="fullName" type="text" placeholder="ชื่อ-สกุล ผู้สูงอายุ/ผู้ป่วย" 
-               class="w-full p-2 mb-4 border rounded">
+        <input id="fullName" type="text" placeholder="ชื่อ-สกุล ผู้สูงอายุ/ผู้ป่วย"
+            class="w-full p-2 mb-4 border rounded">
         <button onclick="startAssessment()" class="bt-custom w-full p-2">เริ่มประเมิน</button>
     </div>
 
@@ -119,7 +130,10 @@
         let answers = {};
         let fullName = '';
         let userId = '';
-
+        Swal.mixin({
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#90EE90'
+        });
         window.onload = async () => {
             await liff.init({ liffId: '2006670422-oyNB0Q5x' });
             try {
@@ -162,7 +176,7 @@
             const maxScore = Math.max(...scores);
             const maxQuestion = Object.keys(answers).find(key => answers[key] === maxScore);
             const questionNum = parseInt(maxQuestion.replace('q', ''));
-            
+
             const bodyParts = ['แขน', 'คอ', 'ไหล่/บ่า', 'หลัง', 'ขา'];
             const bodyPart = bodyParts[questionNum - 1];
             const result = getResult(maxScore, bodyPart);
@@ -258,4 +272,5 @@
         }
     </script>
 </body>
+
 </html>

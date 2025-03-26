@@ -198,6 +198,10 @@
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
+    Swal.mixin({
+      confirmButtonText: 'ตกลง',
+      confirmButtonColor: '#90EE90'
+    });
     // คำถามทั้ง 5 ข้อ
     const questions = [
       { id: "question1", text: "คุณรู้สึกหงุดหงิด โกรธง่าย" },
