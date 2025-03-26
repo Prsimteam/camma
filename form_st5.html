@@ -270,6 +270,8 @@
             Swal.fire({
               icon: 'warning',
               title: 'กรุณาเปิดใน LINE',
+              confirmButtonText: 'ตกลง',
+              confirmButtonColor: '#90EE90',
               text: 'โปรดเปิดลิงก์นี้ผ่านแอปพลิเคชัน LINE'
             });
           }
@@ -289,6 +291,8 @@
           Swal.fire({
             icon: 'warning',
             title: 'กรุณาตอบคำถาม',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#90EE90',
             text: 'คุณยังไม่ได้เลือกคำตอบ'
           });
           return;
@@ -324,6 +328,8 @@
           Swal.fire({
             icon: 'success',
             title: 'ส่งคำตอบสำเร็จ!',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#90EE90',
             text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
           }).then(() => liff.closeWindow());
         } catch (error) {
@@ -331,6 +337,8 @@
           Swal.fire({
             icon: 'error',
             title: 'เกิดข้อผิดพลาด',
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#90EE90',
             text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่'
           });
         }
