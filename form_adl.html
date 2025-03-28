@@ -210,10 +210,7 @@
         let liffId = '2006670422-2lW1Qb9n'; // LIFF ID ของคุณ
         let fullName = '';
         let userId = '';
-        Swal.mixin({
-            confirmButtonText: 'ตกลง',
-            confirmButtonColor: '#90EE90'
-        });
+
         // แสดง Loading Animation และไปหน้า Input ชื่อ พร้อมดึง userId
         window.onload = async () => {
             try {
@@ -237,7 +234,9 @@
         function startAssessment() {
             fullName = document.getElementById('fullName').value.trim();
             if (!fullName) {
-                Swal.fire('กรุณากรอกชื่อ-สกุล', '', 'warning');
+                Swal.fire('กรุณากรอกชื่อ-สกุล', '',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90', 'warning');
                 return;
             }
             document.getElementById('nameInput').classList.add('hidden');
@@ -248,7 +247,9 @@
         function nextPage(current) {
             const selected = document.querySelector(`input[name="q${current}"]:checked`);
             if (!selected) {
-                Swal.fire('กรุณาเลือกคำตอบก่อนไปหน้าถัดไป', '', 'warning');
+                Swal.fire('กรุณาเลือกคำตอบก่อนไปหน้าถัดไป', '',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90', 'warning');
                 return;
             }
             document.getElementById(`page${current}`).classList.add('hidden');
@@ -301,7 +302,9 @@
 
             Swal.fire({
                 title: 'ผลการประเมิน',
-                text: `ชื่อ: ${fullName}\nคะแนนรวม: ${totalScore}\nกลุ่ม: ${group}`,
+                text: `คุณ ${fullName}\nคะแนนรวม: ${totalScore}\n คะแนน ${group}`,
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#90EE90',
                 icon: 'success'
             }).then(async () => {
                 const response = await fetch('https://script.google.com/macros/s/AKfycbzTCByxmbCWJw9qP13QJb5g_TnI5ekm11f8aidYh-BThIOLU35S16hgfLHsmcUE4Z3XOw/exec', {
