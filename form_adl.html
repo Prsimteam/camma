@@ -234,9 +234,14 @@
         function startAssessment() {
             fullName = document.getElementById('fullName').value.trim();
             if (!fullName) {
-                Swal.fire('กรุณากรอกชื่อ-สกุล', '',
+
+                Swal.fire({
+                    title: 'แจ้งเตือน!',
+                    text: 'กรุณากรอกชื่อ-สกุล',
+                    icon: 'warning',
                     confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#90EE90', 'warning');
+                    confirmButtonColor: '#90EE90'
+                });
                 return;
             }
             document.getElementById('nameInput').classList.add('hidden');
@@ -247,9 +252,14 @@
         function nextPage(current) {
             const selected = document.querySelector(`input[name="q${current}"]:checked`);
             if (!selected) {
-                Swal.fire('กรุณาเลือกคำตอบก่อนไปหน้าถัดไป', '',
+
+                Swal.fire({
+                    title: 'แจ้งเตือน!',
+                    text: 'กรุณาเลือกคำตอบก่อนไปหน้าถัดไป',
+                    icon: 'warning',
                     confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#90EE90', 'warning');
+                    confirmButtonColor: '#90EE90'
+                });
                 return;
             }
             document.getElementById(`page${current}`).classList.add('hidden');
