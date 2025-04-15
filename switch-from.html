@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirecting...</title>
+  <style>
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader"></div>
+
+  <script src="https://cdn.line.me/liff/2.22.0/liff.js"></script>
+  <script>
+    async function initializeLiff() {
+      try {
+        await liff.init({ liffId: '2006670422-Ry9kgNoj' });
+        const profile = await liff.getProfile();
+        const userId = profile.userId;
+        
+        const response = await fetch(
+          `https://script.google.com/macros/s/AKfycbzS61xzRAchATRzqtQGDqLs5vRgWrLT03_tYAw-UWfYlcZLPMtp9M6NlBFOxH4xIaA7/exec?userId=${userId}`,
+          {
+            method: 'GET',
+            mode: 'cors'
+          }
+        );
+        
+        const data = await response.json();
+        
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert('ไม่พบ URL สำหรับ redirect: ' + (data.error || 'ไม่ทราบสาเหตุ'));
+        }
+      } catch (error) {
+        alert('เกิดข้อผิดพลาด: ' + error.message);
+      }
+    }
+
+    window.onload = initializeLiff;
+  </script>
+</body>
+</html>
