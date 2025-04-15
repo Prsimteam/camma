@@ -48,33 +48,55 @@
     <span class="loading-text">กำลังโหลด...</span>
   </div>
 
-  <script src="https://unpkg.com/@line/liff@2.x/dist/liff.js"></script>
   <script>
+    // โหลด LIFF SDK ด้วย Promise
+    function loadLiff() {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://static.line-scdn.net/liff/edge/2/sdk.js';
+        script.onload = () => resolve(window.liff);
+        script.onerror = () => reject(new Error('ไม่สามารถโหลด LIFF SDK ได้'));
+        document.head.appendChild(script);
+      });
+    }
+
     async function callRedirectApi(userId, osType) {
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbzpXddYCzZBiP5InjDf3iXeMvlP0GjmCFP2zXuA5ySdELaDDGefVgb3ymaeAYquOxG4/exec';
-      const response = await fetch(`${scriptUrl}?userId=${userId}&osType=${osType}`, {
-        method: 'GET',
-        mode: 'cors'
-      });
-      return await response.json();
+      try {
+        const response = await fetch(`${scriptUrl}?userId=${userId}&osType=${osType}`, {
+          method: 'GET',
+          mode: 'cors'
+        });
+        return await response.json();
+      } catch (error) {
+        throw new Error('เกิดข้อผิดพลาดในการเรียก API: ' + error.message);
+      }
     }
 
     async function initializeApp() {
+      const loadingElement = document.getElementById('loading');
       try {
+        // โหลด LIFF SDK
+        const liff = await loadLiff();
+        
+        // Initialize LIFF
         await liff.init({ liffId: '2006670422-GZKVkP7Q' });
+        
+        // ดึง userId และ OS
         const userId = liff.getContext().userId;
         const osType = liff.getOS();
 
+        // เรียก API
         const data = await callRedirectApi(userId, osType);
         
         if (data.error) {
-          document.getElementById('loading').innerHTML = 
+          loadingElement.innerHTML = 
             '<p style="color: red;">เกิดข้อผิดพลาด: ' + data.error + '</p>';
         } else {
           window.location.href = data.url;
         }
       } catch (error) {
-        document.getElementById('loading').innerHTML = 
+        loadingElement.innerHTML = 
           '<p style="color: red;">เกิดข้อผิดพลาด: ' + error.message + '</p>';
       }
     }
