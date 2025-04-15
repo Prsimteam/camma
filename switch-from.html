@@ -25,14 +25,30 @@
 <body>
   <div class="loader"></div>
 
-  <script src="https://cdn.line.me/liff/2.22.0/liff.js"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
     async function initializeLiff() {
+      // ตรวจสอบว่า liff มีอยู่จริงหรือไม่
+      if (typeof liff === 'undefined') {
+        alert('ไม่สามารถโหลด LIFF SDK ได้ กรุณาตรวจสอบการเชื่อมต่อ');
+        return;
+      }
+
       try {
+        // Initialize LIFF
         await liff.init({ liffId: '2006670422-Ry9kgNoj' });
+        
+        // ตรวจสอบสถานะการ login
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
+
+        // Get User ID from LINE
         const profile = await liff.getProfile();
         const userId = profile.userId;
         
+        // Call Google Apps Script API
         const response = await fetch(
           `https://script.google.com/macros/s/AKfycbzS61xzRAchATRzqtQGDqLs5vRgWrLT03_tYAw-UWfYlcZLPMtp9M6NlBFOxH4xIaA7/exec?userId=${userId}`,
           {
@@ -53,7 +69,11 @@
       }
     }
 
-    window.onload = initializeLiff;
+    // รอให้หน้าโหลดเสร็จแล้วค่อยเริ่ม
+    window.addEventListener('load', () => {
+      // หน่วงเวลาเล็กน้อยเพื่อให้แน่ใจว่า LIFF SDK โหลดแล้ว
+      setTimeout(initializeLiff, 100);
+    });
   </script>
 </body>
 </html>
