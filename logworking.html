@@ -375,13 +375,23 @@
             submitButton.disabled = true;
 
             const formData = new FormData(this);
+            const imageInput = document.getElementById('image_upload');
             const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec';
+
+            // ดีบัก: ตรวจสอบไฟล์
+            if (imageInput.files.length > 0) {
+                const file = imageInput.files[0];
+                console.log('Preparing to send image:', file.name, 'Size:', file.size, 'Type:', file.type);
+                formData.append('image_upload', file);
+            } else {
+                console.log('No image file selected for upload');
+            }
 
             // ดีบัก: ตรวจสอบข้อมูลใน FormData
             console.log('Submitting form to:', webAppUrl);
             let formDataEntries = [];
             for (let [key, value] of formData.entries()) {
-                formDataEntries.push(`${key}: ${value instanceof File ? value.name : value}`);
+                formDataEntries.push(`${key}: ${value instanceof File ? value.name + ' (' + value.type + ')' : value}`);
             }
             console.log('FormData entries:', formDataEntries);
 
