@@ -65,6 +65,18 @@
         .form-check {
             margin-bottom: 0.5rem;
         }
+
+        @media (max-width: 576px) {
+            .disease-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .disease-buttons .btn {
+                width: 100%;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
@@ -181,7 +193,21 @@
                     </div>
                 </div>
 
+                <script>
+                    function goToDiseasePage(pageNum, disease) {
+                        const diseaseInput = document.getElementById('disease');
+                        if (!disease) {
+                            alert('กรุณาเลือกโรค');
+                            return;
+                        }
+                        diseaseInput.value = disease;
+                        document.querySelector('.page.active').classList.remove('active');
+                        document.querySelector(`.page[data-page="${pageNum}"]`).classList.add('active');
+                        updateButtonStates();
+                        updateProgress();
+                    }
 
+                </script>
                 <!-- หน้า 5: เลือกโรค -->
                 <div class="page" data-page="5">
                     <div class="form-section">
@@ -1171,7 +1197,7 @@
                 <!-- หน้า 7: แนบรูป -->
                 <div class="page" data-page="7">
                     <div class="form-section">
-                        <label for="image_upload" class="form-label">แนบรูป</label>
+                        <label for="image_upload" class="form-label">แนบรูปภาพที่เกี่ยวข้องกับการเยี่ยม (ถ้ามี)</label>
                         <input type="file" id="image_upload" name="image_upload" class="form-control"
                             accept="image/jpeg,image/png,image/gif">
                         <div id="imagePreview" class="mt-2"></div>
@@ -1181,7 +1207,7 @@
                             onclick="prevPage()">ย้อนกลับ</button>
                         <button type="submit" class="btn btn-success btn-custom">ส่งแบบฟอร์ม</button>
                     </div>
-                    <div id="submitMessage" class="alert alert-success" role="alert">ส่งแบบฟอร์มสำเร็จ!</div>
+                    <div id="submitMessage" class="alert alert-success" role="alert">ส่งแบบฟอร์มสำเร็จ! ระบบจะรีเซ็ตใน 2 วินาที</div>
                     <div id="errorMessage" class="alert alert-danger" role="alert">เกิดข้อผิดพลาด กรุณาลองใหม่</div>
                 </div>
             </form>
@@ -1207,9 +1233,13 @@
 
         function updateProgress() {
             const currentPage = document.querySelector('.page.active');
-            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
-            document.getElementById('formProgress').value = currentPageNum;
+            let currentPageNum = currentPage.getAttribute('data-page');
+            if (currentPageNum.startsWith('5.')) {
+                currentPageNum = '5';
+            }
+            document.getElementById('formProgress').value = parseInt(currentPageNum);
         }
+
 
         function validateCheckboxes(page) {
             const checkboxes = page.querySelectorAll('input[type="checkbox"]');
@@ -1217,11 +1247,14 @@
         }
 
         function nextPage() {
-            const pages = document.querySelectorAll('.page');
             const currentPage = document.querySelector('.page.active');
-            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
-            const nextPageNum = currentPageNum + 1;
-
+            const currentPageNum = currentPage.getAttribute('data-page');
+            let nextPageNum;
+            if (currentPageNum.startsWith('5.')) {
+                nextPageNum = '6';
+            } else {
+                nextPageNum = parseInt(currentPageNum) + 1;
+            }
             if (nextPageNum <= pages.length) {
                 const requiredFields = currentPage.querySelectorAll('[required]');
                 let allValid = true;
@@ -1232,7 +1265,7 @@
                     }
                 });
 
-                if (currentPageNum === 5 && !validateCheckboxes(currentPage)) {
+                if (currentPageNum.startsWith('5.') && !validateCheckboxes(currentPage)) {
                     alert('กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกในส่วนสภาพปัญหาหรือกิจกรรมการดูแล');
                     return;
                 }
