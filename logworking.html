@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แบบฟอร์มส่งข้อมูลและอัปโหลดรูปภาพ</title>
+    <title>บันทึกการปฏิบัติงาน</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,10 +67,19 @@
             color: red;
             margin-top: 10px;
         }
+        progress {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .preview-image {
+            max-width: 200px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>แบบฟอร์มส่งข้อมูลและอัปโหลดรูปภาพ</h1>
+    <h1>บันทึกการปฏิบัติงาน</h1>
+    <progress id="formProgress" max="7" value="1"></progress>
     <form id="multiPageForm" enctype="multipart/form-data">
         <!-- หน้า 1: CG Info -->
         <div class="page active" data-page="1">
@@ -280,6 +289,7 @@
             <div class="form-section">
                 <label for="image_upload">แนบรูป</label>
                 <input type="file" id="image_upload" name="image_upload" accept="image/*">
+                <div id="imagePreview"></div>
             </div>
             <div class="button-group">
                 <button type="button" onclick="prevPage()">ย้อนกลับ</button>
@@ -291,6 +301,27 @@
     </form>
 
     <script>
+        function updateButtonStates() {
+            const currentPage = document.querySelector('.page.active');
+            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
+            const prevButton = currentPage.querySelector('.button-group button:first-child');
+            const nextButton = currentPage.querySelector('.button-group button:last-child:not([type="submit"])');
+
+            if (prevButton) prevButton.disabled = currentPageNum === 1;
+            if (nextButton) nextButton.disabled = currentPageNum === document.querySelectorAll('.page').length;
+        }
+
+        function updateProgress() {
+            const currentPage = document.querySelector('.page.active');
+            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
+            document.getElementById('formProgress').value = currentPageNum;
+        }
+
+        function validateCheckboxes(page) {
+            const checkboxes = page.querySelectorAll('input[type="checkbox"]');
+            return Array.from(checkboxes).some(checkbox => checkbox.checked);
+        }
+
         function nextPage() {
             const pages = document.querySelectorAll('.page');
             const currentPage = document.querySelector('.page.active');
@@ -306,9 +337,17 @@
                         allValid = false;
                     }
                 });
+
+                if (currentPageNum === 5 && !validateCheckboxes(currentPage)) {
+                    alert('กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกในส่วนสภาพปัญหาหรือกิจกรรมการดูแล');
+                    return;
+                }
+
                 if (allValid) {
                     currentPage.classList.remove('active');
                     pages[nextPageNum - 1].classList.add('active');
+                    updateButtonStates();
+                    updateProgress();
                 }
             }
         }
@@ -322,8 +361,33 @@
             if (prevPageNum >= 1) {
                 currentPage.classList.remove('active');
                 pages[prevPageNum - 1].classList.add('active');
+                updateButtonStates();
+                updateProgress();
             }
         }
+
+        document.getElementById('image_upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const previewContainer = document.getElementById('imagePreview');
+            previewContainer.innerHTML = '';
+
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('ขนาดไฟล์รูปภาพต้องไม่เกิน 5MB');
+                    e.target.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.className = 'preview-image';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
         document.getElementById('multiPageForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -331,22 +395,25 @@
             submitButton.disabled = true;
 
             const formData = new FormData(this);
-            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec'; // แทนที่ด้วย URL ของ Google Apps Script Web App
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec';
 
             fetch(webAppUrl, {
                 method: 'POST',
-                body: formData,
-                mode: 'no-cors'
+                body: formData
             })
-            .then(() => {
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
                 document.getElementById('submitMessage').style.display = 'block';
                 document.getElementById('errorMessage').style.display = 'none';
                 setTimeout(() => {
                     document.getElementById('multiPageForm').reset();
+                    document.getElementById('imagePreview').innerHTML = '';
                     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
                     document.querySelector('.page[data-page="1"]').classList.add('active');
                     document.getElementById('submitMessage').style.display = 'none';
                     submitButton.disabled = false;
+                    updateButtonStates();
+                    updateProgress();
                 }, 2000);
             })
             .catch(error => {
@@ -355,6 +422,11 @@
                 document.getElementById('submitMessage').style.display = 'none';
                 submitButton.disabled = false;
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateButtonStates();
+            updateProgress();
         });
     </script>
 </body>
