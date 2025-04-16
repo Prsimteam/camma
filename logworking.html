@@ -65,17 +65,6 @@
         .form-check {
             margin-bottom: 0.5rem;
         }
-
-        #loadingSpinner {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1050;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
@@ -194,11 +183,13 @@
 
                 <!-- หน้า 5: Medical Information -->
                 <div class="page" data-page="5">
+
                     <label class="form-label"><h2>คุณกำลังดูแลผู้ป่วยที่เป็นโรคเบาหวาน</h2></label>
                     <input type="hidden" id="disease" name="disease" value="โรคเบาหวาน">
 
                     <div class="form-section">
                         <label class="form-label">สภาพปัญหาที่พบ (เลือกได้มากกว่า 1 ข้อ)</label>
+
                         <div class="form-check">
                             <input type="checkbox" name="symptoms" value="ไม่สามารถควบคุมระดับน้ำตาลในเลือดได้"
                                 id="symptom_diabetes_1" class="form-check-input">
@@ -258,9 +249,11 @@
                                 class="form-check-input">
                             <label for="symptom_diabetes_11" class="form-check-label">อื่นๆ</label>
                         </div>
+
                     </div>
                     <div class="form-section">
                         <label class="form-label">กิจกรรมการดูแล (เลือกได้มากกว่า 1 ข้อ)</label>
+
                         <div class="form-check">
                             <input type="checkbox" name="management" value="แนะนำรู้เรื่องโรคและดูแลการเจ็บป่วย"
                                 id="manage_diabetes_1" class="form-check-input">
@@ -292,7 +285,7 @@
                         </div>
                         <div class="form-check">
                             <input type="checkbox" name="management"
-                                value="ออกกำลังกาย เช่น แกว่งแขน ยึดเหย ascolt�stretchกล้ามเนื้อ เดิน ฤษีดัดตน"
+                                value="ออกกำลังกาย เช่น แกว่งแขน ยึดเหยียดกล้ามเนื้อ เดิน ฤษีดัดตน"
                                 id="manage_diabetes_6" class="form-check-input">
                             <label for="manage_diabetes_6" class="form-check-label">ออกกำลังกาย เช่น แกว่งแขน
                                 ยึดเหยียดกล้ามเนื้อ เดิน ฤษีดัดตน</label>
@@ -351,8 +344,9 @@
                         <div class="form-check">
                             <input type="checkbox" name="management" value="จัดการสิ่งแวดล้อมให้ปลอดภัย"
                                 id="manage_diabetes_16" class="form-check-input">
-                            <label for="manage_diabetes_16" class="form-check-label">จัดการสิ่งแวดล้อมให้ปลอดภัย</ snakes
+                            <label for="manage_diabetes_16" class="form-check-label">จัดการสิ่งแวดล้อมให้ปลอดภัย</label>
                         </div>
+
                     </div>
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary btn-custom"
@@ -388,6 +382,7 @@
                             <label for="emotion5" class="form-check-label">แย่มาก</label>
                         </div>
                     </div>
+
                     <div class="form-section">
                         <label class="form-label">ประเมิน อาการผู้ป่วยแตกต่างจากครั้งที่แล้วคือ</label>
                         <div class="form-check">
@@ -411,6 +406,7 @@
                             <label for="condition4" class="form-check-label">แย่ลง</label>
                         </div>
                     </div>
+
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary btn-custom"
                             onclick="prevPage()">ย้อนกลับ</button>
@@ -436,13 +432,6 @@
                     <div id="errorMessage" class="alert alert-danger" role="alert">เกิดข้อผิดพลาด กรุณาลองใหม่</div>
                 </div>
             </form>
-        </div>
-        <!-- Loading Spinner -->
-        <div id="loadingSpinner" class="d-none text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">กำลังโหลด...</span>
-            </div>
-            <p>กำลังส่งแบบฟอร์ม กรุณารอ...</p>
         </div>
     </div>
 
@@ -542,6 +531,7 @@
                     img.src = event.target.result;
                     img.className = 'preview-image';
                     previewContainer.appendChild(img);
+                    // เก็บ Base64 สำหรับตัวเลือก
                     document.getElementById('image_upload').dataset.base64 = event.target.result.split(',')[1];
                 };
                 reader.readAsDataURL(file);
@@ -553,18 +543,18 @@
         document.getElementById('multiPageForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const submitButton = document.querySelector('button[type="submit"]');
-            const loadingSpinner = document.getElementById('loadingSpinner');
             submitButton.disabled = true;
-            loadingSpinner.classList.remove('d-none'); // แสดง Spinner
 
             const formData = new FormData(this);
             const imageInput = document.getElementById('image_upload');
-            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec';
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec'; // แทนที่ด้วย Web App URL
 
+            // เพิ่มไฟล์หรือ Base64
             if (imageInput.files.length > 0) {
                 const file = imageInput.files[0];
                 console.log('Preparing to send image:', file.name, 'Size:', file.size, 'Type:', file.type);
                 formData.append('image_upload', file);
+                // เพิ่ม Base64 ถ้าต้องการ
                 if (imageInput.dataset.base64) {
                     formData.append('image_base64', imageInput.dataset.base64);
                 }
@@ -593,7 +583,6 @@
                         document.getElementById('formProgress').value = 1;
                         document.getElementById('submitMessage').style.display = 'none';
                         submitButton.disabled = false;
-                        loadingSpinner.classList.add('d-none'); // ซ่อน Spinner
                         updateButtonStates();
                     }, 2000);
                 } else {
@@ -605,7 +594,6 @@
                 document.getElementById('errorMessage').textContent = 'เกิดข้อผิดพลาด: ' + error.message;
                 document.getElementById('submitMessage').style.display = 'none';
                 submitButton.disabled = false;
-                loadingSpinner.classList.add('d-none'); // ซ่อน Spinner
             }
         });
 
