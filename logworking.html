@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบฟอร์มส่งข้อมูลและอัปโหลดรูปภาพ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        input[type="text"], input[type="date"], input[type="time"], textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background-color: #45a049;
+        }
+        input[type="file"] {
+            margin-top: 10px;
+        }
+        #submitMessage {
+            display: none;
+            color: green;
+            margin-top: 10px;
+        }
+        #errorMessage {
+            display: none;
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>แบบฟอร์มส่งข้อมูลและอัปโหลดรูปภาพ</h1>
+    <form id="multiPageForm" enctype="multipart/form-data">
+        <!-- หน้า 1: CG Info -->
+        <div class="page active" data-page="1">
+            <div class="form-section">
+                <label for="cg_name">ชื่อ-นามสกุล (ของ CG)</label>
+                <input type="text" id="cg_name" name="cg_name" required>
+            </div>
+            <div class="button-group">
+                <button type="button" disabled>ย้อนกลับ</button>
+                <button type="button" onclick="nextPage()">ถัดไป</button>
+            </div>
+        </div>
+
+        <!-- หน้า 2: Personal Info -->
+        <div class="page" data-page="2">
+            <div class="form-section">
+                <label for="patient_name">ชื่อ-นามสกุล ผู้ป่วย</label>
+                <input type="text" id="patient_name" name="patient_name" required>
+            </div>
+            <div class="form-section">
+                <label for="house_number">บ้านเลขที่</label>
+                <input type="text" id="house_number" name="house_number">
+            </div>
+            <div class="form-section">
+                <label for="age">อายุ</label>
+                <input type="text" id="age" name="age" required>
+            </div>
+            <div class="form-section">
+                <label for="village">หมู่ที่</label>
+                <input type="text" id="village" name="village">
+            </div>
+            <div class="form-section">
+                <label for="patient_group">เป็นผู้ป่วย กลุ่มที่</label>
+                <select id="patient_group" name="patient_group" required>
+                    <option value="">เลือกกลุ่ม</option>
+                    <option value="กลุ่มที่ 1 ติดบ้าน">กลุ่มที่ 1 ติดบ้าน</option>
+                    <option value="กลุ่มที่ 2 ติดบ้านสมองเสื่อม">กลุ่มที่ 2 ติดบ้านสมองเสื่อม</option>
+                    <option value="กลุ่มที่ 3 ติดเตียง">กลุ่มที่ 3 ติดเตียง</option>
+                    <option value="กลุ่มที่ 4 ติดเตียงระยะท้าย">กลุ่มที่ 4 ติดเตียงระยะท้าย</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button type="button" onclick="prevPage()">ย้อนกลับ</button>
+                <button type="button" onclick="nextPage()">ถัดไป</button>
+            </div>
+        </div>
+
+        <!-- หน้า 3: Visit Details -->
+        <div class="page" data-page="3">
+            <div class="form-section">
+                <label for="visit_number">ออกเยี่ยมครั้งที่</label>
+                <select id="visit_number" name="visit_number" required>
+                    <option value="">เลือกครั้ง</option>
+                    <option value="ออกเยี่ยมครั้งที่ 1">ออกเยี่ยมครั้งที่ 1</option>
+                    <option value="ออกเยี่ยมครั้งที่ 2">ออกเยี่ยมครั้งที่ 2</option>
+                    <option value="ออกเยี่ยมครั้งที่ 3">ออกเยี่ยมครั้งที่ 3</option>
+                    <option value="ออกเยี่ยมครั้งที่ 4">ออกเยี่ยมครั้งที่ 4</option>
+                    <option value="ออกเยี่ยมครั้งที่ 5">ออกเยี่ยมครั้งที่ 5</option>
+                    <option value="ออกเยี่ยมครั้งที่ 6">ออกเยี่ยมครั้งที่ 6</option>
+                    <option value="ออกเยี่ยมครั้งที่ 7">ออกเยี่ยมครั้งที่ 7</option>
+                    <option value="ออกเยี่ยมครั้งที่ 8">ออกเยี่ยมครั้งที่ 8</option>
+                    <option value="ออกเยี่ยมครั้งที่ 9">ออกเยี่ยมครั้งที่ 9</option>
+                    <option value="ออกเยี่ยมครั้งที่ 10">ออกเยี่ยมครั้งที่ 10</option>
+                    <option value="ออกเยี่ยมครั้งที่ 11">ออกเยี่ยมครั้งที่ 11</option>
+                    <option value="ออกเยี่ยมครั้งที่ 12">ออกเยี่ยมครั้งที่ 12</option>
+                </select>
+            </div>
+            <div class="form-section">
+                <label for="visit_date">วันที่ออกเยี่ยม</label>
+                <input type="date" id="visit_date" name="visit_date" required>
+            </div>
+            <div class="form-section">
+                <label for="visit_time">เวลาที่ออกเยี่ยม</label>
+                <input type="time" id="visit_time" name="visit_time" required>
+            </div>
+            <div class="button-group">
+                <button type="button" onclick="prevPage()">ย้อนกลับ</button>
+                <button type="button" onclick="nextPage()">ถัดไป</button>
+            </div>
+        </div>
+
+        <!-- หน้า 4: Vital Signs -->
+        <div class="page" data-page="4">
+            <div class="form-section">
+                <label for="blood_pressure">ความดันโลหิต</label>
+                <input type="text" id="blood_pressure" name="blood_pressure" required>
+            </div>
+            <div class="form-section">
+                <label for="pulse">ชีพจร</label>
+                <input type="text" id="pulse" name="pulse" required>
+            </div>
+            <div class="form-section">
+                <label for="temperature">อุณหภูมิร่างกาย</label>
+                <input type="text" id="temperature" name="temperature" required>
+            </div>
+            <div class="form-section">
+                <label for="dtx">เจาะน้ำตาลในเลือด DTX</label>
+                <input type="text" id="dtx" name="dtx">
+            </div>
+            <div class="button-group">
+                <button type="button" onclick="prevPage()">ย้อนกลับ</button>
+                <button type="button" onclick="nextPage()">ถัดไป</button>
+            </div>
+        </div>
+
+        <!-- หน้า 5: Medical Information -->
+        <div class="page" data-page="5">
+            <div class="form-section">
+                <label for="disease">คุณกำลังดูแลผู้ป่วยที่เป็น</label>
+                <select id="disease" name="disease" required>
+                    <option value="">เลือกโรค</option>
+                    <option value="โรคเบาหวาน">โรคเบาหวาน</option>
+                    <option value="โรคความดัน">โรคความดัน</option>
+                    <option value="โรคหลอดเลือดสมอง">โรคหลอดเลือดสมอง</option>
+                    <option value="ผู้ป่วยติดเตียง อัมพฤกษ์ อัมพาต">ผู้ป่วยติดเตียง อัมพฤกษ์ อัมพาต</option>
+                    <option value="โรคไตวายเรื้อรัง">โรคไตวายเรื้อรัง</option>
+                    <option value="โรคสมองเสื่อม">โรคสมองเสื่อม</option>
+                </select>
+            </div>
+            <div class="form-section">
+                <label>สภาพปัญหาที่พบ (เลือกได้มากกว่า 1 ข้อ)</label>
+                <input type="checkbox" name="symptoms" value="1.ไม่สามารถควบคุมระดับน้ำตาลในเลือดได้" id="symptom1">
+                <label for="symptom1">1. ไม่สามารถควบคุมระดับน้ำตาลในเลือดได้</label><br>
+                <input type="checkbox" name="symptoms" value="2.พฤติกรรมการบริโภคไม่เหมาะสม" id="symptom2">
+                <label for="symptom2">2. พฤติกรรมการบริโภคไม่เหมาะสม</label><br>
+                <input type="checkbox" name="symptoms" value="3.เสี่ยงต่อโรคหลอดเลือดหัวใจ หลอดเลือดสมอง" id="symptom3">
+                <label for="symptom3">3. เสี่ยงต่อโรคหลอดเลือดหัวใจ หลอดเลือดสมอง</label><br>
+                <input type="checkbox" name="symptoms" value="4.เสี่ยงต่อภาวะช็อค หมดสติ" id="symptom4">
+                <label for="symptom4">4. เสี่ยงต่อภาวะช็อค หมดสติ</label><br>
+                <input type="checkbox" name="symptoms" value="5.มีบาดแผลที่เท้า" id="symptom5">
+                <label for="symptom5">5. มีบาดแผลที่เท้า</label><br>
+                <input type="checkbox" name="symptoms" value="6.มีภาวะไตวายเรื้อรัง" id="symptom6">
+                <label for="symptom6">6. มีภาวะไตวายเรื้อรัง</label><br>
+                <input type="checkbox" name="symptoms" value="7.มีภาวะไขมันในเลือดสูง" id="symptom7">
+                <label for="symptom7">7. มีภาวะไขมันในเลือดสูง</label><br>
+                <input type="checkbox" name="symptoms" value="8.ผู้ดูแลเครียด วิตกกังวล ซึมเศร้า" id="symptom8">
+                <label for="symptom8">8. ผู้ดูแลเครียด วิตกกังวล ซึมเศร้า</label><br>
+                <input type="checkbox" name="symptoms" value="9.สภาพแวดล้อมไม่ปลอดภัย" id="symptom9">
+                <label for="symptom9">9. สภาพแวดล้อมไม่ปลอดภัย</label><br>
+                <input type="checkbox" name="symptoms" value="10.เสี่ยงต่อการหกล้ม" id="symptom10">
+                <label for="symptom10">10. เสี่ยงต่อการหกล้ม</label>
+            </div>
+            <div class="form-section">
+                <label>กิจกรรมการดูแล (เลือกได้มากกว่า 1 ข้อ)</label>
+                <input type="checkbox" name="management" value="1. แนะนำรู้เรื่องโรค และ ดูแลการเจ็บป่วย" id="manage1">
+                <label for="manage1">1. แนะนำรู้เรื่องโรค และ ดูแลการเจ็บป่วย</label><br>
+                <input type="checkbox" name="management" value="2. ให้ความรู้เกี่ยวกับการป้องกันภาวะแทรกซ้อน" id="manage2">
+                <label for="manage2">2. ให้ความรู้เกี่ยวกับการป้องกันภาวะแทรกซ้อน</label><br>
+                <input type="checkbox" name="management" value="3. ปรับโภชนาการให้เหมาะสมกับโรค อาหาร 3 กลุ่ม" id="manage3">
+                <label for="manage3">3. ปรับโภชนาการให้เหมาะสมกับโรค อาหาร 3 กลุ่ม</label><br>
+                <input type="checkbox" name="management" value="4. แนะนำการรับประทานยาและตรวจตามนัด" id="manage4">
+                <label for="manage4">4. แนะนำการรับประทานยาและตรวจตามนัด</label><br>
+                <input type="checkbox" name="management" value="5. สอนการฉีดอินซูลิน" id="manage5">
+                <label for="manage5">5. สอนการฉีดอินซูลิน</label><br>
+                <input type="checkbox" name="management" value="6. ออกกำลังกาย เช่น แกว่งแขน ยืดเหยียดกล้ามเนื้อ เดิน ฦษีดัดตน" id="manage6">
+                <label for="manage6">6. ออกกำลังกาย เช่น แกว่งแขน ยืดเหยียดกล้ามเนื้อ เดิน ฦษีดัดตน</label><br>
+                <input type="checkbox" name="management" value="7. ลดละเลิกบุหรี่-แอลกอฮอล์" id="manage7">
+                <label for="manage7">7. ลดละเลิกบุหรี่-แอลกอฮอล์</label><br>
+                <input type="checkbox" name="management" value="8. สอนการดูแลเท้า ตรวจเท้า" id="manage8">
+                <label for="manage8">8. สอนการดูแลเท้า ตรวจเท้า</label><br>
+                <input type="checkbox" name="management" value="9. แนะนำรองเท้าที่เหมาะสมกับเท้า" id="manage9">
+                <label for="manage9">9. แนะนำรองเท้าที่เหมาะสมกับเท้า</label><br>
+                <input type="checkbox" name="management" value="10. ฝึกจัดกับความเครียดโดย สมาธิบำบัด" id="manage10">
+                <label for="manage10">10. ฝึกจัดกับความเครียดโดย สมาธิบำบัด</label><br>
+                <input type="checkbox" name="management" value="11. ตรวจเช็คระดับน้ำตาลในเลือด" id="manage11">
+                <label for="manage11">11. ตรวจเช็คระดับน้ำตาลในเลือด</label><br>
+                <input type="checkbox" name="management" value="12. แนะนำการดูแลภาวะน้ำตาลต่ำ น้ำตาลสูง หมดสติ" id="manage12">
+                <label for="manage12">12. แนะนำการดูแลภาวะน้ำตาลต่ำ น้ำตาลสูง หมดสติ</label><br>
+                <input type="checkbox" name="management" value="13. แนะนำการสังเกตสัญญาณเตือน" id="manage13">
+                <label for="manage13">13. แนะนำการสังเกตสัญญาณเตือน</label><br>
+                <input type="checkbox" name="management" value="14. แนะนำขั้นตอนการเรียกรถฉุกเฉิน" id="manage14">
+                <label for="manage14">14. แนะนำขั้นตอนการเรียกรถฉุกเฉิน</label><br>
+                <input type="checkbox" name="management" value="15. แนะนำผู้ดูแลให้ทำแบบประเมินความเครียดผู้ดูแล" id="manage15">
+                <label for="manage15">15. แนะนำผู้ดูแลให้ทำแบบประเมินความเครียดผู้ดูแล</label><br>
+                <input type="checkbox" name="management" value="16. จัดการสิ่งแวดล้อมให้ปลอดภัย" id="manage16">
+                <label for="manage16">16. จัดการสิ่งแวดล้อมให้ปลอดภัย</label>
+            </div>
+            <div class="button-group">
+                <button type="button" onclick="prevPage()">ย้อนกลับ</button>
+                <button type="button" onclick="nextPage()">ถัดไป</button>
+            </div>
+        </div>
+
+        <!-- หน้า 6: ประเมินผล -->
+        <div class="page" data-page="6">
+            <div class="form-section">
+                <label>ประเมิน อารมณ์ผู้สูงอายุ</label>
+                <input type="radio" name="emotion" value="ดี" id="emotion1" required>
+                <label for="emotion1">ดี</label>
+                <input type="radio" name="emotion" value="ปานกลาง" id="emotion2">
+                <label for="emotion2">ปานกลาง</label>
+                <input type="radio" name="emotion" value="แย่" id="emotion3">
+                <label for="emotion3">แย่</label>
+            </div>
+            <div class="form-section">
+                <label for="condition_change">ประเมิน อาการผู้ป่วยแตกต่างจากครั้งที่แล้วคือ</label>
+                <textarea id="condition_change" name="condition_change" rows="4"></textarea>
+            </div>
+            <div class="button-group">
+                <button type="button" onclick="prevPage()">ย้อนกลับ</button>
+                <button type="button" onclick="nextPage()">ถัดไป</button>
+            </div>
+        </div>
+
+        <!-- หน้า 7: แนบรูป -->
+        <div class="page" data-page="7">
+            <div class="form-section">
+                <label for="image_upload">แนบรูป</label>
+                <input type="file" id="image_upload" name="image_upload" accept="image/*">
+            </div>
+            <div class="button-group">
+                <button type="button" onclick="prevPage()">ย้อนกลับ</button>
+                <button type="submit">ส่งแบบฟอร์ม</button>
+            </div>
+            <div id="submitMessage">ส่งแบบฟอร์มสำเร็จ!</div>
+            <div id="errorMessage">เกิดข้อผิดพลาด กรุณาลองใหม่</div>
+        </div>
+    </form>
+
+    <script>
+        function nextPage() {
+            const pages = document.querySelectorAll('.page');
+            const currentPage = document.querySelector('.page.active');
+            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
+            const nextPageNum = currentPageNum + 1;
+
+            if (nextPageNum <= pages.length) {
+                const requiredFields = currentPage.querySelectorAll('[required]');
+                let allValid = true;
+                requiredFields.forEach(field => {
+                    if (!field.value) {
+                        field.reportValidity();
+                        allValid = false;
+                    }
+                });
+                if (allValid) {
+                    currentPage.classList.remove('active');
+                    pages[nextPageNum - 1].classList.add('active');
+                }
+            }
+        }
+
+        function prevPage() {
+            const pages = document.querySelectorAll('.page');
+            const currentPage = document.querySelector('.page.active');
+            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
+            const prevPageNum = currentPageNum - 1;
+
+            if (prevPageNum >= 1) {
+                currentPage.classList.remove('active');
+                pages[prevPageNum - 1].classList.add('active');
+            }
+        }
+
+        document.getElementById('multiPageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
+            const formData = new FormData(this);
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec'; // แทนที่ด้วย URL ของ Google Apps Script Web App
+
+            fetch(webAppUrl, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            })
+            .then(() => {
+                document.getElementById('submitMessage').style.display = 'block';
+                document.getElementById('errorMessage').style.display = 'none';
+                setTimeout(() => {
+                    document.getElementById('multiPageForm').reset();
+                    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                    document.querySelector('.page[data-page="1"]').classList.add('active');
+                    document.getElementById('submitMessage').style.display = 'none';
+                    submitButton.disabled = false;
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('submitMessage').style.display = 'none';
+                submitButton.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
