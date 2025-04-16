@@ -10,6 +10,7 @@
         body {
             background-color: #f8f9fa;
             padding-top: 20px;
+            font-family: 'Prompt', sans-serif;
         }
         .form-container {
             max-width: 900px;
@@ -45,24 +46,15 @@
             padding: 10px 20px;
             font-size: 16px;
         }
-  
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Prompt', sans-serif;
-    }
-    .container {
-      max-width: 800px;
-    }
-    .form-label {
-      font-weight: 500;
-    }
-    .form-check {
-      margin-bottom: 0.5rem;
-    }
-  </style>
-  <!-- Google Fonts สำหรับภาษาไทย -->
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
-
+        .form-label {
+            font-weight: 500;
+        }
+        .form-check {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+    <!-- Google Fonts สำหรับภาษาไทย -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="form-container">
@@ -263,7 +255,7 @@
                 <div class="page" data-page="7">
                     <div class="form-section">
                         <label for="image_upload" class="form-label">แนบรูป</label>
-                        <input type="file" id="image_upload" name="image_upload" class="form-control" accept="image/*">
+                        <input type="file" id="image_upload" name="image_upload" class="form-control" accept="image/jpeg,image/png,image/gif">
                         <div id="imagePreview" class="mt-2"></div>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -352,8 +344,14 @@
             previewContainer.innerHTML = '';
 
             if (file) {
+                console.log('Image selected:', file.name, 'Size:', file.size, 'Type:', file.type);
                 if (file.size > 5 * 1024 * 1024) {
                     alert('ขนาดไฟล์รูปภาพต้องไม่เกิน 5MB');
+                    e.target.value = '';
+                    return;
+                }
+                if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+                    alert('กรุณาเลือกไฟล์ .jpg, .png, หรือ .gif');
                     e.target.value = '';
                     return;
                 }
@@ -366,35 +364,36 @@
                     previewContainer.appendChild(img);
                 };
                 reader.readAsDataURL(file);
+            } else {
+                console.log('No image selected');
             }
         });
 
-        document.getElementById('multiPageForm').addEventListener('submit', function(e) {
+        document.getElementById('multiPageForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
 
             const formData = new FormData(this);
-            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec'; // แทนที่ด้วย URL จาก Google Apps Script Web App
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec';
 
             // ดีบัก: ตรวจสอบข้อมูลใน FormData
-            console.log('Submitting form to: ' + webAppUrl);
+            console.log('Submitting form to:', webAppUrl);
             let formDataEntries = [];
             for (let [key, value] of formData.entries()) {
                 formDataEntries.push(`${key}: ${value instanceof File ? value.name : value}`);
             }
-            console.log('FormData entries: ', formDataEntries);
+            console.log('FormData entries:', formDataEntries);
 
-            fetch(webAppUrl, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                console.log('Response status: ' + response.status);
-                return response.text();
-            })
-            .then(text => {
-                console.log('Response text: ' + text);
+            try {
+                const response = await fetch(webAppUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+                console.log('Response status:', response.status);
+                const text = await response.text();
+                console.log('Response text:', text);
+
                 if (text === 'Success') {
                     document.getElementById('submitMessage').style.display = 'block';
                     document.getElementById('errorMessage').style.display = 'none';
@@ -403,22 +402,21 @@
                         document.getElementById('imagePreview').innerHTML = '';
                         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
                         document.querySelector('.page[data-page="1"]').classList.add('active');
+                        document.getElementById('formProgress').value = 1;
                         document.getElementById('submitMessage').style.display = 'none';
                         submitButton.disabled = false;
                         updateButtonStates();
-                        updateProgress();
                     }, 2000);
                 } else {
                     throw new Error('Server returned: ' + text);
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+            } catch (error) {
+                console.error('Error submitting form:', error);
                 document.getElementById('errorMessage').style.display = 'block';
                 document.getElementById('errorMessage').textContent = 'เกิดข้อผิดพลาด: ' + error.message;
                 document.getElementById('submitMessage').style.display = 'none';
                 submitButton.disabled = false;
-            });
+            }
         });
 
         document.addEventListener('DOMContentLoaded', () => {
