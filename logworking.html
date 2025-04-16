@@ -1,259 +1,413 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>บันทึกการเยี่ยมผู้ป่วย</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บันทึกการปฏิบัติงาน</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .preview-image {
+            max-width: 200px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .progress {
+            height: 25px;
+            margin-bottom: 20px;
+        }
+        #submitMessage, #errorMessage {
+            display: none;
+            margin-top: 15px;
+        }
+        .btn-custom {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
-  <div class="container mx-auto p-4 max-w-2xl">
-    <h1 class="text-2xl font-bold text-center mb-6">บันทึกการเยี่ยมผู้ป่วย</h1>
-    <form id="patientForm" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
-      <!-- ชื่อ-นามสกุล CG -->
-      <div class="mb-4">
-        <label for="cg_name" class="block text-sm font-medium text-gray-700">ชื่อ-นามสกุล (CG)</label>
-        <input type="text" id="cg_name" name="cg_name" required
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
+<body>
+    <div class="form-container">
+        <h1 class="text-center mb-4">บันทึกการปฏิบัติงาน</h1>
+        <progress id="formProgress" class="progress" max="7" value="1"></progress>
+        <div class="card p-4">
+            <form id="multiPageForm" enctype="multipart/form-data">
+                <!-- หน้า 1: CG Info -->
+                <div class="page active" data-page="1">
+                    <div class="form-section">
+                        <label for="cg_name" class="form-label">ชื่อ-นามสกุล (ของ CG)</label>
+                        <input type="text" id="cg_name" name="cg_name" class="form-control" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary btn-custom" disabled>ย้อนกลับ</button>
+                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                    </div>
+                </div>
 
-      <!-- ชื่อผู้ป่วย -->
-      <div class="mb-4">
-        <label for="patient_name" class="block text-sm font-medium text-gray-700">ชื่อผู้ป่วย</label>
-        <input type="text" id="patient_name" name="patient_name" required
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
+                <!-- หน้า 2: Personal Info -->
+                <div class="page" data-page="2">
+                    <div class="form-section">
+                        <label for="patient_name" class="form-label">ชื่อ-นามสกุล ผู้ป่วย</label>
+                        <input type="text" id="patient_name" name="patient_name" class="form-control" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="house_number" class="form-label">บ้านเลขที่</label>
+                        <input type="text" id="house_number" name="house_number" class="form-control">
+                    </div>
+                    <div class="form-section">
+                        <label for="age" class="form-label">อายุ</label>
+                        <input type="text" id="age" name="age" class="form-control" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="village" class="form-label">หมู่ที่</label>
+                        <input type="text" id="village" name="village" class="form-control">
+                    </div>
+                    <div class="form-section">
+                        <label for="patient_group" class="form-label">เป็นผู้ป่วย กลุ่มที่</label>
+                        <select id="patient_group" name="patient_group" class="form-select" required>
+                            <option value="">เลือกกลุ่ม</option>
+                            <option value="กลุ่มที่ 1 ติดบ้าน">กลุ่มที่ 1 ติดบ้าน</option>
+                            <option value="กลุ่มที่ 2 ติดบ้านสมองเสื่อม">กลุ่มที่ 2 ติดบ้านสมองเสื่อม</option>
+                            <option value="กลุ่มที่ 3 ติดเตียง">กลุ่มที่ 3 ติดเตียง</option>
+                            <option value="กลุ่มที่ 4 ติดเตียงระยะท้าย">กลุ่มที่ 4 ติดเตียงระยะท้าย</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary btn-custom" onclick="prevPage()">ย้อนกลับ</button>
+                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                    </div>
+                </div>
 
-      <!-- บ้านเลขที่ -->
-      <div class="mb-4">
-        <label for="house_number" class="block text-sm font-medium text-gray-700">บ้านเลขที่</label>
-        <input type="text" id="house_number" name="house_number"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
+                <!-- หน้า 3: Visit Details -->
+                <div class="page" data-page="3">
+                    <div class="form-section">
+                        <label for="visit_number" class="form-label">ออกเยี่ยมครั้งที่</label>
+                        <select id="visit_number" name="visit_number" class="form-select" required>
+                            <option value="">เลือกครั้ง</option>
+                            <option value="ออกเยี่ยมครั้งที่ 1">ออกเยี่ยมครั้งที่ 1</option>
+                            <option value="ออกเยี่ยมครั้งที่ 2">ออกเยี่ยมครั้งที่ 2</option>
+                            <option value="ออกเยี่ยมครั้งที่ 3">ออกเยี่ยมครั้งที่ 3</option>
+                            <option value="ออกเยี่ยมครั้งที่ 4">ออกเยี่ยมครั้งที่ 4</option>
+                            <option value="ออกเยี่ยมครั้งที่ 5">ออกเยี่ยมครั้งที่ 5</option>
+                            <option value="ออกเยี่ยมครั้งที่ 6">ออกเยี่ยมครั้งที่ 6</option>
+                            <option value="ออกเยี่ยมครั้งที่ 7">ออกเยี่ยมครั้งที่ 7</option>
+                            <option value="ออกเยี่ยมครั้งที่ 8">ออกเยี่ยมครั้งที่ 8</option>
+                            <option value="ออกเยี่ยมครั้งที่ 9">ออกเยี่ยมครั้งที่ 9</option>
+                            <option value="ออกเยี่ยมครั้งที่ 10">ออกเยี่ยมครั้งที่ 10</option>
+                            <option value="ออกเยี่ยมครั้งที่ 11">ออกเยี่ยมครั้งที่ 11</option>
+                            <option value="ออกเยี่ยมครั้งที่ 12">ออกเยี่ยมครั้งที่ 12</option>
+                        </select>
+                    </div>
+                    <div class="form-section">
+                        <label for="visit_date" class="form-label">วันที่ออกเยี่ยม</label>
+                        <input type="date" id="visit_date" name="visit_date" class="form-control" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="visit_time" class="form-label">เวลาที่ออกเยี่ยม</label>
+                        <input type="time" id="visit_time" name="visit_time" class="form-control" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary btn-custom" onclick="prevPage()">ย้อนกลับ</button>
+                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                    </div>
+                </div>
 
-      <!-- หมู่ที่ -->
-      <div class="mb-4">
-        <label for="village" class="block text-sm font-medium text-gray-700">หมู่ที่</label>
-        <input type="text" id="village" name="village"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
+                <!-- หน้า 4: Vital Signs -->
+                <div class="page" data-page="4">
+                    <div class="form-section">
+                        <label for="blood_pressure" class="form-label">ความดันโลหิต</label>
+                        <input type="text" id="blood_pressure" name="blood_pressure" class="form-control" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="pulse" class="form-label">ชีพจร</label>
+                        <input type="text" id="pulse" name="pulse" class="form-control" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="temperature" class="form-label">อุณหภูมิร่างกาย</label>
+                        <input type="text" id="temperature" name="temperature" class="form-control" required>
+                    </div>
+                    <div class="form-section">
+                        <label for="dtx" class="form-label">เจาะน้ำตาลในเลือด DTX</label>
+                        <input type="text" id="dtx" name="dtx" class="form-control">
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary btn-custom" onclick="prevPage()">ย้อนกลับ</button>
+                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                    </div>
+                </div>
 
-      <!-- อายุ -->
-      <div class="mb-4">
-        <label for="age" class="block text-sm font-medium text-gray-700">อายุ</label>
-        <input type="number" id="age" name="age"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
+                <!-- หน้า 5: Medical Information -->
+                <div class="page" data-page="5">
+                    <div class="form-section">
+                        <label for="disease" class="form-label">คุณกำลังดูแลผู้ป่วยที่เป็น</label>
+                        <select id="disease" name="disease" class="form-select" required>
+                            <option value="">เลือกโรค</option>
+                            <option value="โรคเบาหวาน">โรคเบาหวาน</option>
+                            <option value="โรคความดัน">โรคความดัน</option>
+                            <option value="โรคหลอดเลือดสมอง">โรคหลอดเลือดสมอง</option>
+                            <option value="ผู้ป่วยติดเตียง อัมพฤกษ์ อัมพาต">ผู้ป่วยติดเตียง อัมพฤกษ์ อัมพาต</option>
+                            <option value="โรคไตวายเรื้อรัง">โรคไตวายเรื้อรัง</option>
+                            <option value="โรคสมองเสื่อม">โรคสมองเสื่อม</option>
+                        </select>
+                    </div>
+                    <div class="form-section">
+                        <label class="form-label">สภาพปัญหาที่พบ (เลือกได้มากกว่า 1 ข้อ)</label>
+                        <div class="form-check">
+                            <input type="checkbox" name="symptoms" value="1.ไม่สามารถควบคุมระดับน้ำตาลในเลือดได้" id="symptom1" class="form-check-input">
+                            <label for="symptom1" class="form-check-label">1. ไม่สามารถควบคุมระดับน้ำตาลในเลือดได้</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="symptoms" value="2.พฤติกรรมการบริโภคไม่เหมาะสม" id="symptom2" class="form-check-input">
+                            <label for="symptom2" class="form-check-label">2. พฤติกรรมการบริโภคไม่เหมาะสม</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="symptoms" value="3.เสี่ยงต่อโรคหลอดเลือดหัวใจ หลอดเลือดสมอง" id="symptom3" class="form-check-input">
+                            <label for="symptom3" class="form-check-label">3. เสี่ยงต่อโรคหลอดเลือดหัวใจ หลอดเลือดสมอง</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="symptoms" value="4.เสี่ยงต่อการหกล้ม" id="symptom4" class="form-check-input">
+                            <label for="symptom4" class="form-check-label">4. เสี่ยงต่อการหกล้ม</label>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <label class="form-label">กิจกรรมการดูแล (เลือกได้มากกว่า 1 ข้อ)</label>
+                        <div class="form-check">
+                            <input type="checkbox" name="management" value="1. แนะนำรู้เรื่องโรค และ ดูแลการเจ็บป่วย" id="manage1" class="form-check-input">
+                            <label for="manage1" class="form-check-label">1. แนะนำรู้เรื่องโรค และ ดูแลการเจ็บป่วย</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="management" value="2. ให้ความรู้เกี่ยวกับการป้องกันภาวะแทรกซ้อน" id="manage2" class="form-check-input">
+                            <label for="manage2" class="form-check-label">2. ให้ความรู้เกี่ยวกับการป้องกันภาวะแทรกซ้อน</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="management" value="3. ปรับโภชนาการให้เหมาะสมกับโรค อาหาร 3 กลุ่ม" id="manage3" class="form-check-input">
+                            <label for="manage3" class="form-check-label">3. ปรับโภชนาการให้เหมาะสมกับโรค อาหาร 3 กลุ่ม</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="management" value="4. แนะนำการรับประทานยาและตรวจตามนัด" id="manage4" class="form-check-input">
+                            <label for="manage4" class="form-check-label">4. แนะนำการรับประทานยาและตรวจตามนัด</label>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary btn-custom" onclick="prevPage()">ย้อนกลับ</button>
+                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                    </div>
+                </div>
 
-      <!-- กลุ่มผู้ป่วย -->
-      <div class="mb-4">
-        <label for="patient_group" class="block text-sm font-medium text-gray-700">กลุ่มผู้ป่วย</label>
-        <select id="patient_group" name="patient_group"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-          <option value="">เลือกกลุ่ม</option>
-          <option value="กลุ่มที่ 1 ติดบ้าน">กลุ่มที่ 1 ติดบ้าน</option>
-          <option value="กลุ่มที่ 2 ติดเตียง">กลุ่มที่ 2 ติดเตียง</option>
-        </select>
-      </div>
+                <!-- หน้า 6: ประเมินผล -->
+                <div class="page" data-page="6">
+                    <div class="form-section">
+                        <label class="form-label">ประเมิน อารมณ์ผู้สูงอายุ</label>
+                        <div class="form-check">
+                            <input type="radio" name="emotion" value="ดี" id="emotion1" class="form-check-input" required>
+                            <label for="emotion1" class="form-check-label">ดี</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" name="emotion" value="ปานกลาง" id="emotion2" class="form-check-input">
+                            <label for="emotion2" class="form-check-label">ปานกลาง</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" name="emotion" value="แย่" id="emotion3" class="form-check-input">
+                            <label for="emotion3" class="form-check-label">แย่</label>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <label for="condition_change" class="form-label">ประเมิน อาการผู้ป่วยแตกต่างจากครั้งที่แล้วคือ</label>
+                        <textarea id="condition_change" name="condition_change" rows="4" class="form-control"></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary btn-custom" onclick="prevPage()">ย้อนกลับ</button>
+                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                    </div>
+                </div>
 
-      <!-- ออกเยี่ยมครั้งที่ -->
-      <div class="mb-4">
-        <label for="visit_number" class="block text-sm font-medium text-gray-700">ออกเยี่ยมครั้งที่</label>
-        <input type="text" id="visit_number" name="visit_number"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
-
-      <!-- วันที่ออกเยี่ยม -->
-      <div class="mb-4">
-        <label for="visit_date" class="block text-sm font-medium text-gray-700">วันที่ออกเยี่ยม</label>
-        <input type="date" id="visit_date" name="visit_date"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
-
-      <!-- เวลาที่ออกเยี่ยม -->
-      <div class="mb-4">
-        <label for="visit_time" class="block text-sm font-medium text-gray-700">เวลาที่ออกเยี่ยม</label>
-        <input type="time" id="visit_time" name="visit_time"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
-
-      <!-- ความดันโลหิต -->
-      <div class="mb-4">
-        <label for="blood_pressure" class="block text-sm font-medium text-gray-700">ความดันโลหิต</label>
-        <input type="text" id="blood_pressure" name="blood_pressure"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
-
-      <!-- ชีพจร -->
-      <div class="mb-4">
-        <label for="pulse" class="block text-sm font-medium text-gray-700">ชีพจร</label>
-        <input type="text" id="pulse" name="pulse"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
-
-      <!-- อุณหภูมิร่างกาย -->
-      <div class="mb-4">
-        <label for="temperature" class="block text-sm font-medium text-gray-700">อุณหภูมิร่างกาย</label>
-        <input type="text" id="temperature" name="temperature"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
-
-      <!-- เจาะน้ำตาลในเลือด DTX -->
-      <div class="mb-4">
-        <label for="dtx" class="block text-sm font-medium text-gray-700">เจาะน้ำตาลในเลือด DTX</label>
-        <input type="text" id="dtx" name="dtx"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
-
-      <!-- โรค -->
-      <div class="mb-4">
-        <label for="disease" class="block text-sm font-medium text-gray-700">โรค</label>
-        <input type="text" id="disease" name="disease"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-      </div>
-
-      <!-- สภาพปัญหาที่พบ -->
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700">สภาพปัญหาที่พบ</label>
-        <div class="mt-2 space-y-2">
-          <label class="flex items-center">
-            <input type="checkbox" name="symptoms" value="1.ไม่สามารถควบคุมระดับน้ำตาลในเลือดได้"
-                   class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="ml-2">ไม่สามารถควบคุมระดับน้ำตาลในเลือดได้</span>
-          </label>
-          <label class="flex items-center">
-            <input type="checkbox" name="symptoms" value="2.พฤติกรรมการบริโภคไม่เหมาะสม"
-                   class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="ml-2">พฤติกรรมการบริโภคไม่เหมาะสม</span>
-          </label>
-          <label class="flex items-center">
-            <input type="checkbox" name="symptoms" value="3.เสี่ยงต่อโรคหลอดเลือดหัวใจ หลอดเลือดสมอง"
-                   class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="ml-2">เสี่ยงต่อโรคหลอดเลือดหัวใจ หลอดเลือดสมอง</span>
-          </label>
-          <label class="flex items-center">
-            <input type="checkbox" name="symptoms" value="4.เสี่ยงต่อการหกล้ม"
-                   class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="ml-2">เสี่ยงต่อการหกล้ม</span>
-          </label>
+                <!-- หน้า 7: แนบรูป -->
+                <div class="page" data-page="7">
+                    <div class="form-section">
+                        <label for="image_upload" class="form-label">แนบรูป</label>
+                        <input type="file" id="image_upload" name="image_upload" class="form-control" accept="image/*">
+                        <div id="imagePreview" class="mt-2"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary btn-custom" onclick="prevPage()">ย้อนกลับ</button>
+                        <button type="submit" class="btn btn-success btn-custom">ส่งแบบฟอร์ม</button>
+                    </div>
+                    <div id="submitMessage" class="alert alert-success" role="alert">ส่งแบบฟอร์มสำเร็จ!</div>
+                    <div id="errorMessage" class="alert alert-danger" role="alert">เกิดข้อผิดพลาด กรุณาลองใหม่</div>
+                </div>
+            </form>
         </div>
-      </div>
+    </div>
 
-      <!-- กิจกรรมการดูแล -->
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700">กิจกรรมการดูแล</label>
-        <div class="mt-2 space-y-2">
-          <label class="flex items-center">
-            <input type="checkbox" name="management" value="1. แนะนำรู้เรื่องโรค และ ดูแลการเจ็บป่วย"
-                   class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="ml-2">แนะนำรู้เรื่องโรค และ ดูแลการเจ็บป่วย</span>
-          </label>
-          <label class="flex items-center">
-            <input type="checkbox" name="management" value="2. ให้ความรู้เกี่ยวกับการป้องกันภาวะแทรกซ้อน"
-                   class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="ml-2">ให้ความรู้เกี่ยวกับการป้องกันภาวะแทรกซ้อน</span>
-          </label>
-          <label class="flex items-center">
-            <input type="checkbox" name="management" value="3. ปรับโภชนาการให้เหมาะสมกับโรค อาหาร 3 กลุ่ม"
-                   class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="ml-2">ปรับโภชนาการให้เหมาะสมกับโรค อาหาร 3 กลุ่ม</span>
-          </label>
-          <label class="flex items-center">
-            <input type="checkbox" name="management" value="4. แนะนำการรับประทานยาและตรวจตามนัด"
-                   class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="ml-2">แนะนำการรับประทานยาและตรวจตามนัด</span>
-          </label>
-        </div>
-      </div>
+    <!-- Bootstrap 5 JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script>
+        function updateButtonStates() {
+            const currentPage = document.querySelector('.page.active');
+            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
+            const prevButton = currentPage.querySelector('.btn-secondary');
+            const nextButton = currentPage.querySelector('.btn-primary:not([type="submit"])');
 
-      <!-- อารมณ์ -->
-      <div class="mb-4">
-        <label for="emotion" class="block text-sm font-medium text-gray-700">ประเมิน อารมณ์ผู้สูงอายุ</label>
-        <select id="emotion" name="emotion"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-          <option value="">เลือกอารมณ์</option>
-          <option value="ดี">ดี</option>
-          <option value="ปกติ">ปกติ</option>
-          <option value="ไม่ดี">ไม่ดี</option>
-        </select>
-      </div>
-
-      <!-- อาการเปลี่ยนแปลง -->
-      <div class="mb-4">
-        <label for="condition_change" class="block text-sm font-medium text-gray-700">ประเมิน อาการผู้ป่วยแตกต่างจากครั้งที่แล้ว</label>
-        <select id="condition_change" name="condition_change"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-          <option value="">เลือกอาการ</option>
-          <option value="คงที่">คงที่</option>
-          <option value="ดีขึ้น">ดีขึ้น</option>
-          <option value="แย่ลง">แย่ลง</option>
-        </select>
-      </div>
-
-      <!-- อัปโหลดรูปภาพ -->
-      <div class="mb-4">
-        <label for="image_upload" class="block text-sm font-medium text-gray-700">อัปโหลดรูปภาพ</label>
-        <input type="file" id="image_upload" name="image_upload" accept="image/jpeg,image/png,image/gif"
-               class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-      </div>
-
-      <!-- ปุ่มส่ง -->
-      <div class="text-center">
-        <button type="submit"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          ส่งข้อมูล
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <script>
-    // แทนที่ด้วย Web App URL ของคุณ
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec';
-
-    const form = document.getElementById('patientForm');
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const formData = new FormData(form);
-      const imageInput = document.getElementById('image_upload');
-
-      // ตรวจสอบไฟล์รูปภาพ
-      if (imageInput.files.length > 0) {
-        const file = imageInput.files[0];
-        console.log('Image selected:', file.name, 'Size:', file.size, 'Type:', file.type);
-        if (file.size > 5 * 1024 * 1024) {
-          alert('ไฟล์รูปภาพต้องมีขนาดไม่เกิน 5MB');
-          return;
+            if (prevButton) prevButton.disabled = currentPageNum === 1;
+            if (nextButton) nextButton.disabled = currentPageNum === document.querySelectorAll('.page').length;
         }
-        if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
-          alert('กรุณาเลือกไฟล์ .jpg, .png, หรือ .gif');
-          return;
+
+        function updateProgress() {
+            const currentPage = document.querySelector('.page.active');
+            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
+            document.getElementById('formProgress').value = currentPageNum;
         }
-      } else {
-        console.log('No image selected');
-      }
 
-      // Log FormData
-      console.log('FormData entries:');
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${typeof value === 'object' ? '[File]' : value}`);
-      }
+        function validateCheckboxes(page) {
+            const checkboxes = page.querySelectorAll('input[type="checkbox"]');
+            return Array.from(checkboxes).some(checkbox => checkbox.checked);
+        }
 
-      try {
-        console.log('Submitting form to:', webAppUrl);
-        const response = await fetch(webAppUrl, {
-          method: 'POST',
-          body: formData
+        function nextPage() {
+            const pages = document.querySelectorAll('.page');
+            const currentPage = document.querySelector('.page.active');
+            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
+            const nextPageNum = currentPageNum + 1;
+
+            if (nextPageNum <= pages.length) {
+                const requiredFields = currentPage.querySelectorAll('[required]');
+                let allValid = true;
+                requiredFields.forEach(field => {
+                    if (!field.value) {
+                        field.reportValidity();
+                        allValid = false;
+                    }
+                });
+
+                if (currentPageNum === 5 && !validateCheckboxes(currentPage)) {
+                    alert('กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกในส่วนสภาพปัญหาหรือกิจกรรมการดูแล');
+                    return;
+                }
+
+                if (allValid) {
+                    currentPage.classList.remove('active');
+                    pages[nextPageNum - 1].classList.add('active');
+                    updateButtonStates();
+                    updateProgress();
+                }
+            }
+        }
+
+        function prevPage() {
+            const pages = document.querySelectorAll('.page');
+            const currentPage = document.querySelector('.page.active');
+            const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
+            const prevPageNum = currentPageNum - 1;
+
+            if (prevPageNum >= 1) {
+                currentPage.classList.remove('active');
+                pages[prevPageNum - 1].classList.add('active');
+                updateButtonStates();
+                updateProgress();
+            }
+        }
+
+        document.getElementById('image_upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const previewContainer = document.getElementById('imagePreview');
+            previewContainer.innerHTML = '';
+
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('ขนาดไฟล์รูปภาพต้องไม่เกิน 5MB');
+                    e.target.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.className = 'preview-image';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
         });
-        console.log('Response status:', response.status);
-        const responseText = await response.text();
-        console.log('Response text:', responseText);
-        alert(responseText === 'Success' ? 'ส่งข้อมูลสำเร็จ' : 'เกิดข้อผิดพลาด: ' + responseText);
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        alert('เกิดข้อผิดพลาดในการส่งฟอร์ม: ' + error.message);
-      }
-    });
-  </script>
+
+        document.getElementById('multiPageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+
+            const formData = new FormData(this);
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxbxwMA9HTYulCB4O8rrXjTLMjMJLDrY17wn4j1DTebpJBXiijJHLzew320IPQXZOSF/exec'; // แทนที่ด้วย URL จาก Google Apps Script Web App
+
+            // ดีบัก: ตรวจสอบข้อมูลใน FormData
+            console.log('Submitting form to: ' + webAppUrl);
+            let formDataEntries = [];
+            for (let [key, value] of formData.entries()) {
+                formDataEntries.push(`${key}: ${value instanceof File ? value.name : value}`);
+            }
+            console.log('FormData entries: ', formDataEntries);
+
+            fetch(webAppUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('Response status: ' + response.status);
+                return response.text();
+            })
+            .then(text => {
+                console.log('Response text: ' + text);
+                if (text === 'Success') {
+                    document.getElementById('submitMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                    setTimeout(() => {
+                        document.getElementById('multiPageForm').reset();
+                        document.getElementById('imagePreview').innerHTML = '';
+                        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                        document.querySelector('.page[data-page="1"]').classList.add('active');
+                        document.getElementById('submitMessage').style.display = 'none';
+                        submitButton.disabled = false;
+                        updateButtonStates();
+                        updateProgress();
+                    }, 2000);
+                } else {
+                    throw new Error('Server returned: ' + text);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 'เกิดข้อผิดพลาด: ' + error.message;
+                document.getElementById('submitMessage').style.display = 'none';
+                submitButton.disabled = false;
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateButtonStates();
+            updateProgress();
+        });
+    </script>
 </body>
 </html>
