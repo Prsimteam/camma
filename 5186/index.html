@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Prompt', sans-serif; /* ใช้ฟอนต์ Prompt จาก Google Fonts */
-            background-color: #f9f9f9;
+            background-color: #90EE90; /* พื้นหลังสีเขียวอ่อน */
             margin: 0;
             padding: 0;
             display: flex;
@@ -35,23 +35,27 @@
         .button {
             display: block;
             margin: 20px auto;
-            padding: 20px 40px;
+            padding: 15px 30px;
             font-size: 24px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 10px;
+            color: #000; /* สีข้อความในปุ่ม */
+            background-color: transparent; /* พื้นหลังโปร่งใส */
+            border: solid 2px #fff; /* เส้นขอบสีขาว */
+            box-shadow: #000 2px 2px 1px; /* เงาสีดำ */
+            border-radius: 0.75em; /* มุมมน */
             cursor: pointer;
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease; /* เพิ่มเอฟเฟกต์เปลี่ยนแปลงแบบนุ่มนวล */
             width: 100%; /* ปุ่มเต็มความกว้างของกล่อง */
             max-width: 400px; /* จำกัดความกว้างของปุ่ม */
         }
         .button:hover {
-            background-color: #0056b3;
+            background-color: #fff; /* เปลี่ยนพื้นหลังเมื่อ hover */
+            color: #000; /* เปลี่ยนสีข้อความเมื่อ hover */
+            box-shadow: #000 3px 3px 2px; /* เพิ่มเงาเมื่อ hover */
         }
         .button:active {
-            background-color: #004085;
+            transform: scale(0.98); /* ลดขนาดเล็กน้อยเมื่อกด */
+            box-shadow: #000 1px 1px 1px; /* ลดเงาเมื่อกด */
         }
         @media (max-width: 600px) {
             h1 {
@@ -59,7 +63,7 @@
             }
             .button {
                 font-size: 20px;
-                padding: 15px 30px;
+                padding: 12px 25px;
             }
         }
     </style>
