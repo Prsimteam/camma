@@ -512,10 +512,10 @@
                     updateProgress();
                 }
             }
-        }
+    }
 
-        function prevPage() {
-            const pages = document.querySelectorAll('.page');
+    function prevPage() {
+        const pages = document.querySelectorAll('.page');
             const currentPage = document.querySelector('.page.active');
             const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
             const prevPageNum = currentPageNum - 1;
@@ -634,17 +634,27 @@
             updateProgress();
         });
         
-        // JavaScript to show/hide the "other" symptoms input field
+        // JavaScript to show/hide the "other" symptoms input field and update the label
         const otherSymptomCheckbox = document.getElementById('symptom_diabetes_11');
         const otherSymptomInput = document.getElementById('other_symptoms_input');
+        const otherSymptomsField = otherSymptomInput.querySelector('input[name="other_symptoms"]');
+        const otherSymptomLabel = document.querySelector('label[for="symptom_diabetes_11"]');
 
-        otherSymptomCheckbox.addEventListener('change', function() {
+        otherSymptomCheckbox.addEventListener('change', function () {
             if (this.checked) {
                 otherSymptomInput.style.display = 'block';
+                if (otherSymptomsField.value) {
+                    otherSymptomLabel.textContent = otherSymptomsField.value;
+                }
             } else {
                 otherSymptomInput.style.display = 'none';
-                // Clear the input field when unchecked
-                const otherSymptomsField = otherSymptomInput.querySelector('input[name="other_symptoms"]');
+                otherSymptomLabel.textContent = 'อื่นๆ';
+                if (otherSymptomsField) {
+                    otherSymptomsField.value = '';
+                }
+            }
+        });
+        otherSymptomsField.addEventListener('input', function () {
                 if (otherSymptomsField) {
                     otherSymptomsField.value = '';
                 }
