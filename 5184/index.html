@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือกการดูแลผู้ป่วย</title>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif; /* ใช้ฟอนต์ Prompt จาก Google Fonts */
+            background-color: #90EE90; /* พื้นหลังสีเขียวอ่อน */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* จัดกึ่งกลางแนวนอน */
+            align-items: center; /* จัดกึ่งกลางแนวตั้ง */
+            height: 100vh; /* ความสูงเต็มหน้าจอ */
+        }
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px; /* จำกัดความกว้างของกล่อง */
+            width: 90%; /* ขยายให้พอดีกับหน้าจอ */
+        }
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: 700; /* ตัวหนา */
+        }
+        .button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 24px;
+            color: #000; /* สีข้อความในปุ่ม */
+            background-color: #90EE90;
+            border: solid 2px #fff; /* เส้นขอบสีขาว */
+            box-shadow: #000 2px 2px 1px; /* เงาสีดำ */
+            border-radius: 0.75em; /* มุมมน */
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease; /* เพิ่มเอฟเฟกต์เปลี่ยนแปลงแบบนุ่มนวล */
+            width: 100%; /* ปุ่มเต็มความกว้างของกล่อง */
+            max-width: 400px; /* จำกัดความกว้างของปุ่ม */
+        }
+        .button:hover {
+            background-color: #d7e239; /* เปลี่ยนพื้นหลังเมื่อ hover */
+            color: #000; /* เปลี่ยนสีข้อความเมื่อ hover */
+            box-shadow: #000 3px 3px 2px; /* เพิ่มเงาเมื่อ hover */
+        }
+        .button:active {
+            transform: scale(0.98); /* ลดขนาดเล็กน้อยเมื่อกด */
+            box-shadow: #000 1px 1px 1px; /* ลดเงาเมื่อกด */
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+            .button {
+                font-size: 20px;
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>เลือกการดูแลผู้ป่วย</h1>
+        <a href="diabetes.html" class="button">โรคเบาหวาน</a>
+        <a href="hypertension.html" class="button">โรคความดัน</a>
+        <a href="stroke.html" class="button">โรคหลอดเลือดสมอง</a>
+        <a href="dementia.html" class="button">โรคสมองเสื่อม</a>
+        <a href="ckd.html" class="button">โรคไตวายเรื้อรัง</a>
+        <a href="bedridden.html" class="button">ผู้ป่วยติดเตียง</a>
+    </div>
+</body>
+</html>
