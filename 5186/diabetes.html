@@ -256,12 +256,9 @@
                             <label for="symptom_diabetes_10" class="form-check-label">เสี่ยงต่อการหกล้ม</label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" name="symptoms"  id="symptom_diabetes_11"
+                            <input type="checkbox" name="symptoms" value="อื่นๆ" id="symptom_diabetes_11"
                                 id="symptom_diabetes_11" class="form-check-input">
                             <label for="symptom_diabetes_11" class="form-check-label">อื่นๆ</label>
-                        </div>
-                        <div id="other_symptoms_input" style="display: none;">
-                            <input type="text" name="symptoms" class="form-control mt-2" placeholder="โปรดระบุอาการอื่นๆ">
                         </div>
                     </div>
                     <div class="form-section">
@@ -512,10 +509,10 @@
                     updateProgress();
                 }
             }
-    }
+        }
 
-    function prevPage() {
-        const pages = document.querySelectorAll('.page');
+        function prevPage() {
+            const pages = document.querySelectorAll('.page');
             const currentPage = document.querySelector('.page.active');
             const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
             const prevPageNum = currentPageNum - 1;
@@ -632,33 +629,6 @@
             console.log('DOM loaded, initializing form');
             updateButtonStates();
             updateProgress();
-        });
-        
-        // JavaScript to show/hide the "other" symptoms input field and update the label
-        const otherSymptomCheckbox = document.getElementById('symptom_diabetes_11');
-        const otherSymptomInput = document.getElementById('other_symptoms_input');
-        const otherSymptomsField = otherSymptomInput.querySelector('input[name="other_symptoms"]');
-        const otherSymptomLabel = document.querySelector('label[for="symptom_diabetes_11"]');
-
-        otherSymptomCheckbox.addEventListener('change', function () {
-            if (this.checked) {
-                otherSymptomInput.style.display = 'block';
-                if (otherSymptomsField.value) {
-                    otherSymptomLabel.textContent = otherSymptomsField.value;
-                }
-            } else {
-                otherSymptomInput.style.display = 'none';
-                otherSymptomLabel.textContent = 'อื่นๆ';
-                if (otherSymptomsField) {
-                    otherSymptomsField.value = '';
-                }
-            }
-        });
-        otherSymptomsField.addEventListener('input', function () {
-                if (otherSymptomsField) {
-                    otherSymptomsField.value = '';
-                }
-            }
         });
     </script>
 </body>
