@@ -260,6 +260,9 @@
                                 id="symptom_diabetes_11" class="form-check-input">
                             <label for="symptom_diabetes_11" class="form-check-label">อื่นๆ</label>
                         </div>
+                        <div id="other_symptoms_input" style="display: none;">
+                            <input type="text" name="other_symptoms" class="form-control mt-2" placeholder="โปรดระบุอาการอื่นๆ">
+                        </div>
                     </div>
                     <div class="form-section">
                         <label class="form-label">กิจกรรมการดูแล (เลือกได้มากกว่า 1 ข้อ)</label>
@@ -629,6 +632,23 @@
             console.log('DOM loaded, initializing form');
             updateButtonStates();
             updateProgress();
+        });
+        
+        // JavaScript to show/hide the "other" symptoms input field
+        const otherSymptomCheckbox = document.getElementById('symptom_diabetes_11');
+        const otherSymptomInput = document.getElementById('other_symptoms_input');
+
+        otherSymptomCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                otherSymptomInput.style.display = 'block';
+            } else {
+                otherSymptomInput.style.display = 'none';
+                // Clear the input field when unchecked
+                const otherSymptomsField = otherSymptomInput.querySelector('input[name="other_symptoms"]');
+                if (otherSymptomsField) {
+                    otherSymptomsField.value = '';
+                }
+            }
         });
     </script>
 </body>
