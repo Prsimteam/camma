@@ -38,22 +38,16 @@
                     return liff.getProfile();
                 } else {
                     liff.login({
-                        redirectUri: "https://tksoft11.github.io/camma/",
+                        redirectUri: "https://tksoft11.github.io/camma/register.html",
                     });
                 }
             })
             .then((profile) => {
-                window.location.replace(
-                    `https://docs.google.com/forms/d/e/1FAIpQLScXbOOdxNDFymNyBAVenU08XsCMvpxoMnzTFiVNOli_77Ypxg/viewform?usp=pp_url
-&entry.389709692=%E0%B8%ADE0%B8%B0%E0%B9%84%E0%B8%A3
-&entry.105153744=${profile.userId}
-&entry.604876249=${profile.displayName}
-&entry.880286323=${profile.pictureUrl}
-&entry.586837713=${profile.statusMessage}`
-                );
+              
             });
         liff.init({
                 liffId: liffId,
+                
             },
             () => {},
             (err) => {
