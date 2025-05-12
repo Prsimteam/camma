@@ -35,27 +35,24 @@
       margin: auto;
     }
 
-    .cover-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 2rem;
-      height: 300px;
-    }
-
     .cover {
-      width: 250px;
-      height: 250px;
-      border-radius: 50%;
+      width: 100%;
+      max-width: 300px;
+      height: 300px;
       object-fit: cover;
+      border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      transition: transform 1s linear;
-      animation: spin 10s linear infinite;
+      margin: 0 auto 2rem auto;
+      display: block;
     }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    canvas {
+      width: 100%;
+      height: 100px;
+      display: block;
+      margin: 1rem auto;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
     }
 
     .playlist-container {
@@ -97,9 +94,9 @@
 <div class="container text-center">
   <h1>🎵 Camma Audio Player</h1>
 
-  <div class="cover-container">
-    <img id="coverImage" src="https://via.placeholder.com/250x250?text=Cover " alt="Cover" class="cover" />
-  </div>
+  <img id="coverImage" src="https://via.placeholder.com/300x300?text=Cover " alt="Cover" class="cover" />
+
+  <canvas id="visualizer"></canvas>
 
   <div class="playlist-container" id="playlist"></div>
 
@@ -116,6 +113,8 @@
 
   let songs = [];
   let currentSongIndex = 0;
+  let audioContext, analyser, source;
+  let animationId;
 
   // เช็คว่ามี ?id= หรือ ?url= ใน URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -128,7 +127,7 @@
       songs = data.map(song => ({
         title: song.title.trim(),
         url: song.url.trim(),
-        cover: song.cover?.trim() || "https://via.placeholder.com/250x250?text=No+Cover "
+        cover: song.cover?.trim() || "https://via.placeholder.com/300x300?text=No+Cover "
       }));
 
       if (songs.length === 0) {
@@ -197,6 +196,8 @@
   }
 
   function loadAndPlay(index) {
+    cancelAnimationFrame(animationId); // หยุดกราฟเดิม
+
     currentSongIndex = index;
     const song = songs[index];
 
@@ -207,15 +208,55 @@
     // เล่นเสียง
     const audio = document.getElementById("audioPlayer");
     audio.src = song.url;
+
+    // เริ่มกราฟเสียงเมื่อเพลงเริ่มเล่น
+    audio.onplay = () => {
+      setupVisualizer(audio);
+    };
+
     audio.play()
       .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
   }
 
-  const audio = document.getElementById("audioPlayer");
-  audio.addEventListener("ended", () => {
-    currentSongIndex = (currentSongIndex + 1) % songs.length;
-    loadAndPlay(currentSongIndex);
-  });
+  function setupVisualizer(audioElement) {
+    if (!window.AudioContext) {
+      console.warn("เบราว์เซอร์ไม่รองรับ AudioContext");
+      return;
+    }
+
+    audioContext = new AudioContext();
+    analyser = audioContext.createAnalyser();
+    source = audioContext.createMediaElementSource(audioElement);
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const canvas = document.getElementById('visualizer');
+    const canvasCtx = canvas.getContext("2d");
+
+    function draw() {
+      requestAnimationFrame(draw);
+      analyser.getByteFrequencyData(dataArray);
+
+      canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const barWidth = (canvas.width / bufferLength) * 2.5;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i];
+        canvasCtx.fillStyle = `rgb(${barHeight + 100}, 200, 200)`;
+        canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+    }
+
+    draw();
+  }
 </script>
 
 </body>
