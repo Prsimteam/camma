@@ -6,7 +6,7 @@
   <title>🎵 Camma Audio Player</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Prompt :wght@400;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt :wght@400;600&display=swap" rel="stylesheet"/>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap @5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
@@ -14,7 +14,7 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      background: #1e3c72;
       color: white;
       min-height: 100vh;
       margin: 0;
@@ -23,11 +23,9 @@
     }
 
     h1 {
-      font-family: 'Playfair Display', serif;
       text-align: center;
       margin-bottom: 2rem;
-      font-size: 2.5rem;
-      letter-spacing: 1px;
+      font-size: 2rem;
     }
 
     .container {
@@ -101,7 +99,7 @@
   <div class="playlist-container" id="playlist"></div>
 
   <div class="mt-4 w-100">
-    <audio id="audioPlayer" class="w-100" controls autoplay></audio>
+    <audio id="audioPlayer" class="w-100" controls crossorigin="anonymous"></audio>
   </div>
 </div>
 
@@ -116,7 +114,15 @@
   let audioContext, analyser, source;
   let animationId;
 
-  // เช็คว่ามี ?id= หรือ ?url= ใน URL
+  // เปิด AudioContext เมื่อมีการคลิกบนหน้าเว็บ
+  document.body.addEventListener('click', () => {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    } else if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
+  });
+
   const urlParams = new URLSearchParams(window.location.search);
   const playId = urlParams.get("id");
   const playUrl = urlParams.get("url");
@@ -136,7 +142,6 @@
         return;
       }
 
-      // ถ้ามี ?id= หรือ ?url= → เล่นเฉพาะเพลงนั้น
       if (playId !== null && !isNaN(playId)) {
         currentSongIndex = parseInt(playId);
         hidePlaylist();
@@ -177,10 +182,9 @@
       playlist.appendChild(div);
     });
 
-    // เพิ่ม event listener ให้ปุ่มแชร์
     document.querySelectorAll(".btn-share").forEach(btn => {
       btn.addEventListener("click", function (e) {
-        e.stopPropagation(); // ป้องกันไม่ให้ trigger div.onclick
+        e.stopPropagation();
         const index = this.getAttribute("data-index");
         const baseUrl = window.location.href.split('?')[0];
         const shareLink = `${baseUrl}?id=${index}`;
@@ -196,26 +200,29 @@
   }
 
   function loadAndPlay(index) {
-    cancelAnimationFrame(animationId); // หยุดกราฟเดิม
+    cancelAnimationFrame(animationId);
 
     currentSongIndex = index;
     const song = songs[index];
 
-    // อัปเดตรูปปก
     const cover = document.getElementById("coverImage");
     cover.src = song.cover;
 
-    // เล่นเสียง
     const audio = document.getElementById("audioPlayer");
     audio.src = song.url;
 
-    // เริ่มกราฟเสียงเมื่อเพลงเริ่มเล่น
     audio.onplay = () => {
       setupVisualizer(audio);
     };
 
-    audio.play()
-      .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
+    const playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.warn("เบราว์เซอร์บล็อก autoplay", error);
+        alert("กรุณาคลิกปุ่มเล่นก่อน");
+      });
+    }
   }
 
   function setupVisualizer(audioElement) {
@@ -224,9 +231,20 @@
       return;
     }
 
-    audioContext = new AudioContext();
-    analyser = audioContext.createAnalyser();
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
+
+    if (source) {
+      source.disconnect();
+    }
+
     source = audioContext.createMediaElementSource(audioElement);
+    analyser = audioContext.createAnalyser();
     source.connect(analyser);
     analyser.connect(audioContext.destination);
 
@@ -236,6 +254,14 @@
 
     const canvas = document.getElementById('visualizer');
     const canvasCtx = canvas.getContext("2d");
+
+    // ปรับขนาด canvas ให้ตรงกับการแสดงผลจริง
+    function resizeCanvas() {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     function draw() {
       requestAnimationFrame(draw);
