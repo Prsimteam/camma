@@ -5,62 +5,89 @@
   <title>Camma Audio Player</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Prompt', sans-serif;
+      background: #f0f4f8;
       padding: 20px;
-      background: #f4f4f4;
+      color: #333;
     }
     h1 {
       text-align: center;
+      margin-bottom: 30px;
     }
-    .audio-player {
-      margin-bottom: 20px;
+    .playlist {
+      max-width: 600px;
+      margin: auto;
+    }
+    .song {
       background: white;
       padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
     }
     audio {
       width: 100%;
+      margin-top: 10px;
+    }
+    strong {
+      display: block;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 <body>
 
 <h1>🎵 Camma Audio Player</h1>
-<div id="audio-list"></div>
+<div class="playlist" id="playlist"></div>
+
+<audio id="audioPlayer" controls autoplay></audio>
 
 <script>
-  // แทน YOUR_SHEET_ID ด้วย ID ของ Google Sheet ของคุณ
-  const sheetURL = 'https://spreadsheets.google.com/feeds/list/1HDNU6q5aGCXihkgOJ-Kha-yX_jXPKjh0Q5dlztwqA6s/od6/public/values?alt=json';
+  const GAS_URL = "https://script.google.com/macros/s/YOUR_GAS_WEB_APP_URL/exec ";
 
-  fetch(sheetURL)
-    .then(response => response.json())
+  let songs = [];
+  let currentSongIndex = 0;
+
+  fetch(GAS_URL)
+    .then(res => res.json())
     .then(data => {
-      const entries = data.feed.entry;
-      const container = document.getElementById('audio-list');
-
-      entries.forEach(entry => {
-        const title = entry['gsx$title']['$t'];
-        const url = entry['gsx$url']['$t'];
-
-        const div = document.createElement('div');
-        div.className = 'audio-player';
-
-        div.innerHTML = `
-          <strong>${title}</strong><br>
-          <audio controls>
-            <source src="${url}" type="audio/mpeg">
-            Your browser does not support the audio element.
-          </audio>
-        `;
-
-        container.appendChild(div);
-      });
+      songs = data;
+      renderPlaylist();
+      loadAndPlay(currentSongIndex);
     })
-    .catch(error => {
-      console.error('Error fetching sheet data:', error);
-      document.getElementById('audio-list').innerHTML = '<p>ไม่สามารถโหลดข้อมูลได้</p>';
+    .catch(err => {
+      console.error("Error loading songs:", err);
+      document.getElementById("playlist").innerHTML = "<p>ไม่สามารถโหลดเพลงได้</p>";
     });
+
+  function renderPlaylist() {
+    const playlist = document.getElementById("playlist");
+    playlist.innerHTML = "";
+    songs.forEach((song, index) => {
+      const div = document.createElement("div");
+      div.className = "song";
+      div.innerHTML = `<strong>${song.title}</strong>`;
+      div.onclick = () => {
+        loadAndPlay(index);
+      };
+      playlist.appendChild(div);
+    });
+  }
+
+  function loadAndPlay(index) {
+    currentSongIndex = index;
+    const song = songs[index];
+    const audio = document.getElementById("audioPlayer");
+    audio.src = song.url;
+    audio.play();
+  }
+
+  const audio = document.getElementById("audioPlayer");
+  audio.addEventListener("ended", () => {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadAndPlay(currentSongIndex);
+  });
 </script>
 
 </body>
