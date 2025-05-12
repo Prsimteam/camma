@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🎵 Camma Audio Player</title>
 
-  <!-- Google Fonts: Prompt -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Prompt :wght@400;600&display=swap" rel="stylesheet"/>
 
   <!-- Bootstrap CSS -->
@@ -56,69 +56,79 @@
 </head>
 <body>
 
-  <div class="container">
-    <h1>🎵 Camma Audio Player</h1>
+<div class="container">
+  <h1>🎵 Camma Audio Player</h1>
 
-    <div id="playlist" class="playlist-container"></div>
+  <div id="playlist" class="playlist-container"></div>
 
-    <div class="mt-4">
-      <audio id="audioPlayer" class="w-100" controls></audio>
-    </div>
+  <div class="mt-4">
+    <audio id="audioPlayer" class="w-100" controls></audio>
   </div>
+</div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbweEaFAfNObhLf0DqHs7xUNR4YeG8MyEwBkW5NZxnselZnnup4SgYxrFGs_9IrGkn_m/exec ";
+<script>
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbweEaFAfNObhLf0DqHs7xUNR4YeG8MyEwBkW5NZxnselZnnup4SgYxrFGs_9IrGkn_m/exec";
 
-let songs = [];
-let currentSongIndex = 0;
+  let songs = [];
+  let currentSongIndex = 0;
 
-fetch(GAS_URL)
-  .then(res => res.json())
-  .then(data => {
-    songs = data.filter(song => song.url && /\.(mp3|wav|ogg|m4a)$/i.test(song.url));
-    if (songs.length === 0) {
+  fetch(GAS_URL)
+    .then(res => res.json())
+    .then(data => {
+      console.log("Raw data from GAS:", data);
+
+      songs = data.filter(song => {
+        const url = (song.url || "").trim();
+        return url && /\.(mp3|wav|ogg|m4a)$/i.test(url);
+      });
+
+      console.log("Filtered songs:", songs);
+
+      if (songs.length === 0) {
+        document.getElementById("playlist").innerHTML = `
+          <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
+        return;
+      }
+
+      renderPlaylist();
+      loadAndPlay(currentSongIndex);
+    })
+    .catch(err => {
+      console.error("Error loading songs:", err);
       document.getElementById("playlist").innerHTML = `
-        <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
-      return;
-    }
-    renderPlaylist();
-    loadAndPlay(currentSongIndex);
-  })
-  .catch(err => {
-    console.error("Error loading songs:", err);
-    document.getElementById("playlist").innerHTML = `
-      <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
-  });
+        <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
+    });
 
-function renderPlaylist() {
-  const playlist = document.getElementById("playlist");
-  playlist.innerHTML = "";
-  songs.forEach((song, index) => {
-    const div = document.createElement("div");
-    div.className = "song-card";
-    div.innerHTML = `<div class="song-title">${song.title}</div>`;
-    div.onclick = () => loadAndPlay(index);
-    playlist.appendChild(div);
-  });
-}
+  function renderPlaylist() {
+    const playlist = document.getElementById("playlist");
+    playlist.innerHTML = "";
+    songs.forEach((song, index) => {
+      const div = document.createElement("div");
+      div.className = "song-card";
+      div.innerHTML = `<div class="song-title">${song.title.trim()}</div>`;
+      div.onclick = () => loadAndPlay(index);
+      playlist.appendChild(div);
+    });
+  }
 
-function loadAndPlay(index) {
-  currentSongIndex = index;
-  const song = songs[index];
+  function loadAndPlay(index) {
+    currentSongIndex = index;
+    const song = songs[index];
+    const audio = document.getElementById("audioPlayer");
+    audio.src = song.url.trim();
+    audio.play()
+      .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
+  }
+
   const audio = document.getElementById("audioPlayer");
-  audio.src = song.url;
-  audio.play()
-    .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
-}
-
-document.getElementById("audioPlayer").addEventListener("ended", () => {
-  currentSongIndex = (currentSongIndex + 1) % songs.length;
-  loadAndPlay(currentSongIndex);
-});
-  </script>
+  audio.addEventListener("ended", () => {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadAndPlay(currentSongIndex);
+  });
+</script>
 
 </body>
 </html>
