@@ -72,11 +72,6 @@
       align-items: center;
     }
 
-    .song-card:hover {
-      transform: scale(1.03);
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-
     .btn-share {
       font-size: 0.85rem;
     }
@@ -114,7 +109,7 @@
   let audioContext, analyser, source;
   let animationId;
 
-  // เปิด AudioContext เมื่อมีการคลิกบนหน้าเว็บ
+  // Resume AudioContext เมื่อคลิกหน้าเว็บ
   document.body.addEventListener('click', () => {
     if (!audioContext) {
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -211,9 +206,9 @@
     const audio = document.getElementById("audioPlayer");
     audio.src = song.url;
 
-    audio.onplay = () => {
-      setupVisualizer(audio);
-    };
+    // ลบ event listener เก่า เพื่อไม่ให้ซ้ำ
+    audio.removeEventListener("play", onPlayHandler);
+    audio.addEventListener("play", onPlayHandler);
 
     const playPromise = audio.play();
 
@@ -225,6 +220,10 @@
     }
   }
 
+  function onPlayHandler() {
+    setupVisualizer(document.getElementById("audioPlayer"));
+  }
+
   function setupVisualizer(audioElement) {
     if (!window.AudioContext) {
       console.warn("เบราว์เซอร์ไม่รองรับ AudioContext");
@@ -233,9 +232,7 @@
 
     if (!audioContext) {
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    if (audioContext.state === 'suspended') {
+    } else if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
 
@@ -255,7 +252,7 @@
     const canvas = document.getElementById('visualizer');
     const canvasCtx = canvas.getContext("2d");
 
-    // ปรับขนาด canvas ให้ตรงกับการแสดงผลจริง
+    // Resize Canvas ให้ตรงกับการแสดงผล
     function resizeCanvas() {
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
