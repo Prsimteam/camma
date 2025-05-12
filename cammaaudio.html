@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Camma Audio Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+    }
+    .audio-player {
+      margin-bottom: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    audio {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎵 Camma Audio Player</h1>
+<div id="audio-list"></div>
+
+<script>
+  // แทน YOUR_SHEET_ID ด้วย ID ของ Google Sheet ของคุณ
+  const sheetURL = 'https://spreadsheets.google.com/feeds/list/1HDNU6q5aGCXihkgOJ-Kha-yX_jXPKjh0Q5dlztwqA6s/od6/public/values?alt=json';
+
+  fetch(sheetURL)
+    .then(response => response.json())
+    .then(data => {
+      const entries = data.feed.entry;
+      const container = document.getElementById('audio-list');
+
+      entries.forEach(entry => {
+        const title = entry['gsx$title']['$t'];
+        const url = entry['gsx$url']['$t'];
+
+        const div = document.createElement('div');
+        div.className = 'audio-player';
+
+        div.innerHTML = `
+          <strong>${title}</strong><br>
+          <audio controls>
+            <source src="${url}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        `;
+
+        container.appendChild(div);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching sheet data:', error);
+      document.getElementById('audio-list').innerHTML = '<p>ไม่สามารถโหลดข้อมูลได้</p>';
+    });
+</script>
+
+</body>
+</html>
