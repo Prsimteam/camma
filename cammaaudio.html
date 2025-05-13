@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เล่นเสียง MP3 บน iOS และ Android</title>
+    <title>เล่นเสียง MP3 จาก Google Drive</title>
     <style>
         body {
             display: flex;
@@ -20,8 +20,12 @@
         button {
             padding: 10px 20px;
             font-size: 16px;
-            margin-top: 10px;
+            margin: 10px;
             cursor: pointer;
+        }
+        #errorMessage {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -29,32 +33,58 @@
     <div class="audio-container">
         <h2>เครื่องเล่นเสียง</h2>
         <audio id="audioPlayer" preload="metadata" crossorigin="anonymous">
+            <source src="https://drive.google.com/uc?id=1JkA3pFADD79HUyPkNlYtxGV8T_FDlCB_&export=download" type="audio/mpeg">
             <source src="https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1" type="audio/mpeg">
             เบราว์เซอร์ของคุณไม่รองรับแท็ก audio
         </audio>
         <div>
-            <button onclick="togglePlay()">เล่น/หยุด</button>
+            <button onclick="togglePlay()">เล่น/หยุด (Google Drive)</button>
+            <button onclick="playBackup()">เล่นไฟล์สำรอง</button>
         </div>
         <p>คลิกปุ่มเพื่อเล่นหรือหยุดเสียง</p>
+        <div id="errorMessage"></div>
     </div>
 
     <script>
         const audio = document.getElementById('audioPlayer');
         const playButton = document.querySelector('button');
+        const errorMessage = document.getElementById('errorMessage');
 
         function togglePlay() {
             if (audio.paused) {
-                audio.play();
-                playButton.textContent = 'หยุด';
+                audio.play().then(() => {
+                    playButton.textContent = 'หยุด';
+                    console.log('Playing Google Drive audio');
+                }).catch(error => {
+                    errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถเล่นไฟล์ได้ - ' + error.message;
+                    console.error('Playback error:', error);
+                });
             } else {
                 audio.pause();
                 playButton.textContent = 'เล่น';
+                console.log('Paused Google Drive audio');
             }
         }
 
-        // รีเซ็ตปุ่มเมื่อเสียงจบ
+        function playBackup() {
+            audio.src = 'https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1';
+            audio.play().then(() => {
+                playButton.textContent = 'หยุด';
+                console.log('Playing backup audio');
+            }).catch(error => {
+                errorMessage.textContent = 'ข้อผิดพลาดไฟล์สำรอง: ' + error.message;
+                console.error('Backup playback error:', error);
+            });
+        }
+
+        audio.onerror = () => {
+            errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถโหลดไฟล์เสียงได้ ตรวจสอบลิงก์หรือเซิร์ฟเวอร์';
+            console.error('Audio error:', audio.error);
+        };
+
         audio.onended = () => {
             playButton.textContent = 'เล่น';
+            console.log('Audio ended');
         };
     </script>
 </body>
