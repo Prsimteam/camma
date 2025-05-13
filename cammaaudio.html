@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เล่นเสียง MP3 จาก Google Drive และ Dropbox</title>
+    <title>เล่นไฟล์ MP3 จากเครื่อง</title>
     <style>
         body {
             display: flex;
@@ -27,65 +27,72 @@
             color: red;
             margin-top: 10px;
         }
+        a {
+            color: blue;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="audio-container">
         <h2>เครื่องเล่นเสียง</h2>
-        <audio id="audioPlayer" preload="metadata" crossorigin="anonymous">
-            <source src="https://drive.google.com/uc?id=1JkA3pFADD79HUyPkNlYtxGV8T_FDlCB_&export=download" type="audio/mpeg">
-            <source src="https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1" type="audio/mpeg">
-            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-            เบราว์เซอร์ของคุณไม่รองรับแท็ก audio
-        </audio>
+        <p>ดาวน์โหลดไฟล์จากแหล่งต่อไปนี้แล้วเลือกที่นี่:</p>
+        <p>
+            <a href="https://drive.google.com/uc?id=1JkA3pFADD79HUyPkNlYtxGV8T_FDlCB_&export=download">ดาวน์โหลดจาก Google Drive</a><br>
+            <a href="https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1">ดาวน์โหลดจาก Dropbox</a>
+        </p>
+        <input type="file" id="audioFile" accept="audio/mpeg">
+        <audio id="audioPlayer" controls></audio>
         <div>
-            <button onclick="togglePlay()">เล่น/หยุด</button>
-            <button onclick="playBackup()">เล่นไฟล์สำรอง</button>
+            <button id="playButton" onclick="togglePlay()" disabled>เล่น/หยุด</button>
         </div>
-        <p>คลิกปุ่มเพื่อเล่นหรือหยุดเสียง</p>
+        <p>เลือกไฟล์ MP3 แล้วคลิกเล่น</p>
         <div id="errorMessage"></div>
     </div>
 
     <script>
         const audio = document.getElementById('audioPlayer');
-        const playButton = document.querySelector('button');
+        const fileInput = document.getElementById('audioFile');
+        const playButton = document.getElementById('playButton');
         const errorMessage = document.getElementById('errorMessage');
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                audio.src = URL.createObjectURL(file);
+                audio.load();
+                playButton.disabled = false;
+                errorMessage.textContent = '';
+                console.log('Loaded local file:', file.name);
+            } else {
+                errorMessage.textContent = 'กรุณาเลือกไฟล์ MP3';
+            }
+        });
 
         function togglePlay() {
             if (audio.paused) {
                 audio.play().then(() => {
                     playButton.textContent = 'หยุด';
-                    console.log('Playing audio');
+                    console.log('Playing local audio');
                 }).catch(error => {
-                    errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถเล่นไฟล์ได้ - ' + error.message + ' (น่าจะเป็นปัญหา CORS)';
+                    errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถเล่นไฟล์ได้ - ' + error.message;
                     console.error('Playback error:', error);
                 });
             } else {
                 audio.pause();
                 playButton.textContent = 'เล่น';
-                console.log('Paused audio');
+                console.log('Paused local audio');
             }
         }
-
-        function playBackup() {
-            audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-            audio.play().then(() => {
-                playButton.textContent = 'หยุด';
-                console.log('Playing backup audio');
-            }).catch(error => {
-                errorMessage.textContent = 'ข้อผิดพลาดไฟล์สำรอง: ' + error.message;
-                console.error('Backup playback error:', error);
-            });
-        }
-
-        audio.onerror = () => {
-            errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถโหลดไฟล์เสียงได้ อาจเนื่องจาก CORS หรือลิงก์ไม่ถูกต้อง';
-            console.error('Audio error:', audio.error);
-        };
 
         audio.onended = () => {
             playButton.textContent = 'เล่น';
             console.log('Audio ended');
+        };
+
+        audio.onerror = () => {
+            errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถโหลดไฟล์เสียงได้ ตรวจสอบว่าเป็นไฟล์ MP3 ที่ถูกต้อง';
+            console.error('Audio error:', audio.error);
         };
     </script>
 </body>
