@@ -115,40 +115,46 @@
   const playUrl = urlParams.get("url");
 
   fetch(GAS_URL)
-    .then(res => res.json())
-    .then(data => {
-      songs = data.map(song => ({
-        title: song.title.trim(),
-        url: song.url.trim(),
-        cover: song.cover?.trim() || "https://via.placeholder.com/300x300?text=No+Cover "
-      }));
+  .then(res => res.json())
+  .then(data => {
+    songs = data.map(song => ({
+      title: song.title.trim(),
+      url: song.url.trim(),
+      cover: song.cover?.trim() || "https://via.placeholder.com/300x300?text=No+Cover "
+    }));
 
-      if (songs.length === 0) {
-        document.getElementById("playlist").innerHTML = `
-          <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
-        return;
-      }
-
-      if (playId !== null && !isNaN(playId)) {
-        currentSongIndex = parseInt(playId);
-        hidePlaylist();
-      } else if (playUrl) {
-        const matched = songs.find(s => s.url === decodeURIComponent(playUrl));
-        if (matched) {
-          currentSongIndex = songs.indexOf(matched);
-          hidePlaylist();
-        }
-      }
-
-      renderPlaylist();
-      loadAndPlay(currentSongIndex);
-    })
-    .catch(err => {
-      console.error("Error loading songs:", err);
+    if (songs.length === 0) {
       document.getElementById("playlist").innerHTML = `
-        <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
-    });
+        <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
+      return;
+    }
 
+    if (playId !== null && !isNaN(playId)) {
+      currentSongIndex = parseInt(playId);
+      hidePlaylist();
+    } else if (playUrl) {
+      const matched = songs.find(s => s.url === decodeURIComponent(playUrl));
+      if (matched) {
+        currentSongIndex = songs.indexOf(matched);
+        hidePlaylist();
+      }
+    }
+
+    renderPlaylist();
+    loadAndPlay(currentSongIndex);
+
+    // เพิ่ม event listener ให้คลิกที่รูปปกเพื่อเล่นเพลง
+    document.getElementById("coverImage").onclick = () => {
+      loadAndPlay(currentSongIndex);
+    };
+
+  })
+  .catch(err => {
+    console.error("Error loading songs:", err);
+    document.getElementById("playlist").innerHTML = `
+      <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
+  });
+  
   function hidePlaylist() {
     document.getElementById("playlist").style.display = "none";
   }
