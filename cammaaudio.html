@@ -49,16 +49,7 @@
       border-radius: 50%;
       object-fit: cover;
       box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      transition: transform 1s linear;
-    }
-
-    .cover.playing {
-      animation: spin 10s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      cursor: pointer;
     }
 
     .playlist-container {
@@ -144,7 +135,7 @@
       if (songs.length === 0) {
         document.getElementById("playlist").innerHTML = `
           <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
-        document.getElementById("errorMessage").textContent = "ไม่มีไฟล์เสียงที่สามารถเล่นได้";
+        document.getElementById("errorMessage").textContent = "ไม่มีเพลงที่สามารถเล่นได้";
         return;
       }
 
@@ -152,22 +143,23 @@
       if (playId !== null && !isNaN(playId)) {
         currentSongIndex = parseInt(playId);
         hidePlaylist();
+        loadAndPlay(currentSongIndex);
       } else if (playUrl) {
         const matched = songs.find(s => s.url === decodeURIComponent(playUrl));
         if (matched) {
           currentSongIndex = songs.indexOf(matched);
           hidePlaylist();
+          loadAndPlay(currentSongIndex);
         }
       }
 
       renderPlaylist();
-      loadAndPlay(currentSongIndex);
     })
     .catch(err => {
       console.error("Error loading songs:", err);
       document.getElementById("playlist").innerHTML = `
         <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
-      document.getElementById("errorMessage").textContent = "เกิดข้อผิดพลาดในการโหลดข้อมูลเพลง";
+      document.getElementById("errorMessage").textContent = "ไม่สามารถโหลดเพลงได้";
     });
 
   function hidePlaylist() {
@@ -186,7 +178,10 @@
         </div>
         <button class="btn btn-outline-light btn-sm btn-share ms-2" data-index="${index}">🔗 แชร์</button>
       `;
-      div.onclick = () => loadAndPlay(index);
+      div.onclick = () => {
+        currentSongIndex = index;
+        loadAndPlay(index);
+      };
       playlist.appendChild(div);
     });
 
@@ -222,44 +217,44 @@
     const errorMessage = document.getElementById("errorMessage");
 
     cover.src = song.cover;
-    cover.classList.remove("playing");
-
-    if (!song.url) {
-      errorMessage.textContent = "ไม่มี URL เสียงสำหรับเพลงนี้";
-      console.error("No audio URL for song:", song.title);
-      return;
-    }
-
     audio.src = song.url;
-    audio.load();
     audio.play()
       .then(() => {
-        cover.classList.add("playing");
         errorMessage.textContent = "";
         console.log("Playing audio:", song.title);
       })
       .catch(err => {
-        errorMessage.textContent = `ข้อผิดพลาด: ไม่สามารถเล่นไฟล์ได้ - ${err.message} (อาจเนื่องจาก CORS หรือ URL ไม่ถูกต้อง)`;
+        errorMessage.textContent = `ข้อผิดพลาด: ไม่สามารถเล่นไฟล์ได้ - ${err.message} (อาจเนื่องจาก CORS)`;
         console.error("Playback error:", err);
       });
   }
 
-  // หยุดหมุนปกเมื่อหยุดเล่น
+  // คลิกที่ cover เพื่อเล่น/หยุด
+  const coverImage = document.getElementById("coverImage");
   const audio = document.getElementById("audioPlayer");
-  audio.addEventListener("pause", () => {
-    document.getElementById("coverImage").classList.remove("playing");
+  coverImage.addEventListener("click", () => {
+    if (songs.length === 0) {
+      document.getElementById("errorMessage").textContent = "ไม่มีเพลงที่สามารถเล่นได้";
+      return;
+    }
+    if (audio.paused) {
+      loadAndPlay(currentSongIndex);
+    } else {
+      audio.pause();
+      document.getElementById("errorMessage").textContent = "";
+    }
   });
 
   audio.addEventListener("ended", () => {
-    document.getElementById("coverImage").classList.remove("playing");
     currentSongIndex = (currentSongIndex + 1) % songs.length;
     loadAndPlay(currentSongIndex);
   });
-
+<!---
   audio.addEventListener("error", () => {
-    document.getElementById("errorMessage").textContent = "ข้อผิดพลาด: ไม่สามารถโหลดไฟล์เสียงได้ ตรวจสอบว่า URL รองรับ CORS และเป็นไฟล์ MP3 ที่ถูกต้อง";
+    document.getElementById("errorMessage").textContent = "ข้อผิดพลาด: ไม่สามารถโหลดไฟล์เสียงได้ อาจเนื่องจาก CORS หรือลิงก์ไม่ถูกต้อง";
     console.error("Audio error:", audio.error);
   });
+-->  
 </script>
 
 </body>
