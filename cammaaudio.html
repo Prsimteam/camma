@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เล่นเสียง MP3 จาก Google Drive</title>
+    <title>เล่นเสียง MP3 จาก Google Drive และ Dropbox</title>
     <style>
         body {
             display: flex;
@@ -35,10 +35,11 @@
         <audio id="audioPlayer" preload="metadata" crossorigin="anonymous">
             <source src="https://drive.google.com/uc?id=1JkA3pFADD79HUyPkNlYtxGV8T_FDlCB_&export=download" type="audio/mpeg">
             <source src="https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1" type="audio/mpeg">
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
             เบราว์เซอร์ของคุณไม่รองรับแท็ก audio
         </audio>
         <div>
-            <button onclick="togglePlay()">เล่น/หยุด (Google Drive)</button>
+            <button onclick="togglePlay()">เล่น/หยุด</button>
             <button onclick="playBackup()">เล่นไฟล์สำรอง</button>
         </div>
         <p>คลิกปุ่มเพื่อเล่นหรือหยุดเสียง</p>
@@ -54,20 +55,20 @@
             if (audio.paused) {
                 audio.play().then(() => {
                     playButton.textContent = 'หยุด';
-                    console.log('Playing Google Drive audio');
+                    console.log('Playing audio');
                 }).catch(error => {
-                    errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถเล่นไฟล์ได้ - ' + error.message;
+                    errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถเล่นไฟล์ได้ - ' + error.message + ' (น่าจะเป็นปัญหา CORS)';
                     console.error('Playback error:', error);
                 });
             } else {
                 audio.pause();
                 playButton.textContent = 'เล่น';
-                console.log('Paused Google Drive audio');
+                console.log('Paused audio');
             }
         }
 
         function playBackup() {
-            audio.src = 'https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1';
+            audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
             audio.play().then(() => {
                 playButton.textContent = 'หยุด';
                 console.log('Playing backup audio');
@@ -78,7 +79,7 @@
         }
 
         audio.onerror = () => {
-            errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถโหลดไฟล์เสียงได้ ตรวจสอบลิงก์หรือเซิร์ฟเวอร์';
+            errorMessage.textContent = 'ข้อผิดพลาด: ไม่สามารถโหลดไฟล์เสียงได้ อาจเนื่องจาก CORS หรือลิงก์ไม่ถูกต้อง';
             console.error('Audio error:', audio.error);
         };
 
