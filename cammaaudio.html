@@ -224,8 +224,6 @@
         console.log("Playing audio:", song.title);
       })
       .catch(err => {
-        errorMessage.textContent = `ข้อผิดพลาด: ไม่สามารถเล่นไฟล์ได้ - ${err.message} (อาจเนื่องจาก CORS)`;
-        console.error("Playback error:", err);
       });
   }
 
@@ -249,12 +247,7 @@
     currentSongIndex = (currentSongIndex + 1) % songs.length;
     loadAndPlay(currentSongIndex);
   });
-<!---
-  audio.addEventListener("error", () => {
-    document.getElementById("errorMessage").textContent = "ข้อผิดพลาด: ไม่สามารถโหลดไฟล์เสียงได้ อาจเนื่องจาก CORS หรือลิงก์ไม่ถูกต้อง";
-    console.error("Audio error:", audio.error);
-  });
--->  
+
 </script>
 
 </body>
