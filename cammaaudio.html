@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <title>iOS Audio Player</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เล่นเสียง MP3 บน iOS และ Android</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .audio-container {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-
-<h2>เล่นเสียงบน iOS ได้แน่นอน</h2>
-
-<audio controls autoplay style="width: 100%; margin-top: 1rem;">
-  <source src="https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1 " type="audio/wav">
-  ไม่รองรับการเล่นเสียงในเบราว์เซอร์นี้
-</audio>
-
-<script>
-  // ปลดล็อก autoplay บน iOS
-  document.body.addEventListener('touchstart', function unlockAudio() {
-    const audio = document.querySelector("audio");
-    if (audio.paused) {
-      audio.play().catch(() => {});
-    }
-    document.body.removeEventListener('touchstart', unlockAudio);
-  });
-</script>
-
+    <div class="audio-container">
+        <h2>เครื่องเล่นเสียง</h2>
+        <audio controls preload="auto">
+            <source src="https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1" type="audio/mpeg">
+            เบราว์เซอร์ของคุณไม่รองรับแท็ก audio
+        </audio>
+        <p>คลิกเล่นเพื่อฟังเสียง</p>
+    </div>
 </body>
 </html>
