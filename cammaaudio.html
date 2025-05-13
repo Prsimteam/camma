@@ -113,8 +113,8 @@
 
   let songs = [];
   let currentSongIndex = 0;
-  let audioContext = null; // Initialize to null
-  let analyser = null; // Initialize to null
+  let audioContext = null;
+  let analyser = null;
   let source = null;
   let animationId;
 
@@ -215,8 +215,18 @@
     audio.onplay = () => {
       setupVisualizer(audio);
       // Resume AudioContext on play if it was suspended
-      if (audioContext && audioContext.state === 'suspended') {
-          audioContext.resume().catch(err => console.error("Error resuming AudioContext:", err));
+      if (audioContext) {
+          if (audioContext.state === 'suspended') {
+              audioContext.resume().catch(err => console.error("Error resuming AudioContext:", err));
+              console.log("AudioContext resumed.");
+          } else if (audioContext.state === 'closed') {
+              // Recreate AudioContext if it was closed (e.g., page refresh/navigation)
+              console.warn("AudioContext was closed, attempting to recreate.");
+              setupVisualizer(audio); // Call setupVisualizer again to recreate
+          } else {
+              console.log("AudioContext state:", audioContext.state);
+          }
+      } else {
       }
     };
     audio.onpause = () => {
@@ -225,19 +235,37 @@
              audioContext.suspend().catch(err => console.error("Error suspending AudioContext:", err));
          }}
 
+    // Add event listeners for audio errors
+    audio.onerror = (e) => {
+        console.error("Audio playback error:", e);
+        let errorMessage = "เกิดข้อผิดพลาดในการเล่นเสียง";
+        switch (e.target.error.code) {
+            case MediaError.MEDIA_ERR_ABORTED:
+                errorMessage = 'Audio playback aborted.';
+                break;
+            case MediaError.MEDIA_ERR_NETWORK:
+                errorMessage = 'A network error caused the audio download to fail.';
+                break;
+            case MediaError.MEDIA_ERR_DECODE:
+                errorMessage = 'The audio playback was aborted due to a corruption problem or because the audio used features your browser did not support.';
+                break;
+            case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                errorMessage = 'The audio could not be loaded, either because the server or network failed or because the format is not supported.';
+                break;
+            default:
+                errorMessage = 'An unknown audio error occurred.';
+                break;
+        }
+        console.error(errorMessage);
+        // Optionally display an error message to the user
+    };
+
     audio.play()
       .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
   }
 
   function setupVisualizer(audioElement) {
-    if (!window.AudioContext) {
-      console.warn("เบราว์เซอร์ไม่รองรับ AudioContext");
-      return;
-    }
-
-    // Create AudioContext and analyser only on the first user interaction
-    if (audioContext === null) {
-        try {
+     try {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioContext.createAnalyser();
             source = audioContext.createMediaElementSource(audioElement);
@@ -246,6 +274,16 @@
         } catch (e) {
             console.error("Error creating AudioContext:", e);
         }
+
+    if (!window.AudioContext) {
+      console.warn("เบราว์เซอร์ไม่รองรับ AudioContext");
+      return;
+    }
+
+    // Ensure AudioContext and analyser are created before proceeding
+    if (!audioContext || !analyser) {
+        console.warn("AudioContext or analyser not initialized.");
+        return;
     }
 
     analyser.fftSize = 256;
