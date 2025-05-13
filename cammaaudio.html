@@ -1,1 +1,286 @@
-print(default_api.natural_language_write_file(path='cammaaudio.html', language='html', prompt='Modify the existing script tag in the HTML file. Move the creation of `audioContext` and `analyser` outside of the `setupVisualizer` function. Initialize them to null. In the `loadAndPlay` function, before calling `setupVisualizer`, check if `audioContext` is null. If it is, create `audioContext` and `analyser` and connect the source to the analyser. Ensure that the `audioContext.destination` connection is also handled correctly, likely inside `setupVisualizer` still, but adapting to the fact that `analyser` is now a global variable. Add a check in `setupVisualizer` to ensure `audioContext` and `analyser` are not null before proceeding.'))
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎵 Camma Audio Player</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Prompt :wght@400;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet"/>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap @5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .cover {
+      width: 100%;
+      max-width: 300px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin: 0 auto 2rem auto;
+      display: block;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100px;
+      display: block;
+      margin: 1rem auto;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .playlist-container {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .song-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .song-card:hover {
+      transform: scale(1.03);
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-share {
+      font-size: 0.85rem;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container text-center">
+  <h1>🎵 Camma Audio Player</h1>
+
+  <img id="coverImage" src="https://via.placeholder.com/300x300?text=Cover " alt="Cover" class="cover" />
+
+  <canvas id="visualizer"></canvas>
+
+  <div class="playlist-container" id="playlist"></div>
+
+  <div class="mt-4 w-100">
+    <audio id="audioPlayer" class="w-100" controls autoplay></audio>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbweEaFAfNObhLf0DqHs7xUNR4YeG8MyEwBkW5NZxnselZnnup4SgYxrFGs_9IrGkn_m/exec ";
+
+  let songs = [];
+  let currentSongIndex = 0;
+  let audioContext = null; // Initialize to null
+  let analyser = null; // Initialize to null
+  let source = null;
+  let animationId;
+
+  // เช็คว่ามี ?id= หรือ ?url= ใน URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const playId = urlParams.get("id");
+  const playUrl = urlParams.get("url");
+
+  fetch(GAS_URL)
+    .then(res => res.json())
+    .then(data => {
+      songs = data.map(song => ({
+        title: song.title.trim(),
+        url: song.url.trim(),
+        cover: song.cover?.trim() || "https://via.placeholder.com/300x300?text=No+Cover "
+      }));
+
+      if (songs.length === 0) {
+        document.getElementById("playlist").innerHTML = `
+          <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
+        return;
+      }
+
+      // ถ้ามี ?id= หรือ ?url= → เล่นเฉพาะเพลงนั้น
+      if (playId !== null && !isNaN(playId)) {
+        currentSongIndex = parseInt(playId);
+        hidePlaylist();
+      } else if (playUrl) {
+        const matched = songs.find(s => s.url === decodeURIComponent(playUrl));
+        if (matched) {
+          currentSongIndex = songs.indexOf(matched);
+          hidePlaylist();
+        }
+      }
+
+      renderPlaylist();
+      loadAndPlay(currentSongIndex);
+    })
+    .catch(err => {
+      console.error("Error loading songs:", err);
+      document.getElementById("playlist").innerHTML = `
+        <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
+    });
+
+  function hidePlaylist() {
+    document.getElementById("playlist").style.display = "none";
+  }
+
+  function renderPlaylist() {
+    const playlist = document.getElementById("playlist");
+    playlist.innerHTML = "";
+    songs.forEach((song, index) => {
+      const div = document.createElement("div");
+      div.className = "song-card d-flex justify-content-between align-items-center";
+      div.innerHTML = `
+        <div class="flex-grow-1">
+          <div class="song-title fw-bold">${song.title}</div>
+        </div>
+        <button class="btn btn-outline-light btn-sm btn-share ms-2" data-index="${index}">🔗 แชร์</button>
+      `;
+      div.onclick = () => loadAndPlay(index);
+      playlist.appendChild(div);
+    });
+
+    // เพิ่ม event listener ให้ปุ่มแชร์
+    document.querySelectorAll(".btn-share").forEach(btn => {
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation(); // ป้องกันไม่ให้ trigger div.onclick
+        const index = this.getAttribute("data-index");
+        const baseUrl = window.location.href.split('?')[0];
+        const shareLink = `${baseUrl}?id=${index}`;
+
+        navigator.clipboard.writeText(shareLink).then(() => {
+          this.textContent = "✅ คัดลอก";
+          setTimeout(() => {
+            this.textContent = "🔗 แชร์";
+          }, 2000);
+        });
+      });
+    });
+  }
+
+  function loadAndPlay(index) {
+    cancelAnimationFrame(animationId); // หยุดกราฟเดิม
+
+    currentSongIndex = index;
+    const song = songs[index];
+
+    // อัปเดตรูปปก
+    const cover = document.getElementById("coverImage");
+    cover.src = song.cover;
+
+    // เล่นเสียง
+    const audio = document.getElementById("audioPlayer");
+    audio.src = song.url;
+
+    // เริ่มกราฟเสียงเมื่อเพลงเริ่มเล่น
+    audio.onplay = () => {
+      setupVisualizer(audio);
+      // Resume AudioContext on play if it was suspended
+      if (audioContext && audioContext.state === 'suspended') {
+          audioContext.resume().catch(err => console.error("Error resuming AudioContext:", err));
+      }
+    };
+    audio.onpause = () => {
+         // Suspend AudioContext on pause
+         if (audioContext && audioContext.state === 'running') {
+             audioContext.suspend().catch(err => console.error("Error suspending AudioContext:", err));
+         }}
+
+    audio.play()
+      .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
+  }
+
+  function setupVisualizer(audioElement) {
+    if (!window.AudioContext) {
+      console.warn("เบราว์เซอร์ไม่รองรับ AudioContext");
+      return;
+    }
+
+    // Create AudioContext and analyser only on the first user interaction
+    if (audioContext === null) {
+        try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            source = audioContext.createMediaElementSource(audioElement);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+        } catch (e) {
+            console.error("Error creating AudioContext:", e);
+        }
+    }
+
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const canvas = document.getElementById('visualizer');
+    const canvasCtx = canvas.getContext("2d");
+
+    function draw() {
+      // Check if analyser is available before drawing
+      if (!analyser) {
+          return;
+      }
+
+      requestAnimationFrame(draw);
+      analyser.getByteFrequencyData(dataArray);
+
+      canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const barWidth = (canvas.width / bufferLength) * 2.5;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i];
+        canvasCtx.fillStyle = `rgb(${barHeight + 100}, 200, 200)`;
+        canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+    }
+
+    draw();
+  }
+</script>
+
+</body>
+</html>
