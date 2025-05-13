@@ -209,10 +209,7 @@
     const cover = document.getElementById("coverImage");
     cover.src = song.cover;
 
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const audio = document.getElementById("audioPlayer");
-
-    // ใช้ url เดียว แต่เหมาะกับ iOS เพราะเป็น Dropbox ?dl=1
     audio.src = song.url;
     audio.play()
       .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
