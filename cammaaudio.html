@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🎵 Camma Audio Player</title>
 
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Prompt :wght@400;600&display=swap" rel="stylesheet"/>
 
   <!-- Bootstrap CSS -->
@@ -19,17 +19,10 @@
       min-height: 100vh;
       margin: 0;
       padding: 2rem;
-      overflow-x: hidden;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 1rem;
-      font-size: 2rem;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 600px;
       margin: auto;
     }
 
@@ -39,66 +32,59 @@
       height: 300px;
       object-fit: cover;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
       margin: 0 auto 2rem auto;
       display: block;
       cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     }
 
     .playlist-container {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
       padding: 1rem;
-      backdrop-filter: blur(10px);
     }
 
     .song-card {
+      background-color: rgba(255,255,255,0.1);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     .song-card:hover {
-      transform: scale(1.03);
-      background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.02);
+      background-color: rgba(255,255,255,0.2);
     }
 
-    .btn-share {
-      font-size: 0.85rem;
-    }
-
-    .audio-wrapper {
-      position: sticky;
-      top: 1rem;
-      z-index: 100;
-      background: #1e3c72;
-      padding-bottom: 1rem;
-    }
-
-    audio {
+    #user-interaction {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
   </style>
 </head>
 <body>
 
+<div id="user-interaction">
+  <h5 class="text-white text-center">กรุณาแตะหน้าจอเพื่อปลดล็อกเสียง</h5>
+  <button class="btn btn-success mt-3">▶️ เริ่มเล่น</button>
+</div>
+
 <div class="container text-center">
-  <h1>🎵 Camma Audio Player</h1>
+  <h1 class="mb-3">🎵 Camma Audio Player</h1>
 
   <img id="coverImage" src="https://via.placeholder.com/300x300?text=Cover " alt="Cover" class="cover" />
-  
-  <!-- ปุ่มเริ่มเล่นสำหรับ iOS -->
-  <div id="playButtonWrapper" class="mb-3" style="display:none;">
-    <button id="playButton" class="btn btn-lg btn-success">▶️ เริ่มเล่น</button>
-  </div>
 
-  <!-- Audio player -->
   <div class="audio-wrapper">
     <audio id="audioPlayer" class="w-100" controls></audio>
   </div>
@@ -106,18 +92,23 @@
   <div class="playlist-container" id="playlist"></div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
   const GAS_URL = "https://script.google.com/macros/s/AKfycbweEaFAfNObhLf0DqHs7xUNR4YeG8MyEwBkW5NZxnselZnnup4SgYxrFGs_9IrGkn_m/exec ";
 
   let songs = [];
   let currentSongIndex = 0;
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const playId = urlParams.get("id");
-  const playUrl = urlParams.get("url");
+  // บังคับให้คลิกหน้าจอครั้งแรก
+  document.querySelector("#user-interaction button").onclick = () => {
+    document.getElementById("user-interaction").style.display = "none";
+
+    const audio = document.getElementById("audioPlayer");
+    if (audio.src) {
+      audio.play().catch(() => {});
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  };
 
   fetch(GAS_URL)
     .then(res => res.json())
@@ -128,116 +119,59 @@
         cover: song.cover?.trim() || "https://via.placeholder.com/300x300?text=No+Cover "
       }));
 
-      if (songs.length === 0) {
-        document.getElementById("playlist").innerHTML = `
-          <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
+      if (!songs.length) {
+        document.getElementById("playlist").innerHTML = `<div class="alert alert-warning">ไม่มีเพลง</div>`;
         return;
       }
 
-      // ตรวจสอบ URL parameter และโหลดเพลง
-      if (playId !== null && !isNaN(playId)) {
-        currentSongIndex = parseInt(playId);
-        hidePlaylist();
-      } else if (playUrl) {
-        const matched = songs.find(s => s.url === decodeURIComponent(playUrl));
-        if (matched) {
-          currentSongIndex = songs.indexOf(matched);
-          hidePlaylist();
-        }
-      }
+      // โหลดเพลงแรก
+      loadAndPlay(0);
 
+      // สร้าง playlist
       renderPlaylist();
-      loadAndPlay(currentSongIndex);
 
-      // เพิ่ม event listener ให้รูปภาพ
-      document.getElementById("coverImage").onclick = () => {
-        loadAndPlay(currentSongIndex);
-        playAudio();
-      };
-
-      // แสดงปุ่ม "เริ่มเล่น" สำหรับ iOS
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-        document.getElementById("playButtonWrapper").style.display = "block";
-        document.getElementById("playButton").onclick = () => {
-          playAudio();
-          document.getElementById("playButtonWrapper").style.display = "none";
-        };
-      }
-
+      // เพิ่ม event ให้รูปภาพ
+      document.getElementById("coverImage").onclick = () => playCurrent();
     })
     .catch(err => {
-      console.error("Error loading songs:", err);
-      document.getElementById("playlist").innerHTML = `
-        <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
+      console.error("โหลดเพลงล้มเหลว:", err);
+      document.getElementById("playlist").innerHTML = `<div class="alert alert-danger">โหลดเพลงล้มเหลว</div>`;
     });
-
-  function hidePlaylist() {
-    document.getElementById("playlist").style.display = "none";
-  }
 
   function renderPlaylist() {
     const playlist = document.getElementById("playlist");
     playlist.innerHTML = "";
     songs.forEach((song, index) => {
       const div = document.createElement("div");
-      div.className = "song-card d-flex justify-content-between align-items-center";
-      div.innerHTML = `
-        <div class="flex-grow-1">
-          <div class="song-title fw-bold">${song.title}</div>
-        </div>
-        <button class="btn btn-outline-light btn-sm btn-share ms-2" data-index="${index}">🔗 แชร์</button>
-      `;
+      div.className = "song-card";
+      div.innerText = song.title;
       div.onclick = () => {
         loadAndPlay(index);
-        playAudio();
+        playCurrent();
       };
       playlist.appendChild(div);
-    });
-
-    document.querySelectorAll(".btn-share").forEach(btn => {
-      btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        const index = this.getAttribute("data-index");
-        const baseUrl = window.location.href.split('?')[0];
-        const shareLink = `${baseUrl}?id=${index}`;
-
-        navigator.clipboard.writeText(shareLink).then(() => {
-          this.textContent = "✅ คัดลอก";
-          setTimeout(() => {
-            this.textContent = "🔗 แชร์";
-          }, 2000);
-        });
-      });
     });
   }
 
   function loadAndPlay(index) {
-  currentSongIndex = index;
-  const song = songs[index];
-
-  const cover = document.getElementById("coverImage");
-  cover.src = song.cover;
-
-  const audio = document.getElementById("audioPlayer");
-  audio.src = song.url;
-}
-
-function playAudio() {
-  const audio = document.getElementById("audioPlayer");
-
-  // ลบ event เดิมออกก่อน เพื่อป้องกันการเรียกซ้ำ
-  audio.removeEventListener('canplaythrough', null);
-
-  // รอจนกว่าจะพร้อมเล่น
-  audio.addEventListener('canplaythrough', () => {
-    audio.play().catch(err => console.error("เล่นเสียงไม่ได้:", err));
-  }, { once: true });
-
-  // ถ้าโหลดไว้แล้วและ ready → เล่นเลย
-  if (audio.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
-    audio.play().catch(err => console.error("เล่นเสียงไม่ได้:", err));
+    currentSongIndex = index;
+    const song = songs[index];
+    document.getElementById("coverImage").src = song.cover;
+    document.getElementById("audioPlayer").src = song.url;
   }
-}
+
+  function playCurrent() {
+    const audio = document.getElementById("audioPlayer");
+
+    // รอจนพร้อมเล่น
+    audio.oncanplaythrough = () => {
+      audio.play().catch(e => console.error("เล่นเสียงไม่ได้:", e));
+    };
+
+    if (audio.readyState >= 4) {
+      audio.play().catch(e => console.error("เล่นเสียงไม่ได้:", e));
+    }
+  }
 </script>
 
 </body>
