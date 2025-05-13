@@ -17,16 +17,45 @@
         .audio-container {
             text-align: center;
         }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="audio-container">
         <h2>เครื่องเล่นเสียง</h2>
-        <audio controls preload="auto">
+        <audio id="audioPlayer" preload="metadata" crossorigin="anonymous">
             <source src="https://www.dropbox.com/scl/fi/3xgk6tdkxuwvmqmhr1ij4/5.mp3?dl=1" type="audio/mpeg">
             เบราว์เซอร์ของคุณไม่รองรับแท็ก audio
         </audio>
-        <p>คลิกเล่นเพื่อฟังเสียง</p>
+        <div>
+            <button onclick="togglePlay()">เล่น/หยุด</button>
+        </div>
+        <p>คลิกปุ่มเพื่อเล่นหรือหยุดเสียง</p>
     </div>
+
+    <script>
+        const audio = document.getElementById('audioPlayer');
+        const playButton = document.querySelector('button');
+
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                playButton.textContent = 'หยุด';
+            } else {
+                audio.pause();
+                playButton.textContent = 'เล่น';
+            }
+        }
+
+        // รีเซ็ตปุ่มเมื่อเสียงจบ
+        audio.onended = () => {
+            playButton.textContent = 'เล่น';
+        };
+    </script>
 </body>
 </html>
