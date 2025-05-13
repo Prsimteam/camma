@@ -49,7 +49,6 @@
       border-radius: 50%;
       object-fit: cover;
       box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      transition: transform 1s linear;
       animation: spin 10s linear infinite;
     }
 
@@ -104,7 +103,7 @@
   <div class="playlist-container" id="playlist"></div>
 
   <div class="mt-4 w-100">
-    <audio id="audioPlayer" class="w-100" controls autoplay></audio>
+    <audio id="audioPlayer" class="w-100" controls></audio>
   </div>
 </div>
 
@@ -112,22 +111,32 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+  // ใช้ JSON จาก Google Apps Script
   const GAS_URL = "https://script.google.com/macros/s/AKfycbweEaFAfNObhLf0DqHs7xUNR4YeG8MyEwBkW5NZxnselZnnup4SgYxrFGs_9IrGkn_m/exec ";
 
   let songs = [];
   let currentSongIndex = 0;
 
-  // เช็คว่ามี ?id= หรือ ?url= ใน URL
   const urlParams = new URLSearchParams(window.location.search);
   const playId = urlParams.get("id");
   const playUrl = urlParams.get("url");
+
+  // ปลดล็อก autoplay บน iOS
+  document.body.addEventListener('touchstart', function unlockAudio() {
+    const audio = document.getElementById("audioPlayer");
+    if (audio.paused) {
+      audio.play().catch(() => {});
+    }
+    document.body.removeEventListener('touchstart', unlockAudio);
+  });
 
   fetch(GAS_URL)
     .then(res => res.json())
     .then(data => {
       songs = data.map(song => ({
         title: song.title.trim(),
-        url: song.url.trim(),
+        url: song.url.trim(),          // สำหรับเล่นบนเว็บ
+        fileshare: song.fileshare.trim(), // สำหรับ iOS
         cover: song.cover?.trim() || "https://via.placeholder.com/250x250?text=No+Cover "
       }));
 
@@ -137,7 +146,6 @@
         return;
       }
 
-      // ถ้ามี ?id= หรือ ?url= → เล่นเฉพาะเพลงนั้น
       if (playId !== null && !isNaN(playId)) {
         currentSongIndex = parseInt(playId);
         hidePlaylist();
@@ -178,10 +186,9 @@
       playlist.appendChild(div);
     });
 
-    // เพิ่ม event listener ให้ปุ่มแชร์
     document.querySelectorAll(".btn-share").forEach(btn => {
       btn.addEventListener("click", function (e) {
-        e.stopPropagation(); // ป้องกันไม่ให้ trigger div.onclick
+        e.stopPropagation();
         const index = this.getAttribute("data-index");
         const baseUrl = window.location.href.split('?')[0];
         const shareLink = `${baseUrl}?id=${index}`;
@@ -200,13 +207,14 @@
     currentSongIndex = index;
     const song = songs[index];
 
-    // อัปเดตรูปปก
     const cover = document.getElementById("coverImage");
     cover.src = song.cover;
 
-    // เล่นเสียง
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const audio = document.getElementById("audioPlayer");
-    audio.src = song.url;
+    const playUrl = isIOS ? song.fileshare : song.url;
+
+    audio.src = playUrl;
     audio.play()
       .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
   }
