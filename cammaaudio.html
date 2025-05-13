@@ -42,6 +42,7 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.4);
       margin: 0 auto 2rem auto;
       display: block;
+      cursor: pointer;
     }
 
     .playlist-container {
@@ -90,9 +91,14 @@
 <div class="container text-center">
   <h1>🎵 Camma Audio Player</h1>
 
-
   <img id="coverImage" src="https://via.placeholder.com/300x300?text=Cover " alt="Cover" class="cover" />
-  <!-- ปุ่มควบคุมเสียงอยู่ด้านบน -->
+  
+  <!-- ปุ่มเริ่มเล่นสำหรับ iOS -->
+  <div id="playButtonWrapper" class="mb-3" style="display:none;">
+    <button id="playButton" class="btn btn-lg btn-success">▶️ เริ่มเล่น</button>
+  </div>
+
+  <!-- Audio player -->
   <div class="audio-wrapper">
     <audio id="audioPlayer" class="w-100" controls></audio>
   </div>
@@ -109,52 +115,62 @@
   let songs = [];
   let currentSongIndex = 0;
 
-  // เช็คว่ามี ?id= หรือ ?url= ใน URL
   const urlParams = new URLSearchParams(window.location.search);
   const playId = urlParams.get("id");
   const playUrl = urlParams.get("url");
 
   fetch(GAS_URL)
-  .then(res => res.json())
-  .then(data => {
-    songs = data.map(song => ({
-      title: song.title.trim(),
-      url: song.url.trim(),
-      cover: song.cover?.trim() || "https://via.placeholder.com/300x300?text=No+Cover "
-    }));
+    .then(res => res.json())
+    .then(data => {
+      songs = data.map(song => ({
+        title: song.title.trim(),
+        url: song.url.trim(),
+        cover: song.cover?.trim() || "https://via.placeholder.com/300x300?text=No+Cover "
+      }));
 
-    if (songs.length === 0) {
-      document.getElementById("playlist").innerHTML = `
-        <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
-      return;
-    }
-
-    if (playId !== null && !isNaN(playId)) {
-      currentSongIndex = parseInt(playId);
-      hidePlaylist();
-    } else if (playUrl) {
-      const matched = songs.find(s => s.url === decodeURIComponent(playUrl));
-      if (matched) {
-        currentSongIndex = songs.indexOf(matched);
-        hidePlaylist();
+      if (songs.length === 0) {
+        document.getElementById("playlist").innerHTML = `
+          <div class="alert alert-warning text-center">ไม่มีเพลงที่รองรับการเล่นได้</div>`;
+        return;
       }
-    }
 
-    renderPlaylist();
-    loadAndPlay(currentSongIndex);
+      // ตรวจสอบ URL parameter และโหลดเพลง
+      if (playId !== null && !isNaN(playId)) {
+        currentSongIndex = parseInt(playId);
+        hidePlaylist();
+      } else if (playUrl) {
+        const matched = songs.find(s => s.url === decodeURIComponent(playUrl));
+        if (matched) {
+          currentSongIndex = songs.indexOf(matched);
+          hidePlaylist();
+        }
+      }
 
-    // เพิ่ม event listener ให้คลิกที่รูปปกเพื่อเล่นเพลง
-    document.getElementById("coverImage").onclick = () => {
+      renderPlaylist();
       loadAndPlay(currentSongIndex);
-    };
 
-  })
-  .catch(err => {
-    console.error("Error loading songs:", err);
-    document.getElementById("playlist").innerHTML = `
-      <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
-  });
-  
+      // เพิ่ม event listener ให้รูปภาพ
+      document.getElementById("coverImage").onclick = () => {
+        loadAndPlay(currentSongIndex);
+        playAudio();
+      };
+
+      // แสดงปุ่ม "เริ่มเล่น" สำหรับ iOS
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        document.getElementById("playButtonWrapper").style.display = "block";
+        document.getElementById("playButton").onclick = () => {
+          playAudio();
+          document.getElementById("playButtonWrapper").style.display = "none";
+        };
+      }
+
+    })
+    .catch(err => {
+      console.error("Error loading songs:", err);
+      document.getElementById("playlist").innerHTML = `
+        <div class="alert alert-danger text-center">ไม่สามารถโหลดเพลงได้ กรุณาลองใหม่อีกครั้ง</div>`;
+    });
+
   function hidePlaylist() {
     document.getElementById("playlist").style.display = "none";
   }
@@ -171,7 +187,10 @@
         </div>
         <button class="btn btn-outline-light btn-sm btn-share ms-2" data-index="${index}">🔗 แชร์</button>
       `;
-      div.onclick = () => loadAndPlay(index);
+      div.onclick = () => {
+        loadAndPlay(index);
+        playAudio();
+      };
       playlist.appendChild(div);
     });
 
@@ -196,15 +215,16 @@
     currentSongIndex = index;
     const song = songs[index];
 
-    // อัปเดตรูปปก
     const cover = document.getElementById("coverImage");
     cover.src = song.cover;
 
-    // เล่นเสียง
     const audio = document.getElementById("audioPlayer");
     audio.src = song.url;
-    audio.play()
-      .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
+  }
+
+  function playAudio() {
+    const audio = document.getElementById("audioPlayer");
+    audio.play().catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
   }
 </script>
 
