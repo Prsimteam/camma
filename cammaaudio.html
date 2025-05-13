@@ -35,24 +35,27 @@
       margin: auto;
     }
 
-    .cover {
-      width: 100%;
-      max-width: 300px;
+    .cover-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
       height: 300px;
-      object-fit: cover;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      margin: 0 auto 2rem auto;
-      display: block;
     }
 
-    canvas {
-      width: 100%;
-      height: 100px;
-      display: block;
-      margin: 1rem auto;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
+    .cover {
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      transition: transform 1s linear;
+      animation: spin 10s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .playlist-container {
@@ -94,9 +97,9 @@
 <div class="container text-center">
   <h1>🎵 Camma Audio Player</h1>
 
-  <img id="coverImage" src="https://via.placeholder.com/300x300?text=Cover " alt="Cover" class="cover" />
-
-  <canvas id="visualizer"></canvas>
+  <div class="cover-container">
+    <img id="coverImage" src="https://via.placeholder.com/250x250?text=Cover " alt="Cover" class="cover" />
+  </div>
 
   <div class="playlist-container" id="playlist"></div>
 
@@ -113,10 +116,6 @@
 
   let songs = [];
   let currentSongIndex = 0;
-  let audioContext = null;
-  let analyser = null;
-  let source = null;
-  let animationId;
 
   // เช็คว่ามี ?id= หรือ ?url= ใน URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -129,7 +128,7 @@
       songs = data.map(song => ({
         title: song.title.trim(),
         url: song.url.trim(),
-        cover: song.cover?.trim() || "https://via.placeholder.com/300x300?text=No+Cover "
+        cover: song.cover?.trim() || "https://via.placeholder.com/250x250?text=No+Cover "
       }));
 
       if (songs.length === 0) {
@@ -198,8 +197,6 @@
   }
 
   function loadAndPlay(index) {
-    cancelAnimationFrame(animationId); // หยุดกราฟเดิม
-
     currentSongIndex = index;
     const song = songs[index];
 
@@ -210,114 +207,15 @@
     // เล่นเสียง
     const audio = document.getElementById("audioPlayer");
     audio.src = song.url;
-
-    // เริ่มกราฟเสียงเมื่อเพลงเริ่มเล่น
-    audio.onplay = () => {
-      setupVisualizer(audio);
-      // Resume AudioContext on play if it was suspended
-      if (audioContext) {
-          if (audioContext.state === 'suspended') {
-              audioContext.resume().catch(err => console.error("Error resuming AudioContext:", err));
-              console.log("AudioContext resumed.");
-          } else if (audioContext.state === 'closed') {
-              // Recreate AudioContext if it was closed (e.g., page refresh/navigation)
-              console.warn("AudioContext was closed, attempting to recreate.");
-              setupVisualizer(audio); // Call setupVisualizer again to recreate
-          } else {
-              console.log("AudioContext state:", audioContext.state);
-          }
-      } else {
-      }
-    };
-    audio.onpause = () => {
-         // Suspend AudioContext on pause
-         if (audioContext && audioContext.state === 'running') {
-             audioContext.suspend().catch(err => console.error("Error suspending AudioContext:", err));
-         }}
-
-    // Add event listeners for audio errors
-    audio.onerror = (e) => {
-        console.error("Audio playback error:", e);
-        let errorMessage = "เกิดข้อผิดพลาดในการเล่นเสียง";
-        switch (e.target.error.code) {
-            case MediaError.MEDIA_ERR_ABORTED:
-                errorMessage = 'Audio playback aborted.';
-                break;
-            case MediaError.MEDIA_ERR_NETWORK:
-                errorMessage = 'A network error caused the audio download to fail.';
-                break;
-            case MediaError.MEDIA_ERR_DECODE:
-                errorMessage = 'The audio playback was aborted due to a corruption problem or because the audio used features your browser did not support.';
-                break;
-            case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                errorMessage = 'The audio could not be loaded, either because the server or network failed or because the format is not supported.';
-                break;
-            default:
-                errorMessage = 'An unknown audio error occurred.';
-                break;
-        }
-        console.error(errorMessage);
-        // Optionally display an error message to the user
-    };
-
     audio.play()
       .catch(err => console.error("การเล่นเสียงล้มเหลว:", err));
   }
 
-  function setupVisualizer(audioElement) {
-     try {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            source = audioContext.createMediaElementSource(audioElement);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-        } catch (e) {
-            console.error("Error creating AudioContext:", e);
-        }
-
-    if (!window.AudioContext) {
-      console.warn("เบราว์เซอร์ไม่รองรับ AudioContext");
-      return;
-    }
-
-    // Ensure AudioContext and analyser are created before proceeding
-    if (!audioContext || !analyser) {
-        console.warn("AudioContext or analyser not initialized.");
-        return;
-    }
-
-    analyser.fftSize = 256;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    const canvas = document.getElementById('visualizer');
-    const canvasCtx = canvas.getContext("2d");
-
-    function draw() {
-      // Check if analyser is available before drawing
-      if (!analyser) {
-          return;
-      }
-
-      requestAnimationFrame(draw);
-      analyser.getByteFrequencyData(dataArray);
-
-      canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const barWidth = (canvas.width / bufferLength) * 2.5;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i];
-        canvasCtx.fillStyle = `rgb(${barHeight + 100}, 200, 200)`;
-        canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        x += barWidth + 1;
-      }
-    }
-
-    draw();
-  }
+  const audio = document.getElementById("audioPlayer");
+  audio.addEventListener("ended", () => {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadAndPlay(currentSongIndex);
+  });
 </script>
 
 </body>
