@@ -1,40 +1,28 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎵 Camma Audio Player</title>
-
-  <!-- CSS จาก Dropbox -->
-  <link rel="stylesheet" href="https://cfl.dropboxstatic.com/static/metaserver/static/css/notify-vflPup1uz.css " />
+  <meta charset="UTF-8" />
+  <title>iOS Audio Player</title>
 </head>
-<body style="background: #1e3c72; color: white; text-align: center;">
+<body>
 
-  <h1>🎵 Camma Audio Player</h1>
+<h2>เล่นเสียงบน iOS ได้แน่นอน</h2>
 
-  <audio controls autoplay id="myAudio" style="width: 100%; margin-top: 2rem;">
-    <source src="https://ucef17ddc969753c061340331aac.previews.dropboxusercontent.com/p/hls_master_playlist/ACqVELwXlxY-LAY4WcF0aXLPGZ5CfhqQNSrU6WDLaFWf4kKU6eDzNeUkIpwzth8HN_LOdjUnrwKD3mC2JutYdi1Uu-73m_JslgILWhR2VlkYpq1akKge5nY0yMbMPm3qh4RQGvry7n0PlPzAVeWYtx9ZcxFuzQaZocM9I0SXsiHhPm0LfKeDnnDJUl3Gjq1VyeEsAutkbjPcmbfJgMcdxnZVofIJi14sULkQKUlU6B9N2GG9d-cz7huJPluf8-gXicWzui4P93w_es21wzSEGmCw2peZvtOPMK5-nqpm4ARQahnWLczEXa_qcXM28XDqGRjHOQtqHJ27KDMrlFoSqe4yST5oWrGwnjIM8mLVsvH4zzuUFZVxrqEorsDWAUU1rSxGzxnFSvhWu2vMMRdsterUrNK_96nPmQfOC6m58tc415V6VAAJr7NlBksv1HED8KopvZa0_NZpzFLYleumSXXBuKc7BoOFZazCw4M1JSVaSmhkERsLwSu6vmtukSVWPh2m2QUiuOgDnTdY83AQVZfrosvhqPQTGQTK3g4Q2su4RDp4YNSRcWAeqc2KxFjZuKG4TSGO2_o1737Pioq4ZmNVYz2s5r6AC94wTHQG-Im25-wzI3PFOkRxhMD6zI541XW5Do6AUQ7QScD8GXvGD_emzTp_i7C_uhokPeanq3SQsa-oSSt43O2BhjmTe0rc6d0/p.m3u8?is_prewarmed=true " type="application/vnd.apple.mpegurl">
-    Your browser does not support HLS audio playback.
-  </audio>
+<audio controls autoplay style="width: 100%; margin-top: 1rem;">
+  <source src="https://www.dropbox.com/scl/fi/r5hccxbadhhdctodu1u35/4.wav?dl=1 " type="audio/wav">
+  ไม่รองรับการเล่นเสียงในเบราว์เซอร์นี้
+</audio>
 
-  <script>
-    // ปลดล็อก autoplay บน iOS
-    document.body.addEventListener('touchstart', function unlockAudio() {
-      const audio = document.getElementById("myAudio");
-      if (audio.paused) {
-        audio.play().catch(() => {});
-      }
-      document.body.removeEventListener('touchstart', unlockAudio);
-    });
-
-    // โหลดและเล่นเมื่อหน้าโหลดเสร็จ
-    window.addEventListener('load', () => {
-      const audio = document.getElementById("myAudio");
-      audio.play().catch(err => {
-        console.log("ไม่สามารถเล่นอัตโนมัติได้ (ปกติบน Android)", err);
-      });
-    });
-  </script>
+<script>
+  // ปลดล็อก autoplay บน iOS
+  document.body.addEventListener('touchstart', function unlockAudio() {
+    const audio = document.querySelector("audio");
+    if (audio.paused) {
+      audio.play().catch(() => {});
+    }
+    document.body.removeEventListener('touchstart', unlockAudio);
+  });
+</script>
 
 </body>
 </html>
