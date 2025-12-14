@@ -3,143 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แชทกับผู้ดูแลระบบ</title>
+    <title>Chat with Admin</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts: Sarabun -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        body {
-            font-family: 'Noto Sans Thai', sans-serif;
+        body { font-family: 'Sarabun', sans-serif; }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-        
-        /* สไตล์แถบเลื่อน */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        
-        /* อนิเมชัน */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .message-animation {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        /* สไตล์สถานะออนไลน์ */
-        .online-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #10B981;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
     </style>
 </head>
-<body class="bg-gray-50">
-    <div class="min-h-screen flex flex-col">
+<body class="bg-gray-100 h-screen flex flex-col items-center justify-center">
+
+    <div id="app" class="w-full h-full md:max-w-md md:h-[90vh] bg-white md:rounded-xl shadow-2xl flex flex-col overflow-hidden relative">
+        
         <!-- Header -->
-        <header class="bg-blue-600 text-white p-4 shadow-md">
-            <div class="container mx-auto flex justify-between items-center">
-                <div class="flex items-center">
-                    <div class="bg-white p-2 rounded-full mr-3">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold">แชทกับผู้ดูแลระบบ</h1>
-                        <div class="flex items-center text-sm" id="status-indicator">
-                            <span class="online-dot"></span>
-                            <span id="status-text">กำลังเชื่อมต่อ...</span>
-                        </div>
-                    </div>
+        <header class="bg-gradient-to-r from-blue-600 to-blue-500 text-white p-4 flex items-center justify-between shadow-md z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                    <i class="fa-solid fa-headset text-lg"></i>
                 </div>
-                <div class="text-sm">
-                    <span id="user-name">ผู้ใช้</span>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">Admin Support</h1>
+                    <p class="text-xs text-blue-100 flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        Online
+                    </p>
                 </div>
             </div>
         </header>
 
-        <!-- กล่องข้อความ -->
-        <div class="flex-1 container mx-auto p-4 overflow-hidden flex flex-col">
-            <div class="bg-white rounded-lg shadow-md flex-1 overflow-hidden flex flex-col">
-                <!-- ข้อความทั้งหมด -->
-                <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4">
-                    <div class="text-center text-gray-500 text-sm py-4">
-                        เริ่มการสนทนากับผู้ดูแลระบบ
-                    </div>
-                </div>
-
-                <!-- Input box -->
-                <div class="border-t p-4">
-                    <form id="message-form" class="flex space-x-2">
-                        <input 
-                            type="text" 
-                            id="message-input" 
-                            placeholder="พิมพ์ข้อความที่นี่..." 
-                            class="flex-1 border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            autocomplete="off"
-                        >
-                        <button 
-                            type="submit"
-                            class="bg-blue-600 text-white rounded-full px-6 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                        >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
-                        </button>
-                    </form>
-                    <div class="text-xs text-gray-500 mt-2 text-center">
-                        กด Enter หรือคลิกที่ปุ่มเพื่อส่งข้อความ
-                    </div>
-                </div>
-            </div>
+        <!-- Loading / Setup State -->
+        <div v-if="!sessionId" class="flex-1 flex flex-col items-center justify-center p-8 text-center text-gray-500">
+            <i class="fa-solid fa-circle-exclamation text-4xl mb-3 text-yellow-500"></i>
+            <h2 class="text-xl font-bold text-gray-800">Connection Error</h2>
+            <p>User ID not found in URL.</p>
+            <p class="text-sm mt-2">Please use the link provided by Admin.</p>
         </div>
 
-        <!-- Footer -->
-        <footer class="bg-gray-100 p-4 text-center text-gray-600 text-sm">
-            <p>ระบบแชทระหว่างผู้ใช้กับผู้ดูแลระบบ | ข้อมูลได้รับการปกป้องตามนโยบายความเป็นส่วนตัว</p>
-        </footer>
+        <!-- Chat Area -->
+        <div v-else class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 relative" id="chatContainer">
+            
+            <div v-if="isLoading && messages.length === 0" class="flex justify-center mt-10">
+                <i class="fa-solid fa-circle-notch fa-spin text-blue-500 text-2xl"></i>
+            </div>
+            
+            <div v-if="!isLoading && messages.length === 0" class="text-center mt-10 text-gray-400">
+                <p>Start chatting with us!</p>
+            </div>
+
+            <!-- Messages -->
+            <div v-for="(msg, index) in messages" :key="index" 
+                 class="flex flex-col" 
+                 :class="msg.sender === 'user' ? 'items-end' : 'items-start'">
+                
+                <div class="max-w-[80%] rounded-2xl px-4 py-2 shadow-sm text-sm relative group"
+                     :class="msg.sender === 'user' 
+                        ? 'bg-blue-600 text-white rounded-tr-none' 
+                        : 'bg-white text-gray-800 border border-gray-100 rounded-tl-none'">
+                    {{ msg.message }}
+                    
+                    <!-- Time -->
+                    <span class="text-[10px] block mt-1 text-right opacity-70">
+                        {{ formatTime(msg.timestamp) }}
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Typing Indicator (Mock) -->
+            <!-- <div v-if="isTyping" class="flex items-start">
+               <div class="bg-gray-200 rounded-full px-3 py-2">
+                   <div class="flex gap-1">
+                       <span class="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce"></span>
+                       <span class="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-75"></span>
+                       <span class="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-150"></span>
+                   </div>
+               </div>
+            </div> -->
+            
+        </div>
+
+        <!-- Input Area -->
+        <div v-if="sessionId" class="p-3 bg-white border-t border-gray-100 flex items-end gap-2 z-10">
+            <button class="w-10 h-10 text-gray-400 hover:text-blue-500 transition rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="flex-1 bg-gray-100 rounded-2xl px-4 py-2 focus-within:ring-2 focus-within:ring-blue-100 transition">
+                <input type="text" 
+                       v-model="newMessage" 
+                       @keyup.enter="sendMessage"
+                       placeholder="Type a message..." 
+                       class="w-full bg-transparent border-none outline-none text-sm text-gray-800 placeholder-gray-400"
+                       :disabled="isSending">
+            </div>
+            <button @click="sendMessage" 
+                    :disabled="!newMessage.trim() || isSending"
+                    class="w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-full flex items-center justify-center transition shadow-md transform active:scale-95">
+                <i v-if="!isSending" class="fa-solid fa-paper-plane text-sm"></i>
+                <i v-else class="fa-solid fa-spinner fa-spin text-sm"></i>
+            </button>
+        </div>
+
     </div>
 
-    <!-- Google Apps Script API URL -->
+    <!-- Load Config -->
+    <script src="config.js"></script>
+
     <script>
-        // กำหนด URL ของ Google Apps Script API
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyC2GxTahqx8Xu1-vgkPuKPmG_wQtRRMhJHEjXFfW1D5H_Kcxm2xIo0MpvBdLj-Jeeprw/exec';
-        
-        // รับค่า userid จาก URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('userid');
-        
-        // ถ้าไม่มี userid แสดงข้อความแจ้งเตือน
-        if (!userId) {
-            alert('กรุณาเข้าผ่านลิงค์ที่ได้รับจากผู้ดูแลระบบ');
-            window.location.href = 'error.html';
-        }
+        const { createApp, ref, onMounted, nextTick, watch } = Vue;
+
+        createApp({
+            setup() {
+                const sessionId = ref(null);
+                const messages = ref([]);
+                const newMessage = ref("");
+                const isLoading = ref(true);
+                const isSending = ref(false);
+                let pollInterval = null;
+
+                onMounted(() => {
+                    // Extract SessionID from URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    sessionId.value = urlParams.get('userid');
+
+                    if (sessionId.value) {
+                        fetchMessages();
+                        startPolling();
+                    } else {
+                        isLoading.value = false;
+                    }
+                });
+
+                const scrollToBottom = () => {
+                    nextTick(() => {
+                        const container = document.getElementById('chatContainer');
+                        if (container) {
+                            container.scrollTop = container.scrollHeight;
+                        }
+                    });
+                };
+
+                const startPolling = () => {
+                    pollInterval = setInterval(fetchMessages, CONFIG.POLL_INTERVAL || 3000);
+                };
+
+                const fetchMessages = async () => {
+                    try {
+                        // Check if config is set
+                        if (CONFIG.API_URL.includes("YOUR_GOOGLE")) {
+                            console.warn("Config API URL not set.");
+                            return;
+                        }
+
+                        const response = await fetch(`${CONFIG.API_URL}?action=getMessages&sessionId=${sessionId.value}`);
+                        const result = await response.json();
+                        
+                        if (result.status === 'success') {
+                            const newCount = result.data.length;
+                            const currentCount = messages.value.length;
+                            
+                            // Only update if there are changes to avoid UI flicker/scroll jump if not needed
+                            if (newCount !== currentCount) {
+                                messages.value = result.data;
+                                scrollToBottom();
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Error fetching messages:", error);
+                    } finally {
+                        isLoading.value = false;
+                    }
+                };
+
+                const sendMessage = async () => {
+                    if (!newMessage.value.trim() || isSending.value) return;
+                    
+                    const msgText = newMessage.value;
+                    newMessage.value = ""; // Optimistic clear
+                    isSending.value = true;
+
+                    // Optimistic update
+                    messages.value.push({
+                        sender: 'user',
+                        message: msgText,
+                        timestamp: new Date().toISOString(),
+                        temp: true
+                    });
+                    scrollToBottom();
+
+                    try {
+                        const payload = {
+                            action: 'sendMessage',
+                            sessionId: sessionId.value,
+                            message: msgText,
+                            sender: 'user'
+                        };
+                        
+                        // Use navigator.sendBeacon for better reliability on close, 
+                        // but fetch is standard for expecting response.
+                        // We use doPost JSON
+                        const response = await fetch(CONFIG.API_URL, {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        // Wait for next poll to confirm or we could update status here
+                        // Immediate fetch to sync
+                        setTimeout(fetchMessages, 500);
+
+                    } catch (error) {
+                        console.error("Error sending message:", error);
+                        alert("Failed to send message.");
+                        // Revert optimistic update?
+                    } finally {
+                        isSending.value = false;
+                    }
+                };
+
+                const formatTime = (dateStr) => {
+                    const date = new Date(dateStr);
+                    return date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+                };
+
+                return {
+                    sessionId,
+                    messages,
+                    newMessage,
+                    isLoading,
+                    isSending,
+                    sendMessage,
+                    formatTime
+                };
+            }
+        }).mount('#app');
     </script>
-    
-    <script src="app.js"></script>
 </body>
 </html>
