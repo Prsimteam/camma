@@ -91,30 +91,39 @@
             margin-top: 0.2rem;
         }
     </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T1S5VW5N9W"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-T1S5VW5N9W');
+    </script>
 </head>
 
 <body>
 
     <div class="card">
-        <h1>Create Tracking Link</h1>
+        <h1>สร้างระบบติดตาม Link</h1>
 
         <div class="form-group">
-            <label>Google Apps Script Web App URL</label>
-            <input type="url" id="scriptUrl" placeholder="https://script.google.com/macros/s/..."
+            
+            <input type="hidden" id="scriptUrl" placeholder="https://script.google.com/macros/s/..."
                 value="https://script.google.com/macros/s/AKfycbygcvjOD3FDGHUGQAg0uHSmpS7miE39u3kSdLL_Pz_CiRv5EsAmZi6bP5w5E1MzbNVz/exec">
-            <div class="hint">Paste your deployed Web App URL here.</div>
+            
         </div>
 
         <div class="form-group">
-            <label>Target URL</label>
+            <label>URL ที่เราใช้</label>
             <input type="url" id="targetUrl" placeholder="https://example.com" required>
         </div>
 
-        <button id="generateBtn" onclick="generateLink()">Generate Link</button>
+        <button id="generateBtn" onclick="generateLink()">สร้าง Link ใหม่</button>
         <div id="errorMsg" class="error"></div>
 
         <div id="resultArea" class="result">
-            <label>Your Tracking Link:</label>
+            <label>ลิงค์ที่พร้อมติมตามข้อมูล:</label>
             <a href="#" id="finalLink" target="_blank"></a>
         </div>
     </div>
@@ -129,39 +138,50 @@
         }
 
         async function generateLink() {
-            const scriptUrl = document.getElementById('scriptUrl').value.trim();
-            const targetUrl = document.getElementById('targetUrl').value.trim();
+            // Auto-trim inputs
+            const scriptUrlInput = document.getElementById('scriptUrl');
+            const targetUrlInput = document.getElementById('targetUrl');
+
+            const scriptUrl = scriptUrlInput.value.trim();
+            const targetUrl = targetUrlInput.value.trim();
+
+            // Update values back to inputs to show trimmed version
+            scriptUrlInput.value = scriptUrl;
+            targetUrlInput.value = targetUrl;
+
             const btn = document.getElementById('generateBtn');
             const errorMsg = document.getElementById('errorMsg');
             const resultArea = document.getElementById('resultArea');
             const finalLink = document.getElementById('finalLink');
 
             errorMsg.textContent = "";
+            errorMsg.style.display = "none";
             resultArea.style.display = "none";
 
             if (!scriptUrl) {
-                errorMsg.textContent = "Please enter your Google Apps Script Web App URL.";
+                showError("Please enter your Google Apps Script Web App URL.");
                 return;
             }
             if (!targetUrl) {
-                errorMsg.textContent = "Please enter a Target URL.";
+                showError("Please enter a Target URL.");
                 return;
             }
 
-            // Save script URL to local storage for convenience
+            // Save script URL
             localStorage.setItem('camma_log_script_url', scriptUrl);
 
             btn.disabled = true;
-            btn.textContent = "Generating...";
+            btn.innerHTML = "Generating... <span style='font-size:0.8em'>Please wait</span>";
 
             try {
-                // Call GAS
-                // Note: Requests to GAS Web Apps from client-side JS often face CORS redirects.
-                // We use 'no-cors' mode or ensure the GAS script returns TextOutput with setMimeType(JSON) 
-                // AND the fetch handles the redirect. 
-                // However, typical `fetch` to GAS requires `redirect: 'follow'`.
+                const fetchUrl = `${scriptUrl}?action=generate&url=${encodeURIComponent(targetUrl)}`;
+                // Add a timeout to the fetch (e.g., 10 seconds)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-                const response = await fetch(`${scriptUrl}?action=generate&url=${encodeURIComponent(targetUrl)}`);
+                const response = await fetch(fetchUrl, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
                 const data = await response.json();
 
                 if (data.status === "success") {
@@ -177,11 +197,21 @@
 
             } catch (err) {
                 console.error(err);
-                errorMsg.textContent = "Error: " + err.message + ". Check console/network or CORS settings.";
+                let msg = err.message;
+                if (err.name === 'AbortError') msg = "Request timed out. Please check your Script URL.";
+                if (msg.includes("Failed to fetch")) msg = "Network error. Check CORS or Script URL permissions.";
+
+                showError("Error: " + msg);
             } finally {
                 btn.disabled = false;
                 btn.textContent = "Generate Link";
             }
+        }
+
+        function showError(msg) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = msg;
+            errorMsg.style.display = "block";
         }
 
         // Restore Script URL
