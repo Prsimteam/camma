@@ -22,36 +22,64 @@
 
     <div id="app" class="flex h-full">
 
-        <!-- Sidebar: User List -->
+        <!-- Error State -->
+        <div v-if="errorMsg"
+            class="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center p-8 text-center text-red-500">
+            <i class="fa-solid fa-circle-xmark text-5xl mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-800">Error</h2>
+            <p class="mt-2">{{ errorMsg }}</p>
+        </div>
+
+        <!-- Sidebar: Filtered Word List -->
         <div class="w-80 bg-white border-r border-gray-200 flex flex-col h-full shadow-lg z-10">
-            <div class="p-4 border-b border-gray-200 bg-slate-50">
-                <h2 class="font-bold text-slate-700 text-lg">Active Conversations</h2>
-                <div class="mt-2 relative">
-                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
-                    <input type="text" placeholder="Search user ID..."
-                        class="w-full bg-white border border-gray-300 pl-9 pr-3 py-1.5 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+
+            <!-- Admin Header -->
+            <div class="p-4 border-b border-gray-200 bg-blue-600 text-white">
+                <div v-if="adminProfile">
+                    <h2 class="font-bold text-lg">{{ adminProfile.name }} {{ adminProfile.surname }}</h2>
+                    <p class="text-xs text-blue-100 opacity-90">
+                        <i class="fa-solid fa-hospital-user mr-1"></i> {{ adminProfile.unit }}
+                    </p>
                 </div>
+                <div v-else class="animate-pulse">
+                    <div class="h-6 bg-blue-400 rounded w-2/3 mb-2"></div>
+                    <div class="h-4 bg-blue-400 rounded w-1/2"></div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-slate-50 border-b border-gray-100 flex justify-between items-center">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">My FCGs ({{ wardList.length
+                    }})</span>
+                <i class="fa-solid fa-users text-gray-400 text-xs"></i>
             </div>
 
             <div class="flex-1 overflow-y-auto">
-                <div v-if="sessions.length === 0" class="p-4 text-center text-gray-400 text-sm">
-                    No active sessions found.
+                <div v-if="isLoading && wardList.length === 0" class="p-10 flex justify-center text-blue-500">
+                    <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
                 </div>
 
-                <div v-for="session in sessions" :key="session.sessionId" @click="selectSession(session)"
+                <div v-for="user in wardList" :key="user.id" @click="selectSession(user)"
                     class="p-4 border-b border-gray-100 cursor-pointer hover:bg-blue-50 transition relative group"
-                    :class="currentSession?.sessionId === session.sessionId ? 'bg-blue-50 border-l-4 border-l-blue-500' : 'border-l-4 border-l-transparent'">
+                    :class="[
+                        currentSession?.id === user.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : 'border-l-4 border-l-transparent',
+                        !user.hasHistory ? 'opacity-70 bg-slate-50' : ''
+                    ]">
 
                     <div class="flex justify-between items-start mb-1">
-                        <span class="font-bold text-gray-800 truncate">{{ session.sessionId }}</span>
-                        <span class="text-[10px] text-gray-400">{{ formatTime(session.lastTimestamp) }}</span>
+                        <span class="font-bold text-gray-800 truncate">{{ user.name }} {{ user.surname }}</span>
+                        <span v-if="user.lastTimestamp" class="text-[10px] text-gray-400">{{
+                            formatTime(user.lastTimestamp) }}</span>
                     </div>
-                    <p class="text-sm text-gray-500 truncate">{{ session.lastMessage }}</p>
-                </div>
-            </div>
 
-            <div class="p-3 bg-gray-50 border-t border-gray-200 text-xs text-center text-gray-400">
-                Auto-refreshing every 3s
+                    <div class="flex justify-between items-end">
+                        <p class="text-sm truncate w-3/4"
+                            :class="user.hasHistory ? 'text-gray-600' : 'text-orange-500 italic'">
+                            <span v-if="!user.hasHistory"><i class="fa-regular fa-clock"></i> รอการทักทาย...</span>
+                            <span v-else>{{ user.lastMessage || 'Sent a message' }}</span>
+                        </p>
+                        <span v-if="user.hasHistory" class="w-2 h-2 bg-green-500 rounded-full" title="Active"></span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -60,27 +88,36 @@
 
             <div v-if="!currentSession" class="flex-1 flex flex-col items-center justify-center text-gray-400">
                 <i class="fa-regular fa-comments text-6xl mb-4 opacity-50"></i>
-                <p class="text-lg">Select a conversation to start chatting</p>
+                <p class="text-lg">Select a Family Care Giver to start chatting</p>
             </div>
 
             <template v-else>
                 <!-- Chat Header -->
                 <header class="bg-white p-4 border-b border-gray-200 flex justify-between items-center shadow-sm">
                     <div>
-                        <h2 class="font-bold text-lg text-gray-800">{{ currentSession.sessionId }}</h2>
-                        <p class="text-xs text-green-500 flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                            Online User
+                        <h2 class="font-bold text-lg text-gray-800">{{ currentSession.name }} {{ currentSession.surname
+                            }}</h2>
+                        <p class="text-xs text-gray-500">
+                            {{ currentSession.subDistrict }} | {{ currentSession.district }}
                         </p>
                     </div>
-                    <a :href="`index.html?userid=${currentSession.sessionId}`" target="_blank"
+                    <a :href="`index.html?userid=${currentSession.id}`" target="_blank"
                         class="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1">
-                        Open as User <i class="fa-solid fa-external-link-alt"></i>
+                        Open User View <i class="fa-solid fa-external-link-alt"></i>
                     </a>
                 </header>
 
                 <!-- Messages -->
                 <div class="flex-1 overflow-y-auto p-6 space-y-4" id="adminChatContainer">
+                    <div v-if="messages.length === 0"
+                        class="flex flex-col items-center justify-center h-full text-center text-gray-400">
+                        <div class="bg-gray-100 p-4 rounded-full mb-3">
+                            <i class="fa-solid fa-hourglass-start text-3xl"></i>
+                        </div>
+                        <p class="font-bold text-gray-600">ยังไม่มีการสนทนา</p>
+                        <p class="text-sm">ต้องรอให้ผู้ใช้งานทักทายเข้ามาก่อนจึงจะสามารถสนทนาได้</p>
+                    </div>
+
                     <div v-for="(msg, index) in messages" :key="index" class="flex flex-col"
                         :class="msg.sender === 'admin' ? 'items-end' : 'items-start'">
 
@@ -100,9 +137,10 @@
                     <div class="flex gap-2">
                         <input type="text" v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type a reply..."
                             class="flex-1 bg-gray-100 border-none rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-100 transition"
-                            :disabled="isSending">
-                        <button @click="sendMessage" :disabled="!newMessage.trim() || isSending"
-                            class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white px-6 rounded-lg font-medium transition shadow-sm">
+                            :disabled="isSending || messages.length === 0">
+                        <button @click="sendMessage"
+                            :disabled="!newMessage.trim() || isSending || messages.length === 0"
+                            class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:text-gray-500 text-white px-6 rounded-lg font-medium transition shadow-sm">
                             Send
                         </button>
                     </div>
@@ -118,38 +156,70 @@
 
         createApp({
             setup() {
-                const sessions = ref([]);
+                const adminId = ref(null);
+                const adminProfile = ref(null);
+                const wardList = ref([]); // FCGs in my unit
                 const currentSession = ref(null);
                 const messages = ref([]);
                 const newMessage = ref("");
                 const isSending = ref(false);
+                const isLoading = ref(true);
+                const errorMsg = ref(null);
                 let pollInterval = null;
 
                 onMounted(() => {
-                    fetchSessions();
+                    const urlParams = new URLSearchParams(window.location.search);
+                    adminId.value = urlParams.get('admin');
+
+                    if (!adminId.value) {
+                        errorMsg.value = "Access Denied: No Admin ID provided.";
+                        isLoading.value = false;
+                        return;
+                    }
+
+                    fetchAdminContext();
+
+                    // Poll for messages in the CURRENT session
                     pollInterval = setInterval(() => {
-                        fetchSessions();
                         if (currentSession.value) {
-                            fetchMessages(currentSession.value.sessionId);
+                            fetchMessages(currentSession.value.id); // id from user master
                         }
+                        // Optionally refresh context to get new last messages, 
+                        // but reduced frequency might be better or separate endpoint.
+                        // For simplicity, we re-fetch context periodically.
+                        fetchAdminContext(true);
                     }, CONFIG.POLL_INTERVAL || 3000);
                 });
 
-                const fetchSessions = async () => {
+                const fetchAdminContext = async (silent = false) => {
                     if (CONFIG.API_URL.includes("YOUR_GOOGLE")) return;
+                    if (!silent) isLoading.value = true;
+
                     try {
-                        const res = await fetch(`${CONFIG.API_URL}?action=getSessions`);
-                        const data = await res.json();
-                        if (data.status === 'success') {
-                            sessions.value = data.data;
+                        const res = await fetch(`${CONFIG.API_URL}?action=getAdminContext&adminId=${adminId.value}`);
+                        const result = await res.json();
+
+                        if (result.status === 'success') {
+                            adminProfile.value = result.data.admin;
+
+                            // Merge updates carefully to not disrupt UI if list length allows
+                            // Or just replace for MVP simplicity
+                            wardList.value = result.data.fcgs;
+                        } else {
+                            if (!silent) errorMsg.value = result.message || "Failed to load admin context.";
                         }
-                    } catch (e) { console.error(e); }
+                    } catch (e) {
+                        console.error(e);
+                        if (!silent) errorMsg.value = "Network error connecting to Backend.";
+                    } finally {
+                        if (!silent) isLoading.value = false;
+                    }
                 };
 
-                const selectSession = (session) => {
-                    currentSession.value = session;
-                    messages.value = []; // Clear old
-                    fetchMessages(session.sessionId);
+                const selectSession = (user) => {
+                    currentSession.value = user;
+                    messages.value = [];
+                    fetchMessages(user.id);
                 };
 
                 const fetchMessages = async (sid) => {
@@ -186,7 +256,7 @@
                     try {
                         const payload = {
                             action: 'adminReply',
-                            sessionId: currentSession.value.sessionId,
+                            sessionId: currentSession.value.id, // UserID
                             message: txt,
                             sender: 'admin'
                         };
@@ -196,8 +266,9 @@
                             body: JSON.stringify(payload)
                         });
 
-                        // Force refresh
-                        fetchMessages(currentSession.value.sessionId);
+                        fetchMessages(currentSession.value.id);
+                        // Refresh context to update "Last Message" in sidebar immediately
+                        fetchAdminContext(true);
                     } catch (e) {
                         console.error(e);
                         alert("Failed to send");
@@ -213,11 +284,15 @@
                 };
 
                 return {
-                    sessions,
+                    adminId,
+                    adminProfile,
+                    wardList,
                     currentSession,
                     messages,
                     newMessage,
                     isSending,
+                    isLoading,
+                    errorMsg,
                     selectSession,
                     sendMessage,
                     formatTime
