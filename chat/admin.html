@@ -101,10 +101,16 @@
                             {{ currentSession.subDistrict }} | {{ currentSession.district }}
                         </p>
                     </div>
-                    <a :href="`index.html?userid=${currentSession.id}`" target="_blank"
-                        class="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1">
-                        Open User View <i class="fa-solid fa-external-link-alt"></i>
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button @click="copyInviteLink(currentSession)"
+                            class="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1 transition shadow-sm">
+                            <i class="fa-brands fa-line"></i> ส่งลิงก์เชิญแชท
+                        </button>
+                        <a :href="`index.html?userid=${currentSession.id}`" target="_blank"
+                            class="text-gray-400 hover:text-blue-500 text-sm p-2">
+                            <i class="fa-solid fa-external-link-alt"></i>
+                        </a>
+                    </div>
                 </header>
 
                 <!-- Messages -->
@@ -114,8 +120,14 @@
                         <div class="bg-gray-100 p-4 rounded-full mb-3">
                             <i class="fa-solid fa-hourglass-start text-3xl"></i>
                         </div>
-                        <p class="font-bold text-gray-600">ยังไม่มีการสนทนา</p>
-                        <p class="text-sm">ต้องรอให้ผู้ใช้งานทักทายเข้ามาก่อนจึงจะสามารถสนทนาได้</p>
+                        <p class="font-bold text-gray-600 mb-2">ยังไม่มีการสนทนา</p>
+                        <p class="text-sm mb-4">ต้องรอให้ผู้ใช้งานทักทายเข้ามาก่อนจึงจะสามารถสนทนาได้</p>
+
+                        <button @click="copyInviteLink(currentSession)"
+                            class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2">
+                            <i class="fa-regular fa-copy"></i>
+                            คัดลอกลิงก์ส่งให้ User ทาง LINE
+                        </button>
                     </div>
 
                     <div v-for="(msg, index) in messages" :key="index" class="flex flex-col"
@@ -295,7 +307,28 @@
                     errorMsg,
                     selectSession,
                     sendMessage,
-                    formatTime
+                    formatTime,
+                    copyInviteLink: async (user) => {
+                        if (!user) return;
+
+                        // Construct absolute URL based on current admin location
+                        // Assuming index.html is in same directory
+                        const baseUrl = window.location.href.split('?')[0].replace('admin.html', 'index.html');
+                        // Fix if it ended with / (directory root) though unlikely given replace logic above works for file path
+                        // Ideally:
+                        const inviteUrl = `${baseUrl}?userid=${user.id}`;
+
+                        const message = `สวัสดีครับ/ค่ะ ขอเรียนเชิญคุณ ${user.name} ${user.surname} เข้าสู่ระบบ Camma Chat\n\n👇 กดลิงก์นี้เพื่อเริ่มสนทนากับเจ้าหน้าที่ได้เลยครับ\n${inviteUrl}`;
+
+                        try {
+                            await navigator.clipboard.writeText(message);
+                            alert("คัดลอกข้อความสำหรับส่ง LINE เรียบร้อยแล้ว!");
+                        } catch (err) {
+                            console.error('Failed to copy: ', err);
+                            // Fallback
+                            prompt("Copy this link:", message);
+                        }
+                    }
                 };
             }
         }).mount('#app');
