@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camma Broadcast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen">
+    <div id="app" class="max-w-4xl mx-auto p-4 md:p-8">
+
+        <header class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800"><i
+                        class="fa-solid fa-bullhorn text-orange-500 mr-2"></i>ระบบประชาสัมพันธ์ข่าวสาร</h1>
+                <p class="text-gray-500 text-sm mt-1">ส่งข้อความหาผู้ใช้งานผ่าน LINE OA</p>
+            </div>
+            <a href="../admin.html" class="text-blue-500 hover:text-blue-700 text-sm"><i
+                    class="fa-solid fa-arrow-left"></i> กลับหน้าแชท</a>
+        </header>
+
+        <div v-if="isLoading" class="text-center py-20">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500"></i>
+            <p class="mt-4 text-gray-400">Loading User Data...</p>
+        </div>
+
+        <div v-else class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Main Tabs -->
+            <div class="flex border-b border-gray-200">
+                <button @click="currentTab = 'individual'"
+                    :class="currentTab === 'individual' ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50' : 'text-gray-500 hover:bg-gray-50'"
+                    class="flex-1 py-4 text-center font-bold px-6 transition">
+                    <i class="fa-solid fa-user mr-2"></i> ส่งหาบุคคล
+                </button>
+                <button @click="currentTab = 'group'"
+                    :class="currentTab === 'group' ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50' : 'text-gray-500 hover:bg-gray-50'"
+                    class="flex-1 py-4 text-center font-bold px-6 transition">
+                    <i class="fa-solid fa-users mr-2"></i> ส่งแบบกลุ่ม (Broadcast)
+                </button>
+            </div>
+
+            <div class="p-6 md:p-8">
+
+                <!-- INDIVIDUAL MODE -->
+                <div v-if="currentTab === 'individual'" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">เลือกผู้รับ <span
+                                class="text-red-500">*</span></label>
+                        <select v-model="selectedUser"
+                            class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-200">
+                            <option value="">-- กรุณาเลือกรายชื่อ --</option>
+                            <option v-for="user in users" :key="user.id" :value="user.id">
+                                {{ user.fullLabel }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2">ข้อความ</label>
+                        <textarea v-model="form.text" rows="5"
+                            class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-200"
+                            placeholder="พิมพ์ข้อความที่ต้องการส่ง..."></textarea>
+                    </div>
+
+                    <div
+                        class="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-sm text-yellow-800 flex gap-2">
+                        <i class="fa-solid fa-circle-info mt-1"></i>
+                        <p>การส่งแบบบุคคลจะส่งข้อความตัวอักษรเป็นหลัก
+                            หากต้องการส่งรูปภาพกรุณาใช้โหมดส่งแบบกลุ่มและเลือกเพียง 1 คน (หรือพัฒนาเพิ่มเติมในอนาคต)</p>
+                    </div>
+                </div>
+
+                <!-- GROUP MODE -->
+                <div v-else class="space-y-6">
+
+                    <!-- Format Sub-tabs -->
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <button v-for="type in msgTypes" :key="type.id" @click="form.messageType = type.id"
+                            :class="form.messageType === type.id ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                            class="px-4 py-2 rounded-full text-sm font-medium transition">
+                            <i :class="type.icon" class="mr-1"></i> {{ type.label }}
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Left: Form -->
+                        <div class="space-y-4">
+                            <!-- Field: Text (Generic) -->
+                            <div v-if="['text', 'mixed'].includes(form.messageType)">
+                                <label class="block text-gray-700 font-bold mb-2">ข้อความ</label>
+                                <textarea v-model="form.text" rows="4"
+                                    class="w-full border border-gray-300 rounded-lg p-3"
+                                    placeholder="ข้อความ..."></textarea>
+                            </div>
+
+                            <!-- Field: Image URL -->
+                            <div v-if="['image', 'mixed', 'flex_image_url'].includes(form.messageType)">
+                                <label class="block text-gray-700 font-bold mb-2">ลิงก์รูปภาพ (Image URL)</label>
+                                <div class="flex gap-2">
+                                    <input type="text" v-model="form.imageUrl"
+                                        class="flex-1 border border-gray-300 rounded-lg p-3"
+                                        placeholder="https://example.com/image.jpg">
+                                    <label
+                                        class="cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg px-4 flex items-center justify-center transition">
+                                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> อัปโหลด
+                                        <input type="file" @change="uploadImage" accept="image/*" class="hidden">
+                                    </label>
+                                </div>
+                                <div v-if="isUploading" class="text-xs text-blue-500 mt-1 animate-pulse">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> กำลังอัปโหลดรูปภาพ...
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">ต้องเป็นลิงก์ตรง (Direct Link) และเเป็น HTTPS
+                                    เท่านั้น</p>
+                            </div>
+
+                            <!-- Field: Link URL -->
+                            <div v-if="['flex_image_url'].includes(form.messageType)">
+                                <label class="block text-gray-700 font-bold mb-2">ลิงก์ปลายทาง (Target URL)</label>
+                                <input type="text" v-model="form.linkUrl"
+                                    class="w-full border border-gray-300 rounded-lg p-3" placeholder="https://...">
+                                <p class="text-xs text-gray-400 mt-1">เมื่อผู้ใช้กดที่รูป จะเปิดลิงก์นี้</p>
+                            </div>
+
+                            <!-- Recipient Selection -->
+                            <div class="pt-4 border-t border-gray-200">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="block text-gray-700 font-bold">ผู้รับ ({{ selectedUsers.length
+                                        }})</label>
+                                    <div class="space-x-2 text-sm">
+                                        <button @click="selectAll"
+                                            class="text-blue-500 hover:underline">เลือกทั้งหมด</button>
+                                        <button @click="selectedUsers = []"
+                                            class="text-gray-400 hover:underline">ล้าง</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="h-40 overflow-y-auto border border-gray-300 rounded-lg p-2 bg-gray-50 grid grid-cols-1 gap-1">
+                                    <label v-for="user in users" :key="'g'+user.id"
+                                        class="flex items-center gap-2 p-2 hover:bg-white rounded cursor-pointer">
+                                        <input type="checkbox" :value="user.id" v-model="selectedUsers"
+                                            class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700 truncate">{{ user.fullLabel }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Preview -->
+                        <div
+                            class="bg-gray-800 rounded-3xl p-4 w-[300px] mx-auto border-4 border-gray-900 shadow-2xl relative min-h-[500px] flex flex-col">
+                            <div
+                                class="bg-gray-900 w-32 h-6 mx-auto rounded-b-xl mb-4 absolute top-0 left-1/2 transform -translate-x-1/2">
+                            </div>
+
+                            <div class="text-center text-white text-xs mb-2 mt-2 font-bold">LINE Preview</div>
+
+                            <div
+                                class="flex-1 bg-[#8c9eff] rounded-xl overflow-hidden relative p-3 space-y-3 flex flex-col">
+                                <!-- Mock Chat Bubbles -->
+
+                                <div v-if="form.messageType === 'text' || (form.messageType === 'mixed' && form.text)"
+                                    class="bg-white p-3 rounded-xl rounded-tl-none self-start text-sm max-w-[90%] text-gray-800 shadow-sm break-words">
+                                    {{ form.text || 'ตัวอย่างข้อความ...' }}
+                                </div>
+
+                                <div v-if="['image', 'mixed'].includes(form.messageType) && form.imageUrl"
+                                    class="rounded-xl overflow-hidden self-start max-w-[80%] shadow-sm">
+                                    <img :src="form.imageUrl" class="w-full h-auto object-cover"
+                                        @error="imgError = true">
+                                </div>
+
+                                <div v-if="form.messageType === 'flex_image_url' && form.imageUrl"
+                                    class="rounded-xl overflow-hidden self-start max-w-[80%] shadow-sm relative group cursor-pointer border-2 border-transparent hover:border-blue-400 transition">
+                                    <img :src="form.imageUrl" class="w-full aspect-[20/13] object-cover">
+                                    <div
+                                        class="absolute bottom-0 w-full bg-black/50 text-white text-[10px] text-center py-1">
+                                        กดรูปเพื่อดูรายละเอียด
+                                    </div>
+                                </div>
+
+                                <div v-if="!form.text && !form.imageUrl"
+                                    class="flex-1 flex items-center justify-center text-white/50 text-xs">
+                                    Preview Area
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end">
+                    <button @click="resetForm"
+                        class="px-6 py-3 text-gray-500 hover:bg-gray-100 rounded-lg mr-2 transition">รีเซ็ต</button>
+                    <button @click="sendBroadcast"
+                        :disabled="isSending || (currentTab === 'individual' && !selectedUser) || (currentTab === 'group' && selectedUsers.length === 0)"
+                        class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        <i v-if="!isSending" class="fa-regular fa-paper-plane"></i>
+                        <i v-else class="fa-solid fa-spinner fa-spin"></i>
+                        {{ isSending ? 'กำลังส่ง...' : 'ยืนยันและส่งข้อความ' }}
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        const { createApp, ref, onMounted, computed } = Vue;
+
+        createApp({
+            setup() {
+                const isLoading = ref(true);
+                const isSending = ref(false);
+                const isUploading = ref(false);
+                const currentTab = ref('individual'); // individual, group
+                const users = ref([]);
+
+                const selectedUser = ref(""); // Single ID for Individual
+                const selectedUsers = ref([]); // Array IDs for Group
+
+                const msgTypes = [
+                    { id: 'flex_image_url', label: 'ส่งรูปและ URL', icon: 'fa-solid fa-link' },
+                    { id: 'image', label: 'ส่งรูปอย่างเดียว', icon: 'fa-regular fa-image' },
+                    { id: 'text', label: 'ส่งข้อความอย่างเดียว', icon: 'fa-regular fa-comment-dots' },
+                    { id: 'mixed', label: 'ข้อความ + รูป', icon: 'fa-solid fa-layer-group' }
+                ];
+
+                const form = ref({
+                    messageType: 'flex_image_url',
+                    text: '',
+                    imageUrl: '',
+                    linkUrl: ''
+                });
+
+                const adminId = ref('');
+
+                onMounted(async () => {
+                    const params = new URLSearchParams(window.location.search);
+                    const aid = params.get('admin');
+                    if (!aid) {
+                        alert("Access Denied: Admin ID missing");
+                        // Optional: Redirect
+                        window.location.href = '../admin.html'; // Fallback
+                        return;
+                    }
+                    adminId.value = aid;
+                    await fetchUsers();
+                });
+
+                const fetchUsers = async () => {
+                    if (!adminId.value) return;
+
+                    try {
+                        // Pass adminId
+                        const res = await fetch(`${CONFIG.API_URL}?action=getBroadcastUsers&adminId=${adminId.value}`);
+                        const result = await res.json();
+                        if (result.status === 'success') {
+                            users.value = result.data;
+                            if (result.data.length === 0) {
+                                alert("ไม่พบรายชื่อผู้ใช้งานในหน่วยงานของคุณ");
+                            }
+                        } else {
+                            alert("Error: " + result.message);
+                            if (result.message.includes("Unauthorized")) {
+                                window.location.href = '../admin.html';
+                            }
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        alert("Network Error");
+                    } finally {
+                        isLoading.value = false;
+                    }
+                };
+
+                const selectAll = () => {
+                    selectedUsers.value = users.value.map(u => u.id);
+                };
+
+                const resetForm = () => {
+                    form.value = {
+                        messageType: 'flex_image_url',
+                        text: '',
+                        imageUrl: '',
+                        linkUrl: ''
+                    };
+                    selectedUser.value = "";
+                    selectedUsers.value = [];
+                };
+
+                const sendBroadcast = async () => {
+                    if (!confirm("ยืนยันการส่งข้อความประชาสัมพันธ์?")) return;
+
+                    isSending.value = true;
+                    try {
+                        let payload = {
+                            action: 'sendLineBroadcast',
+                            mode: currentTab.value,
+                            messageType: currentTab.value === 'individual' ? 'text' : form.value.messageType,
+                            ...form.value
+                        };
+
+                        if (currentTab.value === 'individual') {
+                            payload.userIds = [selectedUser.value];
+                            // For individual, force text type for simplicity based on requirement 1.1 "Text Input"
+                            // But could support others if needed. The input is "textarea" so defaulting 'text'.
+                            payload.messageType = 'text';
+                        } else {
+                            payload.userIds = selectedUsers.value;
+                        }
+
+                        // Send
+                        // Use fetch post
+                        const res = await fetch(CONFIG.API_URL, {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        });
+                        const result = await res.json();
+
+                        if (result.status === 'success') {
+                            alert("ส่งข้อความสำเร็จ!");
+                            resetForm();
+                        } else {
+                            alert("เกิดข้อผิดพลาด: " + result.message);
+                        }
+
+                    } catch (e) {
+                        console.error(e);
+                        alert("ส่งไม่สำเร็จ: Network Error");
+                    } finally {
+                        isSending.value = false;
+                    }
+                };
+
+                const uploadImage = async (event) => {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    // Limit size (e.g., 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert("ไฟล์ขนาดใหญ่เกินไป (Max 5MB)");
+                        return;
+                    }
+
+                    isUploading.value = true;
+
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        const base64Data = e.target.result.split(',')[1];
+                        const mimeType = file.type;
+
+                        try {
+                            const payload = {
+                                action: 'uploadImage',
+                                fileData: base64Data,
+                                mimeType: mimeType,
+                                fileName: file.name
+                            };
+
+                            const res = await fetch(CONFIG.API_URL, {
+                                method: 'POST',
+                                body: JSON.stringify(payload)
+                            });
+                            const result = await res.json();
+
+                            if (result.status === 'success') {
+                                form.value.imageUrl = result.url;
+                            } else {
+                                alert("อัปโหลดไม่สำเร็จ: " + result.message);
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            alert("เกิดข้อผิดพลาดในการอัปโหลด");
+                        } finally {
+                            isUploading.value = false;
+                            event.target.value = ''; // Reset input
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                };
+
+                return {
+                    isLoading, isSending, currentTab, users,
+                    selectedUser, selectedUsers,
+                    msgTypes, form,
+                    selectAll, resetForm, sendBroadcast,
+                    isUploading, uploadImage
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
