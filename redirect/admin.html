@@ -105,26 +105,37 @@
 <body>
 
     <div class="card">
-        <h1>สร้างระบบติดตาม Link</h1>
+        <h1>Create Tracking Link</h1>
 
         <div class="form-group">
-            
-            <input type="hidden" id="scriptUrl" placeholder="https://script.google.com/macros/s/..."
+            <label>Google Apps Script Web App URL</label>
+            <input type="url" id="scriptUrl" placeholder="https://script.google.com/macros/s/..."
                 value="https://script.google.com/macros/s/AKfycbygcvjOD3FDGHUGQAg0uHSmpS7miE39u3kSdLL_Pz_CiRv5EsAmZi6bP5w5E1MzbNVz/exec">
-            
+            <div class="hint">Paste your deployed Web App URL here.</div>
         </div>
 
         <div class="form-group">
-            <label>URL ที่เราใช้</label>
+            <label>Target URL</label>
             <input type="url" id="targetUrl" placeholder="https://example.com" required>
         </div>
 
-        <button id="generateBtn" onclick="generateLink()">สร้าง Link ใหม่</button>
+        <div class="form-group">
+            <label>Category (optional)</label>
+            <input type="text" id="category" placeholder="Campaign/Channel e.g., summer-sale">
+        </div>
+
+        <div class="form-group">
+            <label>Detail (optional)</label>
+            <input type="text" id="detail" placeholder="Short note e.g., banner-homepage">
+        </div>
+
+        <button id="generateBtn" onclick="generateLink()">Generate Link</button>
         <div id="errorMsg" class="error"></div>
 
         <div id="resultArea" class="result">
-            <label>ลิงค์ที่พร้อมติมตามข้อมูล:</label>
+            <label>Your Tracking Link:</label>
             <a href="#" id="finalLink" target="_blank"></a>
+            <div id="metaInfo" class="hint"></div>
         </div>
     </div>
 
@@ -141,22 +152,30 @@
             // Auto-trim inputs
             const scriptUrlInput = document.getElementById('scriptUrl');
             const targetUrlInput = document.getElementById('targetUrl');
+            const categoryInput = document.getElementById('category');
+            const detailInput = document.getElementById('detail');
 
             const scriptUrl = scriptUrlInput.value.trim();
             const targetUrl = targetUrlInput.value.trim();
+            const category = categoryInput.value.trim();
+            const detail = detailInput.value.trim();
 
             // Update values back to inputs to show trimmed version
             scriptUrlInput.value = scriptUrl;
             targetUrlInput.value = targetUrl;
+            categoryInput.value = category;
+            detailInput.value = detail;
 
             const btn = document.getElementById('generateBtn');
             const errorMsg = document.getElementById('errorMsg');
             const resultArea = document.getElementById('resultArea');
             const finalLink = document.getElementById('finalLink');
+            const metaInfo = document.getElementById('metaInfo');
 
             errorMsg.textContent = "";
             errorMsg.style.display = "none";
             resultArea.style.display = "none";
+            metaInfo.textContent = "";
 
             if (!scriptUrl) {
                 showError("Please enter your Google Apps Script Web App URL.");
@@ -174,7 +193,7 @@
             btn.innerHTML = "Generating... <span style='font-size:0.8em'>Please wait</span>";
 
             try {
-                const fetchUrl = `${scriptUrl}?action=generate&url=${encodeURIComponent(targetUrl)}`;
+                const fetchUrl = `${scriptUrl}?action=generate&url=${encodeURIComponent(targetUrl)}&category=${encodeURIComponent(category)}&detail=${encodeURIComponent(detail)}`;
                 // Add a timeout to the fetch (e.g., 10 seconds)
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -190,6 +209,9 @@
 
                     finalLink.href = trackingUrl;
                     finalLink.textContent = trackingUrl;
+                    const cat = data.category || "(none)";
+                    const det = data.detail || "(none)";
+                    metaInfo.textContent = `Category: ${cat} | Detail: ${det}`;
                     resultArea.style.display = "block";
                 } else {
                     throw new Error(data.message || "Unknown error from server");
