@@ -6,89 +6,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Tracker Admin</title>
     <style>
+        /* Typography & layout */
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+        :root {
+            --bg: #0b1021;
+            --card: #0f172a;
+            --card-border: rgba(255, 255, 255, 0.06);
+            --text: #e8ecf3;
+            --muted: #9fb1c9;
+            --accent: #6ce0b6;
+            --accent-2: #7aa2ff;
+            --danger: #ff7b8a;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            --radius: 14px;
+        }
+        * { box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f8;
+            font-family: 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.14), transparent 30%),
+                        radial-gradient(circle at 80% 10%, rgba(59, 130, 246, 0.16), transparent 35%),
+                        linear-gradient(135deg, #0b1021, #0a162a 60%, #0b1021);
+            color: var(--text);
+            min-height: 100vh;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            padding: 24px;
         }
-
         .card {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 440px;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(6px);
         }
-
         h1 {
-            margin-top: 0;
-            color: #333;
+            margin: 0 0 12px;
+            color: var(--text);
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
-
+        .subtitle {
+            margin: 0 0 18px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 16px;
         }
-
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #666;
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.92rem;
         }
-
         input[type="text"],
-        input[type="url"] {
+        input[type="url"],
+        select {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+            padding: 12px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text);
             font-size: 1rem;
+            transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
         }
-
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108, 224, 182, 0.22);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        select {
+            appearance: none;
+            background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                              linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+            background-position: calc(100% - 20px) calc(50% - 3px), calc(100% - 14px) calc(50% - 3px);
+            background-size: 8px 8px, 8px 8px;
+            background-repeat: no-repeat;
+        }
         button {
             width: 100%;
-            padding: 0.75rem;
-            background-color: #007bff;
-            color: white;
+            padding: 13px 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #0a0f1f;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: transform 0.1s ease, box-shadow 0.15s ease, filter 0.15s ease;
+            box-shadow: 0 12px 25px rgba(122, 162, 255, 0.25);
         }
-
         button:hover {
-            background-color: #0056b3;
+            transform: translateY(-1px);
+            filter: brightness(1.03);
+            box-shadow: 0 16px 30px rgba(122, 162, 255, 0.3);
         }
-
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 10px 22px rgba(122, 162, 255, 0.22);
+        }
         button:disabled {
-            background-color: #ccc;
+            background: #2b3144;
+            color: #7b8298;
+            cursor: not-allowed;
+            box-shadow: none;
         }
-
         .result {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: #e9ecef;
-            border-radius: 4px;
+            margin-top: 16px;
+            padding: 14px;
+            background: rgba(108, 224, 182, 0.06);
+            border: 1px solid rgba(108, 224, 182, 0.25);
+            border-radius: 10px;
             display: none;
             word-break: break-all;
         }
-
-        .error {
-            color: red;
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
+        .result a {
+            color: var(--accent);
+            font-weight: 700;
+            text-decoration: none;
         }
-
+        .result a:hover { text-decoration: underline; }
+        .error {
+            color: var(--danger);
+            margin-top: 6px;
+            font-size: 0.92rem;
+        }
         .hint {
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 0.2rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 4px;
         }
     </style>
     <!-- Google tag (gtag.js) -->
