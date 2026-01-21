@@ -152,6 +152,7 @@
                 const newMessage = ref("");
                 const isLoading = ref(true);
                 const isSending = ref(false);
+                const isPolling = ref(false); // prevent overlapping fetches
                 let pollInterval = null;
 
                 onMounted(() => {
@@ -181,6 +182,8 @@
                 };
 
                 const fetchMessages = async () => {
+                    if (isPolling.value) return; // skip if previous call still running
+                    isPolling.value = true;
                     try {
                         // Check if config is set
                         if (CONFIG.API_URL.includes("YOUR_GOOGLE")) {
@@ -205,6 +208,7 @@
                         console.error("Error fetching messages:", error);
                     } finally {
                         isLoading.value = false;
+                        isPolling.value = false;
                     }
                 };
 

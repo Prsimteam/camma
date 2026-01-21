@@ -177,6 +177,8 @@
                 const isSending = ref(false);
                 const isLoading = ref(true);
                 const errorMsg = ref(null);
+                const isMsgPolling = ref(false); // prevent overlapping message polls
+                const isContextPolling = ref(false); // prevent overlapping context polls
                 let pollInterval = null;
 
                 onMounted(() => {
@@ -204,6 +206,8 @@
                 });
 
                 const fetchAdminContext = async (silent = false) => {
+                    if (isContextPolling.value) return;
+                    isContextPolling.value = true;
                     if (CONFIG.API_URL.includes("YOUR_GOOGLE")) return;
                     if (!silent) isLoading.value = true;
 
@@ -225,6 +229,7 @@
                         if (!silent) errorMsg.value = "Network error connecting to Backend.";
                     } finally {
                         if (!silent) isLoading.value = false;
+                        isContextPolling.value = false;
                     }
                 };
 
@@ -235,6 +240,8 @@
                 };
 
                 const fetchMessages = async (sid) => {
+                    if (isMsgPolling.value) return;
+                    isMsgPolling.value = true;
                     try {
                         const res = await fetch(`${CONFIG.API_URL}?action=getMessages&sessionId=${sid}`);
                         const data = await res.json();
@@ -249,6 +256,7 @@
                             }
                         }
                     } catch (e) { console.error(e); }
+                    finally { isMsgPolling.value = false; }
                 };
 
                 const sendMessage = async () => {
