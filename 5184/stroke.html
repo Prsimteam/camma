@@ -58,6 +58,30 @@
             font-size: 16px;
         }
 
+        .btn-next {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+            color: white;
+        }
+
+        .btn-prev {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+        .btn-prev:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+            color: white;
+        }
+
         .form-label {
             font-weight: 500;
         }
@@ -93,7 +117,7 @@
                         <input type="text" id="cg_name" name="cg_name" class="form-control" required>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                        <button type="button" class="btn btn-next btn-custom" onclick="nextPage()">ถัดไป</button>
                     </div>
                 </div>
 
@@ -126,9 +150,9 @@
                         </select>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary btn-custom"
+                        <button type="button" class="btn btn-prev btn-custom"
                             onclick="prevPage()">ย้อนกลับ</button>
-                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                        <button type="button" class="btn btn-next btn-custom" onclick="nextPage()">ถัดไป</button>
                     </div>
                 </div>
 
@@ -161,9 +185,9 @@
                         <input type="time" id="visit_time" name="visit_time" class="form-control" required>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary btn-custom"
+                        <button type="button" class="btn btn-prev btn-custom"
                             onclick="prevPage()">ย้อนกลับ</button>
-                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                        <button type="button" class="btn btn-next btn-custom" onclick="nextPage()">ถัดไป</button>
                     </div>
                 </div>
 
@@ -186,9 +210,9 @@
                         <input type="text" id="dtx" name="dtx" class="form-control">
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary btn-custom"
+                        <button type="button" class="btn btn-prev btn-custom"
                             onclick="prevPage()">ย้อนกลับ</button>
-                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                        <button type="button" class="btn btn-next btn-custom" onclick="nextPage()">ถัดไป</button>
                     </div>
                 </div>
 
@@ -335,9 +359,9 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary btn-custom"
+                        <button type="button" class="btn btn-prev btn-custom"
                             onclick="prevPage()">ย้อนกลับ</button>
-                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                        <button type="button" class="btn btn-next btn-custom" onclick="nextPage()">ถัดไป</button>
                     </div>
                 </div>
 
@@ -392,9 +416,9 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary btn-custom"
+                        <button type="button" class="btn btn-prev btn-custom"
                             onclick="prevPage()">ย้อนกลับ</button>
-                        <button type="button" class="btn btn-primary btn-custom" onclick="nextPage()">ถัดไป</button>
+                        <button type="button" class="btn btn-next btn-custom" onclick="nextPage()">ถัดไป</button>
                     </div>
                 </div>
 
@@ -407,7 +431,7 @@
                         <div id="imagePreview" class="mt-2"></div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary btn-custom"
+                        <button type="button" class="btn btn-prev btn-custom"
                             onclick="prevPage()">ย้อนกลับ</button>
                         <button type="submit" class="btn btn-success btn-custom" id="submitButton">ส่งแบบฟอร์ม</button>
                     </div>
@@ -439,8 +463,8 @@
         function updateButtonStates() {
             const currentPage = document.querySelector('.page.active');
             const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
-            const prevButton = currentPage.querySelector('.btn-secondary');
-            const nextButton = currentPage.querySelector('.btn-primary:not([type="submit"])');
+            const prevButton = currentPage.querySelector('.btn-prev');
+            const nextButton = currentPage.querySelector('.btn-next:not([type="submit"])');
 
             if (prevButton) prevButton.disabled = currentPageNum === 1;
             if (nextButton) nextButton.disabled = currentPageNum === document.querySelectorAll('.page').length;
