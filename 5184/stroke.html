@@ -62,24 +62,45 @@
             background-color: #28a745;
             border-color: #28a745;
             color: white;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
         }
 
         .btn-next:hover {
             background-color: #218838;
             border-color: #1e7e34;
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
         }
 
         .btn-prev {
             background-color: #dc3545;
             border-color: #dc3545;
             color: white;
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
         }
 
         .btn-prev:hover {
             background-color: #c82333;
             border-color: #bd2130;
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-submit {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-submit:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
         }
 
         .form-label {
@@ -433,7 +454,7 @@
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-prev btn-custom"
                             onclick="prevPage()">ย้อนกลับ</button>
-                        <button type="submit" class="btn btn-success btn-custom" id="submitButton">ส่งแบบฟอร์ม</button>
+                        <button type="submit" class="btn btn-submit btn-custom" id="submitButton">ส่งแบบฟอร์ม</button>
                     </div>
                     <div id="submitMessage" class="alert alert-success mt-3" role="alert">
                         ส่งแบบฟอร์มสำเร็จ! ระบบจะรีเซ็ตใน 2 วินาที
@@ -465,9 +486,11 @@
             const currentPageNum = parseInt(currentPage.getAttribute('data-page'));
             const prevButton = currentPage.querySelector('.btn-prev');
             const nextButton = currentPage.querySelector('.btn-next:not([type="submit"])');
+            const submitButton = currentPage.querySelector('.btn-submit');
 
             if (prevButton) prevButton.disabled = currentPageNum === 1;
             if (nextButton) nextButton.disabled = currentPageNum === document.querySelectorAll('.page').length;
+            if (submitButton) submitButton.disabled = currentPageNum !== document.querySelectorAll('.page').length;
         }
 
         function updateProgress() {
