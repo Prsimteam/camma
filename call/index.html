@@ -50,8 +50,9 @@
             <div id="profileImage"
                 class="w-24 h-24 mx-auto bg-gray-300 rounded-full mb-4 bg-cover bg-center border-4 border-white shadow-md">
             </div>
-            <h1 class="text-2xl font-bold text-gray-800 mb-1">สวัสดี, <span id="displayName">...</span></h1>
-            <p class="text-gray-500 text-sm">วันนี้มีอาการหรือข้อกังวลใจที่อยากปรึกษาไหม?</p>
+            <h1 class="text-2xl font-bold text-gray-800 mb-1">สวัสดี <span id="displayName">...</span></h1>
+            <p id="greetingText" class="text-gray-500 text-sm">วันนี้มีอาการหรือข้อกังวลใจที่อยากปรึกษาไหม?</p>
+
         </div>
 
         <div class="space-y-4">
@@ -65,7 +66,7 @@
                     </path>
                 </svg>
                 <div class="text-left">
-                    <div class="text-xl font-bold">ปรึกษาคุณหมอ/เจ้าหน้าที่</div>
+                    <div class="text-xl font-bold">ปรึกษาคุณหมอ</div>
                     <div class="text-xs opacity-90">Consult Doctor</div>
                 </div>
             </button>
@@ -101,12 +102,15 @@
                 // Get URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
                 const btValue = urlParams.get('bt');
+                const greetingElement = document.getElementById('greetingText');
 
                 // Show/Hide buttons based on ?bt= parameter
                 if (btValue === '1') {
                     document.getElementById('btn-help').classList.add('hidden');
+                    // Text is already default in HTML "วันนี้มีอาการหรือข้อกังวลใจที่อยากปรึกษาไหม?"
                 } else {
                     document.getElementById('btn-consult').classList.add('hidden');
+                    greetingElement.innerText = 'เกิดเหตุฉุกเฉินอะไรขึ้น? ให้เราช่วยประสานงานทันทีไหม?';
                 }
 
                 await liff.init({ liffId: LIFF_ID });
