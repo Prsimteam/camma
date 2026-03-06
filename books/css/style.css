@@ -303,9 +303,9 @@
       gap: 20px;
     }
   
-    /* ซูมตัวหนังสือลงเมื่อหน้าจอเล็ก (TurnJS เป็น fixed-size canvas) */
+    /* ปล่อยให้ JS คุมขนาดเอง ไม่ต้องให้ CSS ย่อซ้ำ */
     .flipbook {
-      transform: scale(0.8);
+      transform: none;
     }
   }
   
@@ -317,12 +317,11 @@
       padding: 20px 15px;
     }
     .flipbook {
-      transform: scale(0.5);
-      transform-origin: top center;
+      transform: none;
     }
     .book-container {
       align-items: flex-start;
-      padding-top: 20px;
+      padding: 20px 10px;
     }
   }
   
