@@ -164,20 +164,35 @@ const App = {
         $('#flipbook').show();
         $('#reader-controls').show();
 
-        // คำนวณขนาดสมุดคร่าวๆ เพื่อเปลี่ยนสมุดให้ตอบสนองกับหน้าจอผู้ใช้
+        // คำนวณขนาดสมุดตามสัดส่วน A4 (กว้าง 1 : สูง 1.414)
         const flipbookDom = $("#flipbook");
         let deviceWidth = window.innerWidth;
+        let deviceHeight = window.innerHeight;
         
-        let flipWidth = 900;
-        let flipHeight = 600;
+        let flipWidth, flipHeight;
         
-        if (deviceWidth < 1000 && deviceWidth >= 600) {
-            flipWidth = deviceWidth - 40;
-            flipHeight = (flipWidth * 600) / 900;
-        } else if (deviceWidth < 600){
-            // จอมือถือ เปิดแบบหน้าเดียว (Single Page Display)
-            flipWidth = deviceWidth - 20;
-            flipHeight = (flipWidth * 600) / 450;
+        if (deviceWidth < 600) {
+            // จอมือถือ: แสดงหน้าเดียว (Single Page)
+            // เว้นระยะขอบซ้ายขวา 30px
+            flipWidth = deviceWidth - 60; 
+            flipHeight = flipWidth * 1.414; // สัดส่วน A4
+            
+            // ป้องกันสมุดสูงเกินหน้าจอ (หักลบพื้นที่ Header/Footer ประมาณ 200px)
+            if (flipHeight > (deviceHeight - 220)) {
+                flipHeight = deviceHeight - 220;
+                flipWidth = flipHeight / 1.414;
+            }
+        } else {
+            // จอคอม/แท็บเล็ต: แสดงหน้าคู่ (Double Page)
+            // ความกว้างรวม 2 หน้า: ความสูงต้องเป็น (Width/2) * 1.414
+            flipWidth = Math.min(deviceWidth - 100, 1000); 
+            flipHeight = (flipWidth / 2) * 1.414;
+
+            // ป้องกันสูงเกินหน้าจอ
+            if (flipHeight > (deviceHeight - 200)) {
+                flipHeight = deviceHeight - 200;
+                flipWidth = (flipHeight / 1.414) * 2;
+            }
         }
 
         flipbookDom.turn({
