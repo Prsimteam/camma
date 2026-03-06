@@ -24,8 +24,8 @@ const App = {
         // ตรวจสอบว่ามีรูปแบบ file/d/ หรือไม่
         const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
         if (idMatch && idMatch[1]) {
-            // ส่งค่ากลับเป็น Direct Link
-            return `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
+            // ส่งค่ากลับเป็น Direct Link ผ่าน LH3
+            return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
         }
         return url.trim(); // ถ้าไม่เจอรูปแบบของ Google Drive ให้ส่งลิงก์แบบเดิมกลับไป
     },
