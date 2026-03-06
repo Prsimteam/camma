@@ -1,0 +1,328 @@
+/* =========================================================================
+   การตั้งค่าโทนสี และ ตัวแปร (CSS Variables) สไตล์ Premium
+   ========================================================================= */
+   :root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --bg-color: #f3f4f6;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --nav-bg: rgba(255, 255, 255, 0.9);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Prompt", sans-serif;
+  }
+  
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    min-height: 100vh;
+  }
+  
+  /* =========================================================================
+     หน้า Library (index.html)
+     ========================================================================= */
+  .app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  
+  .header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  
+  .header p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+  }
+  
+  .bookshelf {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 40px;
+    justify-items: center;
+  }
+  
+  /* การ์ดหนังสือ (Glassmorphism + Smooth Hover Effect) */
+  .book-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .book-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  /* คอนเทนเนอร์รูปภาพหน้าปก */
+  .book-cover-container {
+    width: 100%;
+    aspect-ratio: 3/4;
+    overflow: hidden; /* ป้องกันรูปทะลุการ์ดเวลากระจาย */
+    background-color: #e5e7eb;
+  }
+  
+  .book-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .book-card:hover .book-cover {
+    transform: scale(1.05); /* เอฟเฟกต์ซูมออกแบบพรีเมียมเวลานำเมาส์ไปชี้ */
+  }
+  
+  .book-info {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .book-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    color: var(--text-main);
+  }
+  
+  .book-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+  
+  /* =========================================================================
+     หน้า Reader (book.html)
+     ========================================================================= */
+  .reader-body {
+    background: #111827; /* สภาพแวดล้อมสีเข้มเพื่อเน้นความโฟกัส */
+    color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* แถบ Navigation ด้านบนแบบโปร่งแสง */
+  .reader-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10;
+  }
+  
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #f9fafb;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  
+  .back-btn:hover {
+    color: #818cf8;
+  }
+  
+  .book-title-nav {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  
+  .book-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    perspective: 2000px; /* ใช้สำหรับ 3D Transform ของหนังสือ */
+  }
+  
+  /* ตัวหนังสือ Flipbook */
+  .flipbook {
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    transition: transform 0.3s;
+  }
+  
+  .flipbook .page {
+    background: white;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .flipbook .page img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* นำขอบรูปมาให้สุด ไม่เหลือพื้นที่ขาว */
+    background: #fff;
+    display: block;
+  }
+  
+  /* หน้าปก-หลัง แบบแข็ง */
+  .flipbook .hard {
+    background: #fafafa;
+    border: solid 1px #999;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.05); /* มีเงาเล็กๆ ลบแข็ง */
+  }
+  
+  /* Control buttons bar ด้านล่าง */
+  .reader-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    background: rgba(17, 24, 39, 0.9);
+    z-index: 10;
+  }
+  
+  .control-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      transform 0.1s;
+  }
+  
+  .control-btn:hover {
+    background: var(--primary-hover);
+  }
+  
+  .control-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .page-info {
+    font-size: 1rem;
+    color: #d1d5db;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+  }
+  
+  /* =========================================================================
+     อนุภาค โหลดสถานะต่างๆ (Loading Indicators)
+     ========================================================================= */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    color: var(--text-muted);
+  }
+  
+  .reader-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #f9fafb;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(79, 70, 229, 0.2);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  
+  .spinner-light {
+    border-color: rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+  }
+  
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* =========================================================================
+     Responsive Design การปรับขนาดสำหรับมือถือ/แท็บเล็ต
+     ========================================================================= */
+  @media (max-width: 768px) {
+    .header h1 {
+      font-size: 2rem;
+    }
+    .book-title-nav {
+      font-size: 1rem;
+    }
+    .bookshelf {
+      gap: 20px;
+    }
+  
+    /* ซูมตัวหนังสือลงเมื่อหน้าจอเล็ก (TurnJS เป็น fixed-size canvas) */
+    .flipbook {
+      transform: scale(0.8);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .header h1 {
+      font-size: 1.8rem;
+    }
+    .app-container {
+      padding: 20px 15px;
+    }
+    .flipbook {
+      transform: scale(0.5);
+      transform-origin: top center;
+    }
+    .book-container {
+      align-items: flex-start;
+      padding-top: 20px;
+    }
+  }
+  

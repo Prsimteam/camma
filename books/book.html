@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>อ่านหนังสือ - E-Book Library</title>
+    <!-- Google Fonts for Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="reader-body">
+    
+    <!-- แถบเมนูด้านบน -->
+    <nav class="reader-nav">
+        <a href="index.html" class="back-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            กลับหน้าห้องสมุด
+        </a>
+        <h2 id="book-title" class="book-title-nav">กำลังโหลด...</h2>
+        <div style="width: 130px;"></div> <!-- ใช้สำหรับจัดชื่อเรื่องให้อยู่กึ่งกลาง -->
+    </nav>
+
+    <!-- สถานะกำลังโหลดของ Flipbook -->
+    <div id="loading-state" class="loading-container reader-loading">
+        <div class="spinner spinner-light"></div>
+        <p>กำลังเตรียมหน้าหนังสือ...</p>
+    </div>
+
+    <!-- พื้นที่แสดง Flipbook -->
+    <div class="book-container">
+        <div id="flipbook" class="flipbook" style="display: none;">
+            <!-- หน้าหนังสือจำเพาะจะถูกสร้างที่นี่โดย JS แบบไดนามิก -->
+        </div>
+    </div>
+    
+    <!-- ปุ่มควบคุมพลิกหน้า -->
+    <div class="reader-controls" style="display: none;" id="reader-controls">
+        <button id="prev-btn" class="control-btn">◀ หน้าก่อน</button>
+        <div class="page-info">
+            หน้า <span id="current-page">1</span> / <span id="total-pages">?</span>
+        </div>
+        <button id="next-btn" class="control-btn">ถัดไป ▶</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="http://www.turnjs.com/lib/turn.min.js"></script> <!-- ใช้ CDN ชั่วคราวของ Turn.js -->
+    <script src="js/app.js"></script>
+    <script>
+        $(document).ready(function() {
+            // เช็คว่าโหลด TurnJS ผ่านหรือไม่ ถ้าไม่ผ่านจะให้ alert
+            if (!$.fn.turn) {
+                alert("ไม่สามารถโหลดไลบรารี Turn.js ได้ กรุณาเชื่อมต่ออินเทอร์เน็ต");
+                return;
+            }
+            if (typeof App !== 'undefined') {
+                App.initReader();
+            }
+        });
+    </script>
+</body>
+</html>

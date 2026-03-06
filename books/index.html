@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ห้องสมุดอิเล็กทรอนิกส์</title>
+    <!-- Google Fonts for Premium Typography -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="header">
+        <h1>📚 ห้องสมุดอิเล็กทรอนิกส์</h1>
+        <p>เลือกอ่านหนังสือ E-Book และ Flipbook ที่คุณชื่นชอบได้ที่นี่</p>
+      </header>
+
+      <main>
+        <!-- สถานะกำลังโหลด -->
+        <div id="loading-state" class="loading-container">
+          <div class="spinner"></div>
+          <p>กำลังโหลดหนังสือจากระบบฐานข้อมูล...</p>
+        </div>
+
+        <!-- กรณีดึงข้อมูลผิดพลาด -->
+        <div id="error-state" class="error-container" style="display: none">
+          <p>เกิดข้อผิดพลาดในการดึงข้อมูลจากระบบ กรุณาตรวจสอบการตั้งค่า API</p>
+        </div>
+
+        <!-- ชั้นวางหนังสือ -->
+        <div class="bookshelf" id="bookshelf">
+          <!-- หนังสือจะถูกดึงมาต่อตรงนี้โดย JavaScript -->
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <!-- ใช้ jQuery ซึ่งเป็นของคู่บุญสำหรับ Turn.js และช่วยจัดการ DOM ได้ง่ายขึ้น -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      $(document).ready(function () {
+        // เริ่มการทำงานของหน้า Library
+        if (typeof App !== "undefined") {
+          App.initLibrary();
+        }
+      });
+    </script>
+  </body>
+</html>
