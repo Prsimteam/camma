@@ -128,7 +128,6 @@
     button {
       font-family: 'Kanit', sans-serif;
       color: #003366;
-      /* หัวข้อสีฟ้าเข้ม */
     }
 
     h1 {
@@ -141,20 +140,20 @@
       font-weight: 400;
     }
 
-    /* กำหนดธีมสีใหม่ */
     body {
       background-color: #90EE90;
-      /* พื้นหลังสีฟ้าอ่อน */
+      background-image: 
+        linear-gradient(135deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+        linear-gradient(225deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
       color: #000000;
-      /* อักษรสีขาว */
       font-family: 'Kanit', sans-serif;
-
+      min-height: 100vh;
     }
-
 
     a {
       color: #8B0000;
-      /* ลิงก์สีแดงเข้ม */
     }
 
     .bt-custom {
@@ -162,6 +161,22 @@
       border: solid 2px #fff;
       box-shadow: #000 2px 2px 1px;
       border-radius: 0.75em;
+      transition: all 0.3s ease;
+    }
+
+    .bt-custom:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: #000 4px 4px 2px;
+    }
+
+    .bt-custom:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: #000 1px 1px 0px;
+    }
+
+    .bt-custom:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .c-loader {
@@ -178,21 +193,41 @@
         transform: rotate(1turn);
       }
     }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .radio-label:hover {
+      background-color: rgba(144, 238, 144, 0.3);
+    }
+
+    .radio-label input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-right: 12px;
+    }
   </style>
 </head>
 
 <body class="bg-[#90EE90]">
-  <div class="container mx-auto p-4">
+  <div class="container mx-auto p-4 max-w-2xl">
     <h1 class="text-2xl text-center mb-6">ประเมินความเครียด (ST-5)</h1>
     <!-- คำถามหรือหน้าแนะนำ -->
-    <div id="question-container" class="bg-white p-6 rounded-lg shadow-md">
+    <div id="question-container" class="bg-white p-6 rounded-lg shadow-md mb-6">
       <!-- เนื้อหาจะถูก inject ด้วย JavaScript -->
     </div>
     <!-- ปุ่มนำทาง -->
-    <div class="flex justify-between mt-6">
-      <button id="prevButton" class="bg-gray-300 text-gray-700 px-4 py-2 bt-custom disabled:opacity-50"
-        disabled>ย้อนกลับ</button>
-      <button id="nextButton" class="bt-custom text-black px-4 py-2 ">ถัดไป</button>
+    <div class="flex justify-between gap-4">
+      <button id="prevButton" class="bg-gray-300 text-gray-700 px-6 py-3 bt-custom disabled:opacity-50 flex-1"
+        disabled>← ย้อนกลับ</button>
+      <button id="nextButton" class="bt-custom text-black px-6 py-3 flex-1">ถัดไป →</button>
     </div>
   </div>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -226,7 +261,7 @@
                     <h2 class="text-lg font-semibold mb-4">คำชี้แจง</h2>
                     <p class="text-gray-700">ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้ คุณรู้สึกอย่างไร?...<br>โดยเลือกคำตอบที่ตรงกับความรู้สึกของคุณมากที่สุด</p>
                 `;
-        nextButton.textContent = 'เริ่มต้น';
+        nextButton.textContent = 'เริ่มต้น →';
         prevButton.disabled = true;
       } else {
         // หน้าคำถาม
@@ -234,14 +269,33 @@
         container.innerHTML = `
                     <h2 class="text-lg font-semibold mb-4">ข้อที่ ${page + 1}: ${question.text}</h2>
                     <div class="space-y-2">
-                        <label class="block"><input type="radio" name="${question.id}" value="0" class="mr-2"> ไม่เลย </label>
-                        <label class="block"><input type="radio" name="${question.id}" value="1" class="mr-2"> เล็กน้อย </label>
-                        <label class="block"><input type="radio" name="${question.id}" value="2" class="mr-2"> ปานกลาง </label>
-                        <label class="block"><input type="radio" name="${question.id}" value="3" class="mr-2"> มาก </label>
+                        <label class="radio-label"><input type="radio" name="${question.id}" value="0" class="mr-2"> ไม่เลย</label>
+                        <label class="radio-label"><input type="radio" name="${question.id}" value="1" class="mr-2"> เล็กน้อย</label>
+                        <label class="radio-label"><input type="radio" name="${question.id}" value="2" class="mr-2"> ปานกลาง</label>
+                        <label class="radio-label"><input type="radio" name="${question.id}" value="3" class="mr-2"> มาก</label>
                     </div>
                 `;
-        nextButton.textContent = page === questions.length - 1 ? 'ส่งคำตอบ' : 'ถัดไป';
-        prevButton.disabled = page === 0; // ปิดปุ่มย้อนกลับที่คำถามแรก
+        nextButton.textContent = page === questions.length - 1 ? 'ส่งคำตอบ ✓' : 'ถัดไป →';
+        prevButton.disabled = page === 0;
+        
+        // เพิ่ม event listener ให้ radio buttons
+        document.querySelectorAll(`input[name="${question.id}"]`).forEach(radio => {
+          radio.addEventListener('change', () => {
+            nextButton.disabled = false;
+          });
+        });
+        
+        // ตรวจสอบว่ามีการตอบคำถามนี้หรือไม่
+        const savedAnswer = answers[question.id];
+        if (savedAnswer !== undefined) {
+          const selectedRadio = document.querySelector(`input[name="${question.id}"][value="${savedAnswer}"]`);
+          if (selectedRadio) {
+            selectedRadio.checked = true;
+            nextButton.disabled = false;
+          }
+        } else {
+          nextButton.disabled = true;
+        }
       }
     }
 
@@ -285,9 +339,12 @@
 
     // ปุ่มถัดไป
     document.getElementById('nextButton').addEventListener('click', async () => {
+      // ตรวจสอบว่ามีการเลือกคำตอบหรือยัง (สำหรับหน้าคำถาม)
       if (currentPage >= 0) {
-        saveAnswer();
-        if (!answers[questions[currentPage].id] && answers[questions[currentPage].id] !== 0) {
+        const questionId = questions[currentPage].id;
+        const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+        
+        if (!selected && currentPage !== -1) {
           Swal.fire({
             icon: 'warning',
             title: 'กรุณาตอบคำถาม',
@@ -297,6 +354,8 @@
           });
           return;
         }
+        
+        saveAnswer();
       }
 
       if (currentPage < questions.length - 1) {

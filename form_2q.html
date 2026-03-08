@@ -20,6 +20,9 @@
         body {
             font-family: 'Kanit', sans-serif;
             background: linear-gradient(135deg, #90EE90 0%, #66BB6A 100%);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,255,255,0.05) 50px, rgba(255,255,255,0.05) 51px);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -109,10 +112,11 @@
         input,
         button {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 15px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-family: 'Kanit', sans-serif;
+            transition: all 0.3s ease;
         }
 
         input {
@@ -124,7 +128,7 @@
         input:focus {
             outline: none;
             border-color: #66BB6A;
-            box-shadow: 0 0 5px rgba(102, 187, 106, 0.5);
+            box-shadow: 0 0 8px rgba(102, 187, 106, 0.4);
         }
 
         button {
@@ -132,18 +136,21 @@
             color: white;
             border: none;
             font-size: 1.1rem;
-            font-weight: 400;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         button:hover {
             background: #4CAF50;
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
         button:active {
-            transform: scale(0.98);
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         p {
@@ -151,6 +158,16 @@
             color: #555;
             margin-bottom: 20px;
             text-align: center;
+            line-height: 1.6;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-group button {
+            flex: 1;
         }
     </style>
 </head>
@@ -173,8 +190,10 @@
         <div class="card">
             <h2>ข้อที่ 1</h2>
             <p>ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้<br>ท่านรู้สึก หดหู่ เศร้า หรือท้อแท้สิ้นหวัง หรือไม่</p>
-            <button onclick="answer(1, true)">มี</button>
-            <button onclick="answer(1, false)">ไม่มี</button>
+            <div class="btn-group">
+                <button onclick="answer(1, true)">มี</button>
+                <button onclick="answer(1, false)">ไม่มี</button>
+            </div>
         </div>
     </div>
 
@@ -182,8 +201,10 @@
         <div class="card">
             <h2>ข้อที่ 2</h2>
             <p>ใน 2 สัปดาห์ที่ผ่านมา รวมวันนี้<br>ท่านรู้สึก เบื่อ ทำอะไรก็ไม่เพลิดเพลิน หรือไม่</p>
-            <button onclick="answer(2, true)">มี</button>
-            <button onclick="answer(2, false)">ไม่มี</button>
+            <div class="btn-group">
+                <button onclick="answer(2, true)">มี</button>
+                <button onclick="answer(2, false)">ไม่มี</button>
+            </div>
         </div>
     </div>
 
@@ -266,12 +287,25 @@
 
         async function answer(question, value) {
             answers[question] = value;
+            
+            // Highlight selected button
+            const currentQuestionEl = document.getElementById(`question${question}`);
+            currentQuestionEl.querySelectorAll('button').forEach(btn => {
+                btn.style.opacity = '0.6';
+                btn.style.transform = 'scale(0.98)';
+            });
+            event.target.style.opacity = '1';
+            event.target.style.transform = 'scale(1)';
+            
             if (question === 1) {
-                document.getElementById('question1').style.display = 'none';
-                document.getElementById('question2').style.display = 'block';
-                console.log('ไปคำถามข้อ 2');
+                setTimeout(() => {
+                    document.getElementById('question1').style.display = 'none';
+                    document.getElementById('question2').style.display = 'block';
+                }, 200);
             } else {
-                await submitAssessment();
+                setTimeout(() => {
+                    submitAssessment();
+                }, 200);
             }
         }
 
