@@ -402,13 +402,18 @@ button:disabled {
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
+            console.log('=== Form Submit Started ===');
+
             const firstName = document.getElementById('firstName').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
             const position = document.getElementById('position').value;
             const department = document.getElementById('department').value.trim();
 
+            console.log('Form data:', { firstName, lastName, position, department });
+
             // Validate required fields
             if (!firstName || !lastName || !department) {
+                console.log('Validation failed: missing fields');
                 Swal.fire({
                     icon: 'warning',
                     title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
@@ -419,29 +424,49 @@ button:disabled {
             }
 
             // Get user ID from LIFF
-            const idToken = liff.getDecodedIDToken();
-            if (!idToken || !idToken.sub) {
+            let userId;
+            try {
+                const idToken = liff.getDecodedIDToken();
+                console.log('ID Token:', idToken);
+                
+                if (!idToken || !idToken.sub) {
+                    console.log('ID Token invalid:', idToken);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ข้อผิดพลาด',
+                        text: 'ไม่พบข้อมูลผู้ใช้ กรุณาลองใหม่อีกครั้ง',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#90EE90'
+                    });
+                    return;
+                }
+                userId = idToken.sub;
+            } catch (error) {
+                console.error('Error getting ID token:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'ข้อผิดพลาด',
-                    text: 'ไม่พบข้อมูลผู้ใช้ กรุณาลองใหม่อีกครั้ง',
+                    text: 'ไม่พบข้อมูลผู้ใช้ (ต้องเปิดผ่าน LINE เท่านั้น)',
                     confirmButtonText: 'ตกลง',
                     confirmButtonColor: '#90EE90'
                 });
                 return;
             }
 
-            userId = idToken.sub;
             const profileImage = document.getElementById('profileImage').src;
 
             showLoading();
 
             try {
+                console.log('Sending to Google Sheets...');
                 await sendToGoogleSheet(userId, firstName, lastName, position, department);
-                
+                console.log('Google Sheets sent successfully');
+
                 // Send Flex Message
+                console.log('Sending Flex Message...');
                 await sendFlexMessage('Register');
-                
+                console.log('Flex Message sent successfully');
+
                 Swal.fire({
                     icon: 'success',
                     title: 'ลงทะเบียนสำเร็จ!',
@@ -451,6 +476,7 @@ button:disabled {
                 }).then(() => {
                     document.getElementById('registrationForm').reset();
                     changeDepartment(); // Reset department field
+                    liff.closeWindow(); // Close LIFF window
                 });
             } catch (error) {
                 console.error('Error:', error);
@@ -475,7 +501,17 @@ button:disabled {
             const lastName = document.getElementById('lastName').value;
             const position = document.getElementById('position').value;
             const department = document.getElementById('department').value;
-            const profile = await liff.getProfile();
+            
+            let profile;
+            try {
+                profile = await liff.getProfile();
+            } catch (error) {
+                console.error('Error getting profile:', error);
+                profile = {
+                    displayName: firstName + ' ' + lastName,
+                    pictureUrl: "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif"
+                };
+            }
             
             // Position-based color and icon
             let positionColor = '#4CAF50';
@@ -650,15 +686,17 @@ button:disabled {
             };
 
             try {
+                console.log('Sending message to LINE...');
                 await liff.sendMessages([message]);
-                liff.closeWindow(); 
+                console.log('Message sent successfully');
             } catch (error) {
                 console.error('Error sending message:', error);
+                // Don't throw error - allow form to complete even if message fails
             }
         }
-  
-  
+
+
     </script>
-   
+
 </body>
 </html>
