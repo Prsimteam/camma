@@ -121,7 +121,7 @@
 
          h2, h3, label, button {
             font-family: 'Kanit', sans-serif;
-            color: #003366; /* หัวข้อสีฟ้าเข้ม */
+            color: #003366;
         }
     h1 {
     font-family: 'Kanit', sans-serif;
@@ -131,20 +131,23 @@ p {
     font-family: 'Kanit', sans-serif;
     font-weight: 400;
 }
-    /* กำหนดธีมสีใหม่ */
     body {
-        background-color: #90EE90; /* พื้นหลังสีฟ้าอ่อน */
-        color: #000000; /* อักษรสีขาว */
+        background-color: #90EE90;
+        background-image: url('../images/glare_6338843.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        color: #000000;
         font-family: 'Kanit', sans-serif;
-        
+        min-height: 100vh;
     }
 
 
     a {
-        color: #8B0000; /* ลิงก์สีแดงเข้ม */
+        color: #8B0000;
     }
 
-input {
+input, select {
   border-radius: 0.75em !important;
 }
 
@@ -199,7 +202,7 @@ input {
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            display: none; /* ซ่อน overlay เริ่มต้น */
+            display: none;
         }
         .loading-spinner {
             border: 8px solid #f3f3f3;
@@ -213,12 +216,29 @@ input {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
 button {
   color: #000;
   border: solid 2px #fff;
   box-shadow: #000 2px 2px 1px;
   border-radius: 0.75em;
   background-color:#90EE90 !important;
+  transition: all 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: #000 4px 4px 2px;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: #000 1px 1px 0px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>
 
@@ -286,18 +306,27 @@ button {
     <!-- LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
+        let userId = '';
 
-document.getElementById('position').addEventListener('change', change2);
-
-        function change2() {
-            if (this.value == "user") {
-                    document.getElementById('department').value = "บุคคลทั่วไป";
-                    document.getElementById('department').disabled = true;
-                } else {
-                document.getElementById('department').value = "";
-                    document.getElementById('department').disabled = false;
-                }
+        function changeDepartment() {
+            const positionSelect = document.getElementById('position');
+            const departmentInput = document.getElementById('department');
+            
+            // ถ้าเลือก FCG ให้ disable และใส่ค่า default
+            if (positionSelect.value === 'FCG') {
+                departmentInput.value = 'ผู้ดูแลในครอบครัว';
+                departmentInput.disabled = true;
+            } else {
+                departmentInput.value = '';
+                departmentInput.disabled = false;
+            }
         }
+        
+        // เรียกใช้เมื่อเปลี่ยนค่า select
+        document.getElementById('position').addEventListener('change', changeDepartment);
+        
+        // ตั้งค่าเริ่มต้น
+        changeDepartment();
       
     const liffId = '2006670422-W8z1J0rl'; // เปลี่ยนจุดที่ 1 liff register
 
@@ -346,8 +375,9 @@ document.getElementById('position').addEventListener('change', change2);
         
         async function sendToGoogleSheet(userId, firstName, lastName, position, department) {
             try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbzEra2WSYdWw3NSxgItCcl5BWEIs41ZajR6lPYLx5GqVu0e6l-GGV-z6Eu6fdTseMVt/exec', {  // เปลี่ยนจุดที่ 2 (3.Register)
+                const response = await fetch('https://script.google.com/macros/s/AKfycbzEra2WSYdWw3NSxgItCcl5BWEIs41ZajR6lPYLx5GqVu0e6l-GGV-z6Eu6fdTseMVt/exec', {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
@@ -360,14 +390,11 @@ document.getElementById('position').addEventListener('change', change2);
                     })
                 });
 
-                const result = await response.json();
-                if (response.ok) {
-                    await sendFlexMessage('Register');
-                } else {
-                    console.error('Error sending data to Google Sheets:', result);
-                }
+                // no-cors mode doesn't return readable response, but we assume success
+                console.log('Data sent to Google Sheets');
             } catch (error) {
                 console.error('Error sending data to Google Sheets:', error);
+                throw error;
             }
         }
 
@@ -375,35 +402,121 @@ document.getElementById('position').addEventListener('change', change2);
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
             const position = document.getElementById('position').value;
-            const department = document.getElementById('department').value;
+            const department = document.getElementById('department').value.trim();
+
+            // Validate required fields
+            if (!firstName || !lastName || !department) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90'
+                });
+                return;
+            }
+
+            // Get user ID from LIFF
+            const idToken = liff.getDecodedIDToken();
+            if (!idToken || !idToken.sub) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ข้อผิดพลาด',
+                    text: 'ไม่พบข้อมูลผู้ใช้ กรุณาลองใหม่อีกครั้ง',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90'
+                });
+                return;
+            }
+
+            userId = idToken.sub;
             const profileImage = document.getElementById('profileImage').src;
-            const userId = liff.getDecodedIDToken().sub; 
 
-            showLoading(); 
+            showLoading();
 
-            await sendToGoogleSheet(userId, firstName, lastName, position, department);
-
-            hideLoading(); 
-            document.getElementById('registrationForm').reset();
+            try {
+                await sendToGoogleSheet(userId, firstName, lastName, position, department);
+                
+                // Send Flex Message
+                await sendFlexMessage('Register');
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ลงทะเบียนสำเร็จ!',
+                    text: 'ผลการลงทะเบียนได้ถูกส่งไปยังแชทแล้ว',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90'
+                }).then(() => {
+                    document.getElementById('registrationForm').reset();
+                    changeDepartment(); // Reset department field
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถลงทะเบียนได้ กรุณาลองใหม่อีกครั้ง',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#90EE90'
+                });
+            } finally {
+                hideLoading();
+            }
         });
 
         async function sendFlexMessage(type) {
             const now = new Date();
             const time = now.toLocaleTimeString('en-GB', { hour12: false });
+            const date = now.toLocaleDateString('th-TH');
 
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
             const position = document.getElementById('position').value;
-            const department = document.getElementById('department').value;            
+            const department = document.getElementById('department').value;
             const profile = await liff.getProfile();
+            
+            // Position-based color and icon
+            let positionColor = '#4CAF50';
+            let positionIcon = '🎉';
+            if (position === 'FCG') {
+                positionColor = '#FF6B6B';
+                positionIcon = '🏠';
+            } else if (position === 'CG') {
+                positionColor = '#4ECDC4';
+                positionIcon = '👨‍⚕️';
+            } else if (position === 'CM') {
+                positionColor = '#45B7D1';
+                positionIcon = '📋';
+            } else if (position === 'CCO') {
+                positionColor = '#96CEB4';
+                positionIcon = '👔';
+            }
+
             const message = {
                 type: 'flex',
-                altText: `You have ${type === 'Register' ? 'Register' : 'Register'} at ${time}`,
+                altText: `ลงทะเบียนสำเร็จเมื่อ ${time}`,
                 contents: {
                     "type": "bubble",
+                    "theme": "success",
+                    "header": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": "✅ ลงทะเบียนสำเร็จ",
+                                "weight": "bold",
+                                "size": "lg",
+                                "color": "#ffffff",
+                                "align": "center",
+                                "margin": "md"
+                            }
+                        ],
+                        "backgroundColor": "#4CAF50",
+                        "paddingAll": "12px"
+                    },
                     "body": {
                         "type": "box",
                         "layout": "vertical",
@@ -420,12 +533,13 @@ document.getElementById('position').addEventListener('change', change2);
                                                 "type": "image",
                                                 "url": profile.pictureUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
                                                 "aspectMode": "cover",
-                                                "size": "full"
+                                                "size": "full",
+                                                "cornerRadius": "20px"
                                             }
                                         ],
-                                        "cornerRadius": "100px",
-                                        "width": "72px",
-                                        "height": "72px"
+                                        "width": "80px",
+                                        "height": "80px",
+                                        "cornerRadius": "20px"
                                     },
                                     {
                                         "type": "box",
@@ -433,84 +547,104 @@ document.getElementById('position').addEventListener('change', change2);
                                         "contents": [
                                             {
                                                 "type": "text",
-                                                "contents": [
-                                                    {
-                                                        "type": "span",
-                                                        "text": `คุณ : `,
-                                                    },
-                                                    {
-                                                        "type": "span",
-                                                        "text": `${firstName} ${lastName}`,
-                                                        "weight": "bold",
-                                                        "color": "#0000aa"
-                                                    }
-                                                ],
-                                                "size": "sm",
+                                                "text": `${firstName} ${lastName}`,
+                                                "weight": "bold",
+                                                "size": "lg",
+                                                "color": "#1a1a2e",
                                                 "wrap": false
                                             },
                                             {
                                                 "type": "text",
-                                                "contents": [
-                                                    {
-                                                        "type": "span",
-                                                        "text": `ลงทะเบียนเป็น : `,
-                                                    },
-                                                    {
-                                                        "type": "span",
-                                                        "text": `${position}`,
-                                                        "weight": "bold",
-                                                        "color": "#0000aa"
-                                                    }
-                                                ],
+                                                "text": `ตำแหน่ง: ${positionIcon} ${position}`,
                                                 "size": "sm",
+                                                "color": positionColor,
+                                                "weight": "bold",
+                                                "margin": "sm",
                                                 "wrap": false
                                             },
                                             {
                                                 "type": "text",
-                                                "contents": [
-                                                    {
-                                                        "type": "span",
-                                                        "text": `ขึ้นตรงกับ : `,
-                                                    },
-                                                    {
-                                                        "type": "span",
-                                                        "text": `${department}`,
-                                                        "weight": "bold",
-                                                        "color": "#0000aa"
-                                                    }
-                                                ],
+                                                "text": `หน่วยงาน: ${department}`,
                                                 "size": "sm",
-                                                "wrap": false
-                                            },
-                                            {
-                                                "type": "text",
-                                                "contents": [
-                                                    {
-                                                        "type": "span",
-                                                        "text": "ทำการลงทะเบียนสำเร็จ\n",
-                                                        "weight": "bold",
-                                                        "color": "#000000"
-                                                    },
-                                                    {
-                                                        "type": "span",
-                                                        "text": `เวลา : ${time}`
-                                                    }
-                                                ],
-                                                "size": "sm",
+                                                "color": "#666666",
+                                                "margin": "sm",
                                                 "wrap": true
-                                            },
-                                            
-                                            
+                                            }
                                         ],
-                                        "justifyContent": "space-between"
+                                        "spacing": "sm",
+                                        "justifyContent": "center"
                                     }
                                 ],
-                                "spacing": "xl",
-                                "paddingAll": "20px"
+                                "spacing": "md",
+                                "paddingAll": "md",
+                                "backgroundColor": "#f8f9fa",
+                                "cornerRadius": "12px",
+                                "margin": "md"
+                            },
+                            {
+                                "type": "separator",
+                                "margin": "lg"
+                            },
+                            {
+                                "type": "box",
+                                "layout": "horizontal",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": "📅",
+                                        "size": "md",
+                                        "flex": 0
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": date,
+                                        "size": "sm",
+                                        "color": "#666666",
+                                        "margin": "sm",
+                                        "flex": 1
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": "🕐",
+                                        "size": "md",
+                                        "flex": 0
+                                    },
+                                    {
+                                        "type": "text",
+                                        "text": time,
+                                        "size": "sm",
+                                        "color": "#666666",
+                                        "margin": "sm",
+                                        "flex": 1
+                                    }
+                                ],
+                                "paddingAll": "sm",
+                                "backgroundColor": "#e8f5e9",
+                                "cornerRadius": "8px",
+                                "margin": "md"
                             }
-                                   
                         ],
-                        "paddingAll": "0px"
+                        "paddingAll": "md"
+                    },
+                    "footer": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": "ขอบคุณที่ลงทะเบียน 🙏",
+                                "size": "sm",
+                                "color": "#888888",
+                                "align": "center",
+                                "margin": "md"
+                            }
+                        ],
+                        "paddingAll": "sm"
+                    },
+                    "styles": {
+                        "header": {
+                            "separator": true
+                        }
                     }
                 }
             };
