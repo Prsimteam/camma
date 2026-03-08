@@ -452,11 +452,6 @@
             document.getElementById('formProgress').value = currentPageNum;
         }
 
-        function validateCheckboxes(page) {
-            const checkboxes = page.querySelectorAll('input[type="checkbox"]');
-            return Array.from(checkboxes).some(checkbox => checkbox.checked);
-        }
-
         function nextPage() {
             const pages = document.querySelectorAll('.page');
             const currentPage = document.querySelector('.page.active');
@@ -466,26 +461,60 @@
             console.log('Navigating to page', nextPageNum);
 
             if (nextPageNum <= pages.length) {
+                // Validate required fields
                 const requiredFields = currentPage.querySelectorAll('[required]');
                 let allValid = true;
+                let firstInvalidField = null;
+
                 requiredFields.forEach(field => {
-                    if (!field.value) {
-                        field.reportValidity();
+                    if (!field.value || field.value.trim() === '') {
+                        field.classList.add('is-invalid');
                         allValid = false;
+                        if (!firstInvalidField) firstInvalidField = field;
+                    } else {
+                        field.classList.remove('is-invalid');
                     }
                 });
 
-                if (currentPageNum === 5 && !validateCheckboxes(currentPage)) {
-                    alert('กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกในส่วนสภาพปัญหาหรือกิจกรรมการดูแล');
+                if (!allValid) {
+                    if (firstInvalidField) {
+                        firstInvalidField.focus();
+                        firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
                     return;
                 }
 
-                if (allValid) {
-                    currentPage.classList.remove('active');
-                    pages[nextPageNum - 1].classList.add('active');
-                    updateButtonStates();
-                    updateProgress();
+                // Validate checkboxes on page 5
+                if (currentPageNum === 5) {
+                    const symptomsChecked = currentPage.querySelectorAll('input[name="symptoms"]:checked').length > 0;
+                    const managementChecked = currentPage.querySelectorAll('input[name="management"]:checked').length > 0;
+
+                    if (!symptomsChecked && !managementChecked) {
+                        alert('กรุณาเลือกอย่างน้อยหนึ่งตัวเลือกในส่วนสภาพปัญหาหรือกิจกรรมการดูแล');
+                        return;
+                    }
                 }
+
+                // Validate radio buttons on page 6
+                if (currentPageNum === 6) {
+                    const emotionChecked = currentPage.querySelector('input[name="emotion"]:checked');
+                    const conditionChecked = currentPage.querySelector('input[name="condition_change"]:checked');
+
+                    if (!emotionChecked) {
+                        alert('กรุณาประเมินอารมณ์ผู้สูงอายุ');
+                        return;
+                    }
+                    if (!conditionChecked) {
+                        alert('กรุณาประเมินอาการผู้ป่วยแตกต่างจากครั้งที่แล้ว');
+                        return;
+                    }
+                }
+
+                currentPage.classList.remove('active');
+                pages[nextPageNum - 1].classList.add('active');
+                updateButtonStates();
+                updateProgress();
             }
         }
 
@@ -572,34 +601,37 @@
                 const response = await fetch(webAppUrl, {
                     method: 'POST',
                     body: formData,
-                    mode: 'no-cors' // ใช้ no-cors เพื่อหลีกเลี่ยงปัญหา CORS (ถ้าจำเป็น)
+                    mode: 'cors'
                 });
-                console.log('Fetch response received:', response);
+                const result = await response.text();
+                console.log('Fetch response received:', result);
 
-                // เนื่องจาก mode: 'no-cors' ทำให้ response.text() ไม่สามารถอ่านได้
-                // สมมติว่า response มาถึงแปลว่าสำเร็จ (ปรับตามความเหมาะสม)
-                console.log('Assuming success due to no-cors mode');
-                submitMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
-                setTimeout(() => {
-                    console.log('Resetting form');
-                    document.getElementById('multiPageForm').reset();
-                    document.getElementById('imagePreview').innerHTML = '';
-                    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-                    document.querySelector('.page[data-page="1"]').classList.add('active');
-                    document.getElementById('formProgress').value = 1;
-                    submitMessage.style.display = 'none';
-                    submitButton.disabled = false;
-                    loadingSpinner.classList.add('d-none'); // ซ่อน Spinner
-                    updateButtonStates();
-                }, 2000);
+                if (result.includes('Success') || result.includes('OK')) {
+                    console.log('Submission successful');
+                    submitMessage.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                    setTimeout(() => {
+                        console.log('Resetting form');
+                        document.getElementById('multiPageForm').reset();
+                        document.getElementById('imagePreview').innerHTML = '';
+                        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                        document.querySelector('.page[data-page="1"]').classList.add('active');
+                        document.getElementById('formProgress').value = 1;
+                        submitMessage.style.display = 'none';
+                        submitButton.disabled = false;
+                        loadingSpinner.classList.add('d-none');
+                        updateButtonStates();
+                    }, 2000);
+                } else {
+                    throw new Error('Server returned: ' + result);
+                }
             } catch (error) {
                 console.error('Submission error:', error);
                 errorMessage.style.display = 'block';
                 errorMessage.textContent = 'เกิดข้อผิดพลาด: ' + error.message;
                 submitMessage.style.display = 'none';
                 submitButton.disabled = false;
-                loadingSpinner.classList.add('d-none'); // ซ่อน Spinner
+                loadingSpinner.classList.add('d-none');
             }
         });
 

@@ -2,81 +2,395 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เลือกการดูแลผู้ป่วย</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#10b981">
+    <meta name="description" content="ระบบบันทึกการดูแลผู้ป่วย">
+    <title>CAMMA - บันทึกการดูแลผู้ป่วย</title>
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Prompt', sans-serif; /* ใช้ฟอนต์ Prompt จาก Google Fonts */
-            background-color: #90EE90; /* พื้นหลังสีเขียวอ่อน */
+        * {
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center; /* จัดกึ่งกลางแนวนอน */
-            align-items: center; /* จัดกึ่งกลางแนวตั้ง */
-            height: 100vh; /* ความสูงเต็มหน้าจอ */
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
         .container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
             text-align: center;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            max-width: 500px; /* จำกัดความกว้างของกล่อง */
-            width: 90%; /* ขยายให้พอดีกับหน้าจอ */
-        }
-        h1 {
-            color: #333;
-            font-size: 28px;
             margin-bottom: 30px;
-            font-weight: 700; /* ตัวหนา */
+            animation: fadeInDown 0.6s ease;
         }
-        .button {
-            display: block;
-            margin: 20px auto;
-            padding: 15px 30px;
-            font-size: 24px;
-            color: #000; /* สีข้อความในปุ่ม */
-            background-color: #90EE90;
-            border: solid 2px #fff; /* เส้นขอบสีขาว */
-            box-shadow: #000 2px 2px 1px; /* เงาสีดำ */
-            border-radius: 0.75em; /* มุมมน */
-            cursor: pointer;
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .logo i {
+            font-size: 40px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .disease-list {
+            display: grid;
+            gap: 12px;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        .disease-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px 20px;
             text-decoration: none;
-            transition: all 0.3s ease; /* เพิ่มเอฟเฟกต์เปลี่ยนแปลงแบบนุ่มนวล */
-            width: 100%; /* ปุ่มเต็มความกว้างของกล่อง */
-            max-width: 400px; /* จำกัดความกว้างของปุ่ม */
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
-        .button:hover {
-            background-color: #d7e239; /* เปลี่ยนพื้นหลังเมื่อ hover */
-            color: #000; /* เปลี่ยนสีข้อความเมื่อ hover */
-            box-shadow: #000 3px 3px 2px; /* เพิ่มเงาเมื่อ hover */
+
+        .disease-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        .button:active {
-            transform: scale(0.98); /* ลดขนาดเล็กน้อยเมื่อกด */
-            box-shadow: #000 1px 1px 1px; /* ลดเงาเมื่อกด */
+
+        .disease-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 24px;
+
+        .disease-card:hover::before {
+            opacity: 1;
+        }
+
+        .disease-card:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .disease-card:hover .icon-box {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .icon-diabetes {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #d97706;
+        }
+
+        .icon-hypertension {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #dc2626;
+        }
+
+        .icon-stroke {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #2563eb;
+        }
+
+        .icon-dementia {
+            background: linear-gradient(135deg, #e9d5ff, #d8b4fe);
+            color: #7c3aed;
+        }
+
+        .icon-ckd {
+            background: linear-gradient(135deg, #ccfbf1, #99f6e4);
+            color: #0d9488;
+        }
+
+        .card-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-title {
+            color: #1f2937;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        .card-arrow {
+            color: #9ca3af;
+            font-size: 18px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .disease-card:hover .card-arrow {
+            transform: translateX(5px);
+            color: #10b981;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            animation: fadeIn 0.6s ease 0.4s both;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
             }
-            .button {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 12px;
+            }
+
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+
+            .logo i {
+                font-size: 35px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+            }
+
+            .disease-card {
+                padding: 15px 16px;
+            }
+
+            .icon-box {
+                width: 45px;
+                height: 45px;
                 font-size: 20px;
-                padding: 12px 25px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .card-subtitle {
+                font-size: 12px;
+            }
+        }
+
+        /* Touch feedback for mobile */
+        @media (hover: none) {
+            .disease-card:active {
+                transform: translateY(-1px) scale(0.98);
+            }
+        }
+
+        /* Safe area for notched devices */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>เลือกการดูแลผู้ป่วย</h1>
-        <a href="diabetes.html" class="button">โรคเบาหวาน</a>
-        <a href="hypertension.html" class="button">โรคความดัน</a>
-        <a href="stroke.html" class="button">โรคหลอดเลือดสมอง</a>
-        <a href="dementia.html" class="button">โรคสมองเสื่อม</a>
-        <a href="ckd.html" class="button">โรคไตวายเรื้อรัง</a>
-        
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <h1>เลือกการดูแลผู้ป่วย</h1>
+            <p class="subtitle">ระบบบันทึกการปฏิบัติงานดูแลผู้ป่วย</p>
+        </div>
+
+        <div class="disease-list">
+            <a href="diabetes.html" class="disease-card">
+                <div class="icon-box icon-diabetes">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">โรคเบาหวาน</div>
+                    <div class="card-subtitle">Diabetes Care</div>
+                </div>
+                <i class="fas fa-chevron-right card-arrow"></i>
+            </a>
+
+            <a href="hypertension.html" class="disease-card">
+                <div class="icon-box icon-hypertension">
+                    <i class="fas fa-heart-pulse"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">โรคความดันโลหิตสูง</div>
+                    <div class="card-subtitle">Hypertension Care</div>
+                </div>
+                <i class="fas fa-chevron-right card-arrow"></i>
+            </a>
+
+            <a href="stroke.html" class="disease-card">
+                <div class="icon-box icon-stroke">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">โรคหลอดเลือดสมอง</div>
+                    <div class="card-subtitle">Stroke Care</div>
+                </div>
+                <i class="fas fa-chevron-right card-arrow"></i>
+            </a>
+
+            <a href="dementia.html" class="disease-card">
+                <div class="icon-box icon-dementia">
+                    <i class="fas fa-head-side-virus"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">โรคสมองเสื่อม</div>
+                    <div class="card-subtitle">Dementia Care</div>
+                </div>
+                <i class="fas fa-chevron-right card-arrow"></i>
+            </a>
+
+            <a href="ckd.html" class="disease-card">
+                <div class="icon-box icon-ckd">
+                    <i class="fas fa-kidneys"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-title">โรคไตวายเรื้อรัง</div>
+                    <div class="card-subtitle">CKD Care</div>
+                </div>
+                <i class="fas fa-chevron-right card-arrow"></i>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>CAMMA Healthcare System © 2024</p>
+        </div>
     </div>
+
+    <script>
+        // Add ripple effect on touch
+        document.querySelectorAll('.disease-card').forEach(card => {
+            card.addEventListener('touchstart', function(e) {
+                this.style.transform = 'translateY(-1px) scale(0.98)';
+            });
+            
+            card.addEventListener('touchend', function(e) {
+                this.style.transform = '';
+            });
+        });
+    </script>
 </body>
-</html><!-- <a href="bedridden.html" class="button">ผู้ป่วยติดเตียง</a> -->
+</html>
