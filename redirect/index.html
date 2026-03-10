@@ -64,7 +64,7 @@
 <body>
 
     <div class="loader" id="loader"></div>
-    <div id="message">Processing...</div>
+    <div id="message">กำลังไป...</div>
 
     <script>
         // ==========================================
@@ -118,7 +118,7 @@
                 const data = await response.json();
 
                 if (data.status === "success" && data.targetUrl) {
-                    msgEl.textContent = "Redirecting...";
+                    msgEl.textContent = "รอสักครู่...";
                     window.location.href = data.targetUrl;
                 } else {
                     throw new Error(data.message || "Unknown error");
