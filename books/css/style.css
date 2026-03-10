@@ -88,7 +88,7 @@
   /* คอนเทนเนอร์รูปภาพหน้าปก */
   .book-cover-container {
     width: 100%;
-    aspect-ratio: 3/4;
+    aspect-ratio: auto;
     overflow: hidden; /* ป้องกันรูปทะลุการ์ดเวลากระจาย */
     background-color: #e5e7eb;
   }
