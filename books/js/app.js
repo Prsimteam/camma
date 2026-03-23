@@ -136,7 +136,8 @@ const App = {
         // 4.1) แทรกปกหน้า
         // เพิ่มคลาส hard ลงไปเพื่อสร้างเอฟเฟกต์ปกแบบแข็งไม่งอเวลาพลิก
         pagesHTML += `<div class="page hard"><img src="${coverImg}" onerror="this.src='https://via.placeholder.com/400x600?text=หน้าปก'"></div>`;
-        pagesHTML += `<div class="page hard"></div>`; // ใช้งานด้านในปกหน้าเป็นกระดาษว่าง
+        // เอาด้านในปกหน้าที่เป็นกระดาษว่างออก
+        // pagesHTML += `<div class="page hard"></div>`;
         
         // 4.2) แทรกหน้าเนื้อด้านใน
         pageUrls.forEach((imgUrl, idx) => {
@@ -153,7 +154,8 @@ const App = {
         }
         
         // 4.4) แทรกปกหลัง
-        pagesHTML += `<div class="page hard"></div>`; // ด้านในกระดาษเปล่าหลังสุด
+        // เอาด้านในกระดาษเปล่าหลังสุดออก
+        // pagesHTML += `<div class="page hard"></div>`;
         pagesHTML += `<div class="page hard"><img src="${backImg}" onerror="this.src='https://via.placeholder.com/400x600?text=ปกหลัง'"></div>`;
 
         // สั่งแทรกลงใน DOM
