@@ -33,29 +33,51 @@
             z-index: -1;
         }
 
-        .bt-custom {
-            color: #000;
-            border: solid 2px #fff;
-            box-shadow: #000 2px 2px 1px;
+        .btn {
             border-radius: 0.75em;
             transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
         }
-        
-        .bt-custom:hover:not(:disabled) {
+
+        .btn-next {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-next:hover {
+            background-color: #45a049;
             transform: translateY(-2px);
-            box-shadow: #000 4px 4px 2px;
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
         }
-        
-        .bt-custom:active:not(:disabled) {
+
+        .btn-next:active {
             transform: translateY(0);
-            box-shadow: #000 1px 1px 0px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
-        .bt-custom:disabled {
+
+        .btn-prev {
+            background-color: #f0f0f0; /* Light Gray */
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .btn-prev:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .btn-prev:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-
+        
         .score-btn {
             min-width: 50px;
             height: 50px;
@@ -106,6 +128,13 @@
             border-radius: 12px;
             padding: 24px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .question-card.hidden {
+            transform: translateX(-100%);
+            opacity: 0;
+            position: absolute;
         }
     </style>
 </head>
@@ -120,72 +149,72 @@
         <div class="question-card">
             <input id="fullName" type="text" placeholder="ชื่อ-สกุล ผู้สูงอายุ/ผู้ป่วย"
                 class="w-full p-3 mb-4 border rounded-lg text-lg">
-            <button onclick="startAssessment()" class="bt-custom w-full p-3 text-lg font-semibold">เริ่มประเมิน</button>
+            <button onclick="startAssessment()" class="btn btn-next w-full p-3 text-lg font-semibold">เริ่มประเมิน</button>
         </div>
     </div>
 
     <div id="assessment" class="container mx-auto p-4 hidden max-w-2xl">
-        <div class="question-card mb-6">
-            <div id="question1">
+        <div class="relative">
+            <div id="question1" class="question-card">
                 <h2 class="text-xl mb-6 text-center">1. แขน มีระดับความเมื่อยล้า</h2>
                 <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(1, 0)" class="bt-custom score-btn">0</button>
-                    <button onclick="selectAnswer(1, 1)" class="bt-custom score-btn">1</button>
-                    <button onclick="selectAnswer(1, 2)" class="bt-custom score-btn">2</button>
-                    <button onclick="selectAnswer(1, 3)" class="bt-custom score-btn">3</button>
-                    <button onclick="selectAnswer(1, 4)" class="bt-custom score-btn">4</button>
+                    <button onclick="selectAnswer(1, 0)" class="btn score-btn">0</button>
+                    <button onclick="selectAnswer(1, 1)" class="btn score-btn">1</button>
+                    <button onclick="selectAnswer(1, 2)" class="btn score-btn">2</button>
+                    <button onclick="selectAnswer(1, 3)" class="btn score-btn">3</button>
+                    <button onclick="selectAnswer(1, 4)" class="btn score-btn">4</button>
                 </div>
             </div>
 
-            <div id="question2" class="hidden">
+            <div id="question2" class="question-card hidden">
                 <h2 class="text-xl mb-6 text-center">2. คอ มีระดับความเมื่อยล้า</h2>
                 <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(2, 0)" class="bt-custom score-btn">0</button>
-                    <button onclick="selectAnswer(2, 1)" class="bt-custom score-btn">1</button>
-                    <button onclick="selectAnswer(2, 2)" class="bt-custom score-btn">2</button>
-                    <button onclick="selectAnswer(2, 3)" class="bt-custom score-btn">3</button>
-                    <button onclick="selectAnswer(2, 4)" class="bt-custom score-btn">4</button>
+                    <button onclick="selectAnswer(2, 0)" class="btn score-btn">0</button>
+                    <button onclick="selectAnswer(2, 1)" class="btn score-btn">1</button>
+                    <button onclick="selectAnswer(2, 2)" class="btn score-btn">2</button>
+                    <button onclick="selectAnswer(2, 3)" class="btn score-btn">3</button>
+                    <button onclick="selectAnswer(2, 4)" class="btn score-btn">4</button>
                 </div>
             </div>
 
-            <div id="question3" class="hidden">
+            <div id="question3" class="question-card hidden">
                 <h2 class="text-xl mb-6 text-center">3. ไหล่/บ่า มีระดับความเมื่อยล้า</h2>
                 <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(3, 0)" class="bt-custom score-btn">0</button>
-                    <button onclick="selectAnswer(3, 1)" class="bt-custom score-btn">1</button>
-                    <button onclick="selectAnswer(3, 2)" class="bt-custom score-btn">2</button>
-                    <button onclick="selectAnswer(3, 3)" class="bt-custom score-btn">3</button>
-                    <button onclick="selectAnswer(3, 4)" class="bt-custom score-btn">4</button>
+                    <button onclick="selectAnswer(3, 0)" class="btn score-btn">0</button>
+                    <button onclick="selectAnswer(3, 1)" class="btn score-btn">1</button>
+                    <button onclick="selectAnswer(3, 2)" class="btn score-btn">2</button>
+                    <button onclick="selectAnswer(3, 3)" class="btn score-btn">3</button>
+                    <button onclick="selectAnswer(3, 4)" class="btn score-btn">4</button>
                 </div>
             </div>
 
-            <div id="question4" class="hidden">
+            <div id="question4" class="question-card hidden">
                 <h2 class="text-xl mb-6 text-center">4. หลัง มีระดับความเมื่อยล้า</h2>
                 <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(4, 0)" class="bt-custom score-btn">0</button>
-                    <button onclick="selectAnswer(4, 1)" class="bt-custom score-btn">1</button>
-                    <button onclick="selectAnswer(4, 2)" class="bt-custom score-btn">2</button>
-                    <button onclick="selectAnswer(4, 3)" class="bt-custom score-btn">3</button>
-                    <button onclick="selectAnswer(4, 4)" class="bt-custom score-btn">4</button>
+                    <button onclick="selectAnswer(4, 0)" class="btn score-btn">0</button>
+                    <button onclick="selectAnswer(4, 1)" class="btn score-btn">1</button>
+                    <button onclick="selectAnswer(4, 2)" class="btn score-btn">2</button>
+                    <button onclick="selectAnswer(4, 3)" class="btn score-btn">3</button>
+                    <button onclick="selectAnswer(4, 4)" class="btn score-btn">4</button>
                 </div>
             </div>
 
-            <div id="question5" class="hidden">
+            <div id="question5" class="question-card hidden">
                 <h2 class="text-xl mb-6 text-center">5. ขา มีระดับความเมื่อยล้า</h2>
                 <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(5, 0)" class="bt-custom score-btn">0</button>
-                    <button onclick="selectAnswer(5, 1)" class="bt-custom score-btn">1</button>
-                    <button onclick="selectAnswer(5, 2)" class="bt-custom score-btn">2</button>
-                    <button onclick="selectAnswer(5, 3)" class="bt-custom score-btn">3</button>
-                    <button onclick="selectAnswer(5, 4)" class="bt-custom score-btn">4</button>
+                    <button onclick="selectAnswer(5, 0)" class="btn score-btn">0</button>
+                    <button onclick="selectAnswer(5, 1)" class="btn score-btn">1</button>
+                    <button onclick="selectAnswer(5, 2)" class="btn score-btn">2</button>
+                    <button onclick="selectAnswer(5, 3)" class="btn score-btn">3</button>
+                    <button onclick="selectAnswer(5, 4)" class="btn score-btn">4</button>
                 </div>
             </div>
         </div>
         
         <!-- Navigation Buttons -->
-        <div class="flex justify-between gap-4">
-            <button id="prevButton" onclick="prevQuestion()" class="bt-custom px-6 py-3 flex-1 disabled:opacity-50" disabled>← ย้อนกลับ</button>
-            <button id="nextButton" onclick="nextQuestion()" class="bt-custom px-6 py-3 flex-1">ถัดไป →</button>
+        <div class="flex justify-between gap-4 mt-6">
+            <button id="prevButton" onclick="prevQuestion()" class="btn btn-prev flex-1" disabled>← ย้อนกลับ</button>
+            <button id="nextButton" onclick="nextQuestion()" class="btn btn-next flex-1">ถัดไป →</button>
         </div>
     </div>
 
@@ -200,8 +229,17 @@
             confirmButtonText: 'ตกลง',
             confirmButtonColor: '#90EE90'
         });
+
+        function showQuestion(questionNumber) {
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.add('hidden');
+            });
+            const cardToShow = document.getElementById(`question${questionNumber}`);
+            if(cardToShow){
+                cardToShow.classList.remove('hidden');
+            }
+        }
         
-        // Update button states
         function updateButtonStates() {
             const prevButton = document.getElementById('prevButton');
             const nextButton = document.getElementById('nextButton');
@@ -209,7 +247,6 @@
             prevButton.disabled = currentQuestion === 1;
             nextButton.textContent = currentQuestion === totalQuestions ? 'ส่งคำตอบ ✓' : 'ถัดไป →';
             
-            // Highlight selected button
             document.querySelectorAll('.score-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
@@ -224,30 +261,25 @@
         
         function prevQuestion() {
             if (currentQuestion > 1) {
-                document.getElementById(`question${currentQuestion}`).classList.add('hidden');
                 currentQuestion--;
-                document.getElementById(`question${currentQuestion}`).classList.remove('hidden');
+                showQuestion(currentQuestion);
                 updateButtonStates();
             }
         }
 
         function nextQuestion() {
-            // Validate that an answer is selected
             if (!answers[currentQuestion] && answers[currentQuestion] !== 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'กรุณาเลือกคำตอบ',
-                    confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#90EE90',
                     text: 'คุณยังไม่ได้เลือกคะแนน'
                 });
                 return;
             }
             
             if (currentQuestion < totalQuestions) {
-                document.getElementById(`question${currentQuestion}`).classList.add('hidden');
                 currentQuestion++;
-                document.getElementById(`question${currentQuestion}`).classList.remove('hidden');
+                showQuestion(currentQuestion);
                 updateButtonStates();
             } else {
                 submitAssessment();
@@ -257,7 +289,9 @@
         function selectAnswer(question, score) {
             answers[question] = score;
             updateButtonStates();
+            setTimeout(nextQuestion, 300); // Auto-advance after a short delay
         }
+
         window.onload = async () => {
             await liff.init({ liffId: '2006670422-oyNB0Q5x' });
             try {
@@ -271,7 +305,7 @@
             setTimeout(() => {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('nameInput').classList.remove('hidden');
-            }, 2000);
+            }, 1000);
         };
 
         function startAssessment() {
@@ -281,43 +315,29 @@
                     title: 'แจ้งเตือน!',
                     text: 'กรุณากรอกชื่อ-สกุล',
                     icon: 'warning',
-                    confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#90EE90'
                 });
                 return;
             }
             document.getElementById('nameInput').classList.add('hidden');
             document.getElementById('assessment').classList.remove('hidden');
-        }
-
-        function selectAnswer(question, score) {
-            answers[`q${question}`] = score;
-            if (question < 5) {
-                document.getElementById(`question${question}`).classList.add('hidden');
-                document.getElementById(`question${question + 1}`).classList.remove('hidden');
-                currentQuestion++;
-            } else {
-                submitAssessment();
-            }
+            showQuestion(currentQuestion);
+            updateButtonStates();
         }
 
         async function submitAssessment() {
             const scores = Object.values(answers);
             const maxScore = Math.max(...scores);
-            const maxQuestion = Object.keys(answers).find(key => answers[key] === maxScore);
-            const questionNum = parseInt(maxQuestion.replace('q', ''));
+            const questionNum = scores.indexOf(maxScore) + 1;
 
             const bodyParts = ['แขน', 'คอ', 'ไหล่/บ่า', 'หลัง', 'ขา'];
             const bodyPart = bodyParts[questionNum - 1];
             const result = getResult(maxScore, bodyPart);
 
-            // Send to Google Sheet
             await fetch('https://script.google.com/macros/s/AKfycbzuNXdFkqYjKf_cSjM42wumTbO29oWxuuzzlykwjmycgMa_bJ0Odk8LbJyPObPNZE-6/exec', {
                 method: 'POST',
                 body: JSON.stringify({ userId, fullName, ...answers, maxScore, bodyPart })
             });
 
-            // Send LINE Flex Message
             const flexMessage = {
                 type: 'flex',
                 altText: 'ผลการประเมินความเมื่อยล้า',
@@ -377,6 +397,7 @@
                                                 size: 'sm',
                                                 wrap: true
                                             }
+js
                                         ],
                                         paddingAll: 'md'
                                     }
@@ -393,11 +414,10 @@
             Swal.fire({
                 icon: 'success',
                 title: 'ส่งคำตอบสำเร็จ!',
-                confirmButtonText: 'ตกลง',
-                confirmButtonColor: '#90EE90',
                 text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
+            }).then(() => {
+                 liff.closeWindow();
             });
-            liff.closeWindow();
         }
 
         function getResult(score, bodyPart) {
