@@ -5,136 +5,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แบบประเมินความเมื่อยล้า</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
-            background-color: #90EE90;
+            background-color: #e8f5e9;
             font-family: 'Kanit', sans-serif;
-            min-height: 100vh;
-            position: relative;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('images/glare_6338843.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transform: rotate(90deg);
-            transform-origin: center;
-            z-index: -1;
-        }
-
-        .btn {
-            border-radius: 0.75em;
-            transition: all 0.3s ease;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-        }
-
-        .btn-next {
-            background-color: #4CAF50; /* Green */
-            color: white;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .btn-next:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
-        }
-
-        .btn-next:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .btn-prev {
-            background-color: #f0f0f0; /* Light Gray */
             color: #333;
-            border: 1px solid #ccc;
         }
 
-        .btn-prev:hover {
-            background-color: #e0e0e0;
-            transform: translateY(-2px);
-        }
-
-        .btn-prev:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .score-btn {
-            min-width: 50px;
+        .bt-custom {
+            background-color: #fff;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            width: 50px;
             height: 50px;
             font-size: 1.25rem;
-            font-weight: 600;
-        }
-        
-        .score-btn.selected {
-            background-color: #22c55e;
-            color: white;
-            border-color: #16a34a;
+            font-weight: bold;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            outline: none;
         }
 
+        .bt-custom:hover {
+            background-color: #4caf50;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .bt-custom:active, .bt-custom.selected {
+            background-color: #2e7d32;
+            color: #fff;
+            transform: translateY(0);
+            border-color: #2e7d32;
+        }
+
+        .bt-start {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .bt-start:hover {
+            background-color: #388e3c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Loading Spinner */
         #loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #90EE90;
+            background: rgba(232, 245, 233, 0.9);
             z-index: 9999;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
 
         .loader {
             border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
+            border-top: 8px solid #4caf50;
             border-radius: 50%;
             width: 60px;
             height: 60px;
-            animation: spin 2s linear infinite;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        
-        .question-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .question-card.hidden {
-            transform: translateX(-100%);
-            opacity: 0;
-            position: absolute;
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -142,282 +116,307 @@
 <body>
     <div id="loading">
         <div class="loader"></div>
+        <div class="mt-4 text-green-700 font-bold" id="loading-text">กำลังโหลด...</div>
     </div>
 
-    <div id="nameInput" class="container mx-auto p-4 hidden max-w-2xl">
-        <h1 class="text-2xl text-center mb-4">กรุณากรอกข้อมูล</h1>
-        <div class="question-card">
+    <div id="nameInput" class="container mx-auto p-4 hidden max-w-md mt-10">
+        <div class="card fade-in">
+            <h1 class="text-2xl text-center mb-2 font-bold text-green-700">แบบประเมินความเมื่อยล้า</h1>
+            <p class="text-gray-500 mb-6 text-sm text-center">กรุณากรอกชื่อ-สกุล เพื่อเริ่มการประเมิน</p>
             <input id="fullName" type="text" placeholder="ชื่อ-สกุล ผู้สูงอายุ/ผู้ป่วย"
-                class="w-full p-3 mb-4 border rounded-lg text-lg">
-            <button onclick="startAssessment()" class="btn btn-next w-full p-3 text-lg font-semibold">เริ่มประเมิน</button>
+                class="w-full p-3 mb-6 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 transition-colors">
+            <button onclick="startAssessment()" class="bt-start w-full p-3">เริ่มประเมิน</button>
         </div>
     </div>
 
-    <div id="assessment" class="container mx-auto p-4 hidden max-w-2xl">
-        <div class="relative">
-            <div id="question1" class="question-card">
-                <h2 class="text-xl mb-6 text-center">1. แขน มีระดับความเมื่อยล้า</h2>
-                <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(1, 0)" class="btn score-btn">0</button>
-                    <button onclick="selectAnswer(1, 1)" class="btn score-btn">1</button>
-                    <button onclick="selectAnswer(1, 2)" class="btn score-btn">2</button>
-                    <button onclick="selectAnswer(1, 3)" class="btn score-btn">3</button>
-                    <button onclick="selectAnswer(1, 4)" class="btn score-btn">4</button>
-                </div>
+    <div id="assessment" class="container mx-auto p-4 hidden max-w-md mt-10">
+        <!-- Question 1 -->
+        <div id="question1" class="card fade-in">
+            <div class="mb-6 flex justify-between items-center">
+                <span class="text-sm font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full">ข้อ 1 / 5</span>
             </div>
-
-            <div id="question2" class="question-card hidden">
-                <h2 class="text-xl mb-6 text-center">2. คอ มีระดับความเมื่อยล้า</h2>
-                <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(2, 0)" class="btn score-btn">0</button>
-                    <button onclick="selectAnswer(2, 1)" class="btn score-btn">1</button>
-                    <button onclick="selectAnswer(2, 2)" class="btn score-btn">2</button>
-                    <button onclick="selectAnswer(2, 3)" class="btn score-btn">3</button>
-                    <button onclick="selectAnswer(2, 4)" class="btn score-btn">4</button>
-                </div>
+            <h2 class="text-xl mb-6 font-bold text-gray-800 text-center">แขน <br><span class="text-base font-normal text-gray-500">มีระดับความเมื่อยล้าเท่าใด?</span></h2>
+            <div class="flex justify-between items-center mb-2">
+                <button onclick="selectAnswer(1, 0, this)" class="bt-custom">0</button>
+                <button onclick="selectAnswer(1, 1, this)" class="bt-custom">1</button>
+                <button onclick="selectAnswer(1, 2, this)" class="bt-custom">2</button>
+                <button onclick="selectAnswer(1, 3, this)" class="bt-custom">3</button>
+                <button onclick="selectAnswer(1, 4, this)" class="bt-custom">4</button>
             </div>
-
-            <div id="question3" class="question-card hidden">
-                <h2 class="text-xl mb-6 text-center">3. ไหล่/บ่า มีระดับความเมื่อยล้า</h2>
-                <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(3, 0)" class="btn score-btn">0</button>
-                    <button onclick="selectAnswer(3, 1)" class="btn score-btn">1</button>
-                    <button onclick="selectAnswer(3, 2)" class="btn score-btn">2</button>
-                    <button onclick="selectAnswer(3, 3)" class="btn score-btn">3</button>
-                    <button onclick="selectAnswer(3, 4)" class="btn score-btn">4</button>
-                </div>
-            </div>
-
-            <div id="question4" class="question-card hidden">
-                <h2 class="text-xl mb-6 text-center">4. หลัง มีระดับความเมื่อยล้า</h2>
-                <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(4, 0)" class="btn score-btn">0</button>
-                    <button onclick="selectAnswer(4, 1)" class="btn score-btn">1</button>
-                    <button onclick="selectAnswer(4, 2)" class="btn score-btn">2</button>
-                    <button onclick="selectAnswer(4, 3)" class="btn score-btn">3</button>
-                    <button onclick="selectAnswer(4, 4)" class="btn score-btn">4</button>
-                </div>
-            </div>
-
-            <div id="question5" class="question-card hidden">
-                <h2 class="text-xl mb-6 text-center">5. ขา มีระดับความเมื่อยล้า</h2>
-                <div class="flex justify-center gap-3">
-                    <button onclick="selectAnswer(5, 0)" class="btn score-btn">0</button>
-                    <button onclick="selectAnswer(5, 1)" class="btn score-btn">1</button>
-                    <button onclick="selectAnswer(5, 2)" class="btn score-btn">2</button>
-                    <button onclick="selectAnswer(5, 3)" class="btn score-btn">3</button>
-                    <button onclick="selectAnswer(5, 4)" class="btn score-btn">4</button>
-                </div>
+            <div class="flex justify-between text-xs text-gray-400 font-medium px-1">
+                <span>ไม่เมื่อย</span>
+                <span>เมื่อยมาก</span>
             </div>
         </div>
-        
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between gap-4 mt-6">
-            <button id="prevButton" onclick="prevQuestion()" class="btn btn-prev flex-1" disabled>← ย้อนกลับ</button>
-            <button id="nextButton" onclick="nextQuestion()" class="btn btn-next flex-1">ถัดไป →</button>
+
+        <!-- Question 2 -->
+        <div id="question2" class="card hidden">
+            <div class="mb-6 flex justify-between items-center">
+                <span class="text-sm font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full">ข้อ 2 / 5</span>
+            </div>
+            <h2 class="text-xl mb-6 font-bold text-gray-800 text-center">คอ <br><span class="text-base font-normal text-gray-500">มีระดับความเมื่อยล้าเท่าใด?</span></h2>
+            <div class="flex justify-between items-center mb-2">
+                <button onclick="selectAnswer(2, 0, this)" class="bt-custom">0</button>
+                <button onclick="selectAnswer(2, 1, this)" class="bt-custom">1</button>
+                <button onclick="selectAnswer(2, 2, this)" class="bt-custom">2</button>
+                <button onclick="selectAnswer(2, 3, this)" class="bt-custom">3</button>
+                <button onclick="selectAnswer(2, 4, this)" class="bt-custom">4</button>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400 font-medium px-1">
+                <span>ไม่เมื่อย</span>
+                <span>เมื่อยมาก</span>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div id="question3" class="card hidden">
+            <div class="mb-6 flex justify-between items-center">
+                <span class="text-sm font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full">ข้อ 3 / 5</span>
+            </div>
+            <h2 class="text-xl mb-6 font-bold text-gray-800 text-center">ไหล่/บ่า <br><span class="text-base font-normal text-gray-500">มีระดับความเมื่อยล้าเท่าใด?</span></h2>
+            <div class="flex justify-between items-center mb-2">
+                <button onclick="selectAnswer(3, 0, this)" class="bt-custom">0</button>
+                <button onclick="selectAnswer(3, 1, this)" class="bt-custom">1</button>
+                <button onclick="selectAnswer(3, 2, this)" class="bt-custom">2</button>
+                <button onclick="selectAnswer(3, 3, this)" class="bt-custom">3</button>
+                <button onclick="selectAnswer(3, 4, this)" class="bt-custom">4</button>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400 font-medium px-1">
+                <span>ไม่เมื่อย</span>
+                <span>เมื่อยมาก</span>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div id="question4" class="card hidden">
+            <div class="mb-6 flex justify-between items-center">
+                <span class="text-sm font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full">ข้อ 4 / 5</span>
+            </div>
+            <h2 class="text-xl mb-6 font-bold text-gray-800 text-center">หลัง <br><span class="text-base font-normal text-gray-500">มีระดับความเมื่อยล้าเท่าใด?</span></h2>
+            <div class="flex justify-between items-center mb-2">
+                <button onclick="selectAnswer(4, 0, this)" class="bt-custom">0</button>
+                <button onclick="selectAnswer(4, 1, this)" class="bt-custom">1</button>
+                <button onclick="selectAnswer(4, 2, this)" class="bt-custom">2</button>
+                <button onclick="selectAnswer(4, 3, this)" class="bt-custom">3</button>
+                <button onclick="selectAnswer(4, 4, this)" class="bt-custom">4</button>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400 font-medium px-1">
+                <span>ไม่เมื่อย</span>
+                <span>เมื่อยมาก</span>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div id="question5" class="card hidden">
+            <div class="mb-6 flex justify-between items-center">
+                <span class="text-sm font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full">ข้อ 5 / 5</span>
+            </div>
+            <h2 class="text-xl mb-6 font-bold text-gray-800 text-center">ขา <br><span class="text-base font-normal text-gray-500">มีระดับความเมื่อยล้าเท่าใด?</span></h2>
+            <div class="flex justify-between items-center mb-2">
+                <button onclick="selectAnswer(5, 0, this)" class="bt-custom">0</button>
+                <button onclick="selectAnswer(5, 1, this)" class="bt-custom">1</button>
+                <button onclick="selectAnswer(5, 2, this)" class="bt-custom">2</button>
+                <button onclick="selectAnswer(5, 3, this)" class="bt-custom">3</button>
+                <button onclick="selectAnswer(5, 4, this)" class="bt-custom">4</button>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400 font-medium px-1">
+                <span>ไม่เมื่อย</span>
+                <span>เมื่อยมาก</span>
+            </div>
         </div>
     </div>
 
     <script>
         let currentQuestion = 1;
-        const totalQuestions = 5;
         let answers = {};
         let fullName = '';
         let userId = '';
-        
+
         Swal.mixin({
             confirmButtonText: 'ตกลง',
-            confirmButtonColor: '#90EE90'
+            confirmButtonColor: '#4caf50'
         });
 
-        function showQuestion(questionNumber) {
-            document.querySelectorAll('.question-card').forEach(card => {
-                card.classList.add('hidden');
-            });
-            const cardToShow = document.getElementById(`question${questionNumber}`);
-            if(cardToShow){
-                cardToShow.classList.remove('hidden');
-            }
-        }
-        
-        function updateButtonStates() {
-            const prevButton = document.getElementById('prevButton');
-            const nextButton = document.getElementById('nextButton');
-            
-            prevButton.disabled = currentQuestion === 1;
-            nextButton.textContent = currentQuestion === totalQuestions ? 'ส่งคำตอบ ✓' : 'ถัดไป →';
-            
-            document.querySelectorAll('.score-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            if (answers[currentQuestion] !== undefined) {
-                const currentQuestionEl = document.getElementById(`question${currentQuestion}`);
-                const selectedBtn = currentQuestionEl.querySelector(`button[onclick*="selectAnswer(${currentQuestion}, ${answers[currentQuestion]})"]`);
-                if (selectedBtn) {
-                    selectedBtn.classList.add('selected');
-                }
-            }
-        }
-        
-        function prevQuestion() {
-            if (currentQuestion > 1) {
-                currentQuestion--;
-                showQuestion(currentQuestion);
-                updateButtonStates();
-            }
-        }
-
-        function nextQuestion() {
-            if (!answers[currentQuestion] && answers[currentQuestion] !== 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'กรุณาเลือกคำตอบ',
-                    text: 'คุณยังไม่ได้เลือกคะแนน'
-                });
-                return;
-            }
-            
-            if (currentQuestion < totalQuestions) {
-                currentQuestion++;
-                showQuestion(currentQuestion);
-                updateButtonStates();
-            } else {
-                submitAssessment();
-            }
-        }
-
-        function selectAnswer(question, score) {
-            answers[question] = score;
-            updateButtonStates();
-            setTimeout(nextQuestion, 300); // Auto-advance after a short delay
-        }
-
         window.onload = async () => {
-            await liff.init({ liffId: '2006670422-oyNB0Q5x' });
             try {
-                const profile = await liff.getProfile();
-                userId = profile.userId;
+                await liff.init({ liffId: '2006670422-oyNB0Q5x' });
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    userId = profile.userId;
+                } else {
+                    console.log("LIFF is not logged in.");
+                }
             } catch (error) {
                 console.error('Error getting profile:', error);
-                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถดึงข้อมูลผู้ใช้ได้', 'error');
-                return;
+            } finally {
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('nameInput').classList.remove('hidden');
+                }, 600);
             }
-            setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('nameInput').classList.remove('hidden');
-            }, 1000);
         };
 
         function startAssessment() {
-            fullName = document.getElementById('fullName').value;
+            fullName = document.getElementById('fullName').value.trim();
             if (!fullName) {
                 Swal.fire({
                     title: 'แจ้งเตือน!',
                     text: 'กรุณากรอกชื่อ-สกุล',
                     icon: 'warning',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#4caf50'
                 });
                 return;
             }
             document.getElementById('nameInput').classList.add('hidden');
             document.getElementById('assessment').classList.remove('hidden');
-            showQuestion(currentQuestion);
-            updateButtonStates();
+        }
+
+        function selectAnswer(question, score, btn) {
+            // Visual feedback on button
+            const buttons = document.querySelectorAll(`#question${question} .bt-custom`);
+            buttons.forEach(b => b.classList.remove('selected', 'bg-green-700', 'text-white'));
+            btn.classList.add('selected', 'bg-green-700', 'text-white');
+
+            answers[`q${question}`] = score;
+            
+            // Short delay before moving to next screen
+            setTimeout(() => {
+                if (question < 5) {
+                    document.getElementById(`question${question}`).classList.add('hidden');
+                    const nextQ = document.getElementById(`question${question + 1}`);
+                    nextQ.classList.remove('hidden');
+                    nextQ.classList.add('fade-in');
+                    currentQuestion++;
+                } else {
+                    submitAssessment();
+                }
+            }, 300);
         }
 
         async function submitAssessment() {
-            const scores = Object.values(answers);
-            const maxScore = Math.max(...scores);
-            const questionNum = scores.indexOf(maxScore) + 1;
+            document.getElementById('loading-text').innerText = "กำลังบันทึกข้อมูล...";
+            document.getElementById('loading').style.display = 'flex';
 
-            const bodyParts = ['แขน', 'คอ', 'ไหล่/บ่า', 'หลัง', 'ขา'];
-            const bodyPart = bodyParts[questionNum - 1];
-            const result = getResult(maxScore, bodyPart);
+            try {
+                const scores = Object.values(answers);
+                const maxScore = Math.max(...scores);
+                const maxQuestion = Object.keys(answers).find(key => answers[key] === maxScore);
+                const questionNum = parseInt(maxQuestion.replace('q', ''));
 
-            await fetch('https://script.google.com/macros/s/AKfycbzuNXdFkqYjKf_cSjM42wumTbO29oWxuuzzlykwjmycgMa_bJ0Odk8LbJyPObPNZE-6/exec', {
-                method: 'POST',
-                body: JSON.stringify({ userId, fullName, ...answers, maxScore, bodyPart })
-            });
+                const bodyParts = ['แขน', 'คอ', 'ไหล่/บ่า', 'หลัง', 'ขา'];
+                const bodyPart = bodyParts[questionNum - 1];
+                const result = getResult(maxScore, bodyPart);
 
-            const flexMessage = {
-                type: 'flex',
-                altText: 'ผลการประเมินความเมื่อยล้า',
-                contents: {
-                    type: 'bubble',
-                    body: {
-                        type: 'box',
-                        layout: 'vertical',
-                        spacing: 'sm',
-                        contents: [
-                            {
-                                type: 'text',
-                                text: 'ผลประเมินของคุณ',
-                                weight: 'bold',
-                                size: 'xl',
-                                align: 'center',
-                                margin: 'md'
-                            },
-                            {
-                                type: 'text',
-                                text: fullName,
-                                size: 'lg',
-                                align: 'center',
-                                margin: 'sm'
-                            },
-                            {
-                                type: 'separator',
-                                margin: 'md'
-                            },
-                            {
+                // Send to Google Sheet
+                await fetch('https://script.google.com/macros/s/AKfycbzuNXdFkqYjKf_cSjM42wumTbO29oWxuuzzlykwjmycgMa_bJ0Odk8LbJyPObPNZE-6/exec', {
+                    method: 'POST',
+                    body: JSON.stringify({ userId, fullName, ...answers, maxScore, bodyPart })
+                });
+
+                // Send LINE Flex Message (Only if in LINE Client)
+                if (liff.isLoggedIn() && liff.isInClient()) {
+                    const flexMessage = {
+                        type: 'flex',
+                        altText: 'ผลการประเมินความเมื่อยล้า',
+                        contents: {
+                            type: 'bubble',
+                            body: {
                                 type: 'box',
                                 layout: 'vertical',
+                                spacing: 'sm',
                                 contents: [
                                     {
-                                        type: 'box',
-                                        layout: 'horizontal',
-                                        contents: [
-                                            {
-                                                type: 'text',
-                                                text: `ความเมื่อยล้าระดับ ${result.level}`,
-                                                size: 'md',
-                                                weight: 'bold'
-                                            }
-                                        ],
-                                        paddingAll: 'md'
+                                        type: 'text',
+                                        text: 'ผลประเมินของคุณ',
+                                        weight: 'bold',
+                                        size: 'xl',
+                                        align: 'center',
+                                        margin: 'md',
+                                        color: '#166534'
                                     },
                                     {
-                                        type: 'separator'
+                                        type: 'text',
+                                        text: fullName,
+                                        size: 'lg',
+                                        align: 'center',
+                                        margin: 'sm'
+                                    },
+                                    {
+                                        type: 'separator',
+                                        margin: 'md'
                                     },
                                     {
                                         type: 'box',
                                         layout: 'vertical',
                                         contents: [
                                             {
-                                                type: 'text',
-                                                text: `${bodyPart}ของคุณ ${result.description}`,
-                                                size: 'sm',
-                                                wrap: true
+                                                type: 'box',
+                                                layout: 'horizontal',
+                                                contents: [
+                                                    {
+                                                        type: 'text',
+                                                        text: `ความเมื่อยล้าระดับ ${result.level}`,
+                                                        size: 'md',
+                                                        weight: 'bold',
+                                                        color: '#166534'
+                                                    }
+                                                ],
+                                                paddingAll: 'md'
+                                            },
+                                            {
+                                                type: 'separator'
+                                            },
+                                            {
+                                                type: 'box',
+                                                layout: 'vertical',
+                                                contents: [
+                                                    {
+                                                        type: 'text',
+                                                        text: `${bodyPart}ของคุณ ${result.description}`,
+                                                        size: 'sm',
+                                                        wrap: true,
+                                                        color: '#4b5563'
+                                                    }
+                                                ],
+                                                paddingAll: 'md'
                                             }
-js
-                                        ],
-                                        paddingAll: 'md'
+                                        ]
                                     }
-                                ]
+                                ],
+                                backgroundColor: '#e8f5e9'
                             }
-                        ],
-                        backgroundColor: '#90EE90'
-                    }
+                        }
+                    };
+                    await liff.sendMessages([flexMessage]);
                 }
-            };
 
-            await liff.sendMessages([flexMessage]);
+                document.getElementById('loading').style.display = 'none';
 
-            Swal.fire({
-                icon: 'success',
-                title: 'ส่งคำตอบสำเร็จ!',
-                text: 'ผลคะแนนของคุณได้ถูกส่งไปยังแชทแล้ว'
-            }).then(() => {
-                 liff.closeWindow();
-            });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ส่งคำตอบสำเร็จ!',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#4caf50',
+                    text: 'ผลคะแนนของคุณได้ถูกบันทึกแล้ว'
+                }).then(() => {
+                    if (liff.isInClient()) {
+                        liff.closeWindow();
+                    } else {
+                        location.reload(); // reset for browser testing
+                    }
+                });
+            } catch(error) {
+                document.getElementById('loading').style.display = 'none';
+                console.error('Submit Error:', error);
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#4caf50'
+                });
+            }
         }
 
         function getResult(score, bodyPart) {
