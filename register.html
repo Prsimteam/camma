@@ -121,7 +121,7 @@
 
          h2, h3, label, button {
             font-family: 'Kanit', sans-serif;
-            color: #003366;
+            color: #003366; /* หัวข้อสีฟ้าเข้ม */
         }
     h1 {
     font-family: 'Kanit', sans-serif;
@@ -131,23 +131,20 @@ p {
     font-family: 'Kanit', sans-serif;
     font-weight: 400;
 }
+    /* กำหนดธีมสีใหม่ */
     body {
-        background-color: #90EE90;
-        background-image: url('../images/glare_6338843.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        color: #000000;
+        background-color: #90EE90; /* พื้นหลังสีฟ้าอ่อน */
+        color: #000000; /* อักษรสีขาว */
         font-family: 'Kanit', sans-serif;
-        min-height: 100vh;
+        
     }
 
 
     a {
-        color: #8B0000;
+        color: #8B0000; /* ลิงก์สีแดงเข้ม */
     }
 
-input, select {
+input {
   border-radius: 0.75em !important;
 }
 
@@ -202,7 +199,7 @@ input, select {
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            display: none;
+            display: none; /* ซ่อน overlay เริ่มต้น */
         }
         .loading-spinner {
             border: 8px solid #f3f3f3;
@@ -216,29 +213,12 @@ input, select {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
 button {
   color: #000;
   border: solid 2px #fff;
   box-shadow: #000 2px 2px 1px;
   border-radius: 0.75em;
   background-color:#90EE90 !important;
-  transition: all 0.3s ease;
-}
-
-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: #000 4px 4px 2px;
-}
-
-button:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: #000 1px 1px 0px;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 </style>
 
@@ -291,6 +271,22 @@ button:disabled {
                     <label for="department" class="block text-gray-700 text-sm mb-2">ขึ้นตรงหน่วยงาน(ชื่อ) </label>
                     <input type="text" id="department" name="department" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm mb-2">จังหวัด</label>
+                    <input type="text" value="ขอนแก่น" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500 bg-gray-100 leading-tight" readonly disabled>
+                </div>
+                <div class="mb-4">
+                    <label for="district" class="block text-gray-700 text-sm mb-2">อำเภอ</label>
+                    <select id="district" name="district" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="" selected disabled>-- เลือกอำเภอ --</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="subDistrict" class="block text-gray-700 text-sm mb-2">ตำบล</label>
+                    <select id="subDistrict" name="subDistrict" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required disabled>
+                        <option value="" selected disabled>-- เลือกอำเภอก่อน --</option>
+                    </select>
+                </div>
                 <div class="flex items-center justify-center">
                     <button type="submit" id="bt_custom" class="hover:bg-green-700 py-2 px-4  focus:outline-none focus:shadow-outline">ลงทะเบียน</button>
                 </div>
@@ -306,31 +302,88 @@ button:disabled {
     <!-- LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
-        let userId = '';
 
-        function changeDepartment() {
-            const positionSelect = document.getElementById('position');
-            const departmentInput = document.getElementById('department');
-            
-            // ถ้าเลือก FCG ให้ disable และใส่ค่า default
-            if (positionSelect.value === 'FCG') {
-                departmentInput.value = 'ผู้ดูแลในครอบครัว';
-                departmentInput.disabled = true;
-            } else {
-                departmentInput.value = '';
-                departmentInput.disabled = false;
-            }
+document.getElementById('position').addEventListener('change', change2);
+
+        function change2() {
+            if (this.value == "user") {
+                    document.getElementById('department').value = "บุคคลทั่วไป";
+                    document.getElementById('department').disabled = true;
+                } else {
+                document.getElementById('department').value = "";
+                    document.getElementById('department').disabled = false;
+                }
         }
-        
-        // เรียกใช้เมื่อเปลี่ยนค่า select
-        document.getElementById('position').addEventListener('change', changeDepartment);
-        
-        // ตั้งค่าเริ่มต้น
-        changeDepartment();
       
     const liffId = '2006670422-W8z1J0rl'; // เปลี่ยนจุดที่ 1 liff register
 
-        
+        const PROVINCE_NAME = "ขอนแก่น";
+
+        const KHONKAEN_GEO = {
+            "เมืองขอนแก่น": ["ในเมือง","สำราญ","โคกสี","ท่าพระ","บ้านทุ่ม","เมืองเก่า","พระลับ","สาวะถี","บ้านหว้า","บ้านค้อ","แดงใหญ่","ดอนช้าง","ดอนหัน","ศิลา","บ้านเป็ด","หนองตูม","บึงเนียม","โนนท่อน"],
+            "บ้านฝาง": ["หนองบัว","ป่าหวายนั่ง","โนนฆ้อง","บ้านเหล่า","ป่ามะนาว","บ้านฝาง","โคกงาม"],
+            "พระยืน": ["พระยืน","พระบุ","บ้านโต้น","หนองแวง","ขามป้อม"],
+            "หนองเรือ": ["หนองเรือ","บ้านเม็ง","บ้านกง","ยางคำ","จระเข้","โนนทอง","กุดกว้าง","โนนทัน","โนนสะอาด","บ้านผือ"],
+            "ชุมแพ": ["ชุมแพ","โนนหัน","นาหนองทุ่ม","โนนอุดม","ขัวเรียง","หนองไผ่","ไชยสอ","วังหินลาด","นาเพียง","หนองเขียด","หนองเสาเล้า","โนนสะอาด"],
+            "สีชมพู": ["สีชมพู","ศรีสุข","นาจาน","วังเพิ่ม","ซำยาง","หนองแดง","ดงลาน","บริบูรณ์","บ้านใหม่","ภูห่าน"],
+            "น้ำพอง": ["น้ำพอง","วังชัย","หนองกุง","บัวใหญ่","สะอาด","ม่วงหวาน","บ้านขาม","บัวเงิน","ทรายมูล","ท่ากระเสริม","พังทุย","กุดน้ำใส"],
+            "อุบลรัตน์": ["โคกสูง","บ้านดง","เขื่อนอุบลรัตน์","นาคำ","ศรีสุขสำราญ","ทุ่งโป่ง"],
+            "กระนวน": ["หนองโก","หนองกุงใหญ่","ห้วยโจด","ห้วยยาง","บ้านฝาง","ดูนสาด","หนองโน","น้ำอ้อม","หัวนาคำ"],
+            "บ้านไผ่": ["บ้านไผ่","ในเมือง","เมืองเพีย","บ้านลาน","แคนเหนือ","ภูเหล็ก","ป่าปอ","หินตั้ง","หนองน้ำใส","หัวหนอง"],
+            "เปือยน้อย": ["เปือยน้อย","วังม่วง","ขามป้อม","สระแก้ว"],
+            "พล": ["เมืองพล","โจดหนองแก","เก่างิ้ว","หนองมะเขือ","หนองแวงโสกพระ","เพ็กใหญ่","โคกสง่า","หนองแวงนางเบ้า","ลอมคอม","โนนข่า","โสกนกเต็น","หัวทุ่ง"],
+            "แวงใหญ่": ["คอนฉิม","ใหม่นาเพียง","โนนทอง","แวงใหญ่","โนนสะอาด"],
+            "แวงน้อย": ["แวงน้อย","ก้านเหลือง","ท่านางแนว","ละหานนา","ท่าวัด","ทางขวาง"],
+            "หนองสองห้อง": ["หนองสองห้อง","คึมชาด","โนนธาตุ","ตะกั่วป่า","สำโรง","หนองเม็ก","ดอนดู่","ดงเค็ง","หันโจด","ดอนดั่ง","วังหิน","หนองไผ่ล้อม"],
+            "ภูเวียง": ["บ้านเรือ","หว้าทอง","กุดขอนแก่น","นาชุมแสง","นาหว้า","หนองกุงธนสาร","หนองกุงเซิน","สงเปือย","ทุ่งชมพู","ดินดำ","ภูเวียง"],
+            "มัญจาคีรี": ["กุดเค้า","สวนหม่อน","หนองแปน","โพนเพ็ก","คำแคน","นาข่า","นางาม","ท่าศาลา"],
+            "ชนบท": ["ชนบท","กุดเพียขอม","วังแสง","ห้วยแก","บ้านแท่น","ศรีบุญเรือง","โนนพะยอม","ปอแดง"],
+            "เขาสวนกวาง": ["เขาสวนกวาง","ดงเมืองแอม","นางิ้ว","โนนสมบูรณ์","คำม่วง"],
+            "ภูผาม่าน": ["โนนคอม","นาฝาย","ภูผาม่าน","วังสวาบ","ห้วยม่วง"],
+            "ซำสูง": ["กระนวน","คำแมด","บ้านโนน","คูคำ","ห้วยเตย"],
+            "โคกโพธิ์ไชย": ["บ้านโคก","โพธิ์ไชย","ซับสมบูรณ์","นาแพง"],
+            "หนองนาคำ": ["กุดธาตุ","บ้านโคก","ขนวน"],
+            "บ้านแฮด": ["บ้านแฮด","โคกสำราญ","โนนสมบูรณ์","หนองแซง"],
+            "โนนศิลา": ["โนนศิลา","หนองปลาหมอ","บ้านหัน","เปือยใหญ่","โนนแดง"],
+            "เวียงเก่า": ["ในเมือง","เมืองเก่าพัฒนา","เขาน้อย"]
+        };
+
+        function populateDistrictOptions() {
+            const districtSelect = document.getElementById('district');
+            Object.keys(KHONKAEN_GEO).forEach(function(name) {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = 'อำเภอ' + name;
+                districtSelect.appendChild(opt);
+            });
+        }
+
+        function populateSubDistrictOptions(districtName) {
+            const subDistrictSelect = document.getElementById('subDistrict');
+            subDistrictSelect.innerHTML = '';
+            const tambons = KHONKAEN_GEO[districtName] || [];
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.disabled = true;
+            placeholder.selected = true;
+            placeholder.textContent = tambons.length ? '-- เลือกตำบล --' : '-- เลือกอำเภอก่อน --';
+            subDistrictSelect.appendChild(placeholder);
+            tambons.forEach(function(name) {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = 'ตำบล' + name;
+                subDistrictSelect.appendChild(opt);
+            });
+            subDistrictSelect.disabled = tambons.length === 0;
+        }
+
+        populateDistrictOptions();
+
+        document.getElementById('district').addEventListener('change', function() {
+            populateSubDistrictOptions(this.value);
+        });
+
+
         function updateTime() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -373,330 +426,197 @@ button:disabled {
         initializeLiff();
 
         
-        async function sendToGoogleSheet(userId, firstName, lastName, position, department) {
-            try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbzEra2WSYdWw3NSxgItCcl5BWEIs41ZajR6lPYLx5GqVu0e6l-GGV-z6Eu6fdTseMVt/exec', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({
-                        userId: userId,
-                        firstName: firstName,
-                        lastName: lastName,
-                        position: position,
-                        department: department,
-                    })
-                });
+        async function sendToGoogleSheet(userId, firstName, lastName, position, department, district, subDistrict) {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbzEra2WSYdWw3NSxgItCcl5BWEIs41ZajR6lPYLx5GqVu0e6l-GGV-z6Eu6fdTseMVt/exec', {  // เปลี่ยนจุดที่ 2 (3.Register)
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    userId: userId,
+                    firstName: firstName,
+                    lastName: lastName,
+                    position: position,
+                    department: department,
+                    district: district,
+                    subDistrict: subDistrict,
+                    province: PROVINCE_NAME,
+                })
+            });
 
-                // no-cors mode doesn't return readable response, but we assume success
-                console.log('Data sent to Google Sheets');
-            } catch (error) {
-                console.error('Error sending data to Google Sheets:', error);
-                throw error;
+            if (!response.ok) {
+                throw new Error('Registration request failed with status ' + response.status);
             }
+
+            return response.json();
         }
 
-      
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-
-            console.log('=== Form Submit Started ===');
-
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const position = document.getElementById('position').value;
-            const department = document.getElementById('department').value.trim();
-
-            console.log('Form data:', { firstName, lastName, position, department });
-
-            // Validate required fields
-            if (!firstName || !lastName || !department) {
-                console.log('Validation failed: missing fields');
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-                    confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#90EE90'
-                });
-                return;
-            }
-
-            // Get user ID from LIFF
-            let userId;
-            try {
-                const idToken = liff.getDecodedIDToken();
-                console.log('ID Token:', idToken);
-                
-                if (!idToken || !idToken.sub) {
-                    console.log('ID Token invalid:', idToken);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'ข้อผิดพลาด',
-                        text: 'ไม่พบข้อมูลผู้ใช้ กรุณาลองใหม่อีกครั้ง',
-                        confirmButtonText: 'ตกลง',
-                        confirmButtonColor: '#90EE90'
-                    });
-                    return;
-                }
-                userId = idToken.sub;
-            } catch (error) {
-                console.error('Error getting ID token:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ข้อผิดพลาด',
-                    text: 'ไม่พบข้อมูลผู้ใช้ (ต้องเปิดผ่าน LINE เท่านั้น)',
-                    confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#90EE90'
-                });
-                return;
-            }
-
-            const profileImage = document.getElementById('profileImage').src;
-
-            showLoading();
-
-            try {
-                console.log('Sending to Google Sheets...');
-                await sendToGoogleSheet(userId, firstName, lastName, position, department);
-                console.log('Google Sheets sent successfully');
-
-                // Send Flex Message
-                console.log('Sending Flex Message...');
-                await sendFlexMessage('Register');
-                console.log('Flex Message sent successfully');
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'ลงทะเบียนสำเร็จ!',
-                    text: 'ผลการลงทะเบียนได้ถูกส่งไปยังแชทแล้ว',
-                    confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#90EE90'
-                }).then(() => {
-                    document.getElementById('registrationForm').reset();
-                    changeDepartment(); // Reset department field
-                    liff.closeWindow(); // Close LIFF window
-                });
-            } catch (error) {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถลงทะเบียนได้ กรุณาลองใหม่อีกครั้ง',
-                    confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#90EE90'
-                });
-            } finally {
-                hideLoading();
-            }
-        });
-
-        async function sendFlexMessage(type) {
-            const now = new Date();
-            const time = now.toLocaleTimeString('en-GB', { hour12: false });
-            const date = now.toLocaleDateString('th-TH');
 
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
             const position = document.getElementById('position').value;
+            const positionLabel = document.getElementById('position').selectedOptions[0].text;
             const department = document.getElementById('department').value;
-            
-            let profile;
+            const district = document.getElementById('district').value;
+            const subDistrict = document.getElementById('subDistrict').value;
+            const userId = liff.getDecodedIDToken().sub;
+
+            showLoading();
+
             try {
-                profile = await liff.getProfile();
+                await sendToGoogleSheet(userId, firstName, lastName, position, department, district, subDistrict);
+
+                hideLoading();
+                document.getElementById('registrationForm').reset();
+                document.getElementById('district').selectedIndex = 0;
+                populateSubDistrictOptions('');
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'ลงทะเบียนสำเร็จ',
+                    text: 'ระบบบันทึกข้อมูลของคุณเรียบร้อยแล้ว',
+                    confirmButtonColor: '#2c3e50',
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+
+                try {
+                    await sendFlexMessage({ firstName, lastName, positionLabel, department, district, subDistrict });
+                } catch (flexError) {
+                    // ข้อมูลลงทะเบียนบันทึกสำเร็จไปแล้ว แค่การ์ดสรุปส่งเข้าแชทไม่ได้ (เช่น LIFF ไม่ได้เปิดจากห้องแชท) ไม่ถือเป็น error ร้ายแรง
+                    console.error('Error sending confirmation flex message:', flexError);
+                }
+
+                liff.closeWindow();
             } catch (error) {
-                console.error('Error getting profile:', error);
-                profile = {
-                    displayName: firstName + ' ' + lastName,
-                    pictureUrl: "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif"
-                };
+                console.error('Error registering:', error);
+                hideLoading();
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'ลงทะเบียนไม่สำเร็จ',
+                    text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง',
+                    confirmButtonColor: '#8B0000'
+                });
             }
-            
-            // Position-based color and icon
-            let positionColor = '#4CAF50';
-            let positionIcon = '🎉';
-            if (position === 'FCG') {
-                positionColor = '#FF6B6B';
-                positionIcon = '🏠';
-            } else if (position === 'CG') {
-                positionColor = '#4ECDC4';
-                positionIcon = '👨‍⚕️';
-            } else if (position === 'CM') {
-                positionColor = '#45B7D1';
-                positionIcon = '📋';
-            } else if (position === 'CCO') {
-                positionColor = '#96CEB4';
-                positionIcon = '👔';
-            }
+        });
+
+        function flexInfoRow(label, value) {
+            return {
+                type: "box",
+                layout: "horizontal",
+                spacing: "sm",
+                contents: [
+                    { type: "text", text: label, size: "sm", color: "#8b93a1", flex: 2 },
+                    { type: "text", text: value, size: "sm", color: "#1a1a1a", weight: "bold", wrap: true, flex: 3 }
+                ]
+            };
+        }
+
+        async function sendFlexMessage({ firstName, lastName, positionLabel, department, district, subDistrict }) {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-GB', { hour12: false });
+            const profile = await liff.getProfile();
 
             const message = {
                 type: 'flex',
-                altText: `ลงทะเบียนสำเร็จเมื่อ ${time}`,
+                altText: `ลงทะเบียนสำเร็จ - ${firstName} ${lastName}`,
                 contents: {
-                    "type": "bubble",
-                    "theme": "success",
-                    "header": {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
+                    type: "bubble",
+                    header: {
+                        type: "box",
+                        layout: "horizontal",
+                        backgroundColor: "#2c3e50",
+                        paddingAll: "16px",
+                        spacing: "md",
+                        alignItems: "center",
+                        contents: [
                             {
-                                "type": "text",
-                                "text": "✅ ลงทะเบียนสำเร็จ",
-                                "weight": "bold",
-                                "size": "lg",
-                                "color": "#ffffff",
-                                "align": "center",
-                                "margin": "md"
-                            }
-                        ],
-                        "backgroundColor": "#4CAF50",
-                        "paddingAll": "12px"
-                    },
-                    "body": {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
-                            {
-                                "type": "box",
-                                "layout": "horizontal",
-                                "contents": [
-                                    {
-                                        "type": "box",
-                                        "layout": "vertical",
-                                        "contents": [
-                                            {
-                                                "type": "image",
-                                                "url": profile.pictureUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
-                                                "aspectMode": "cover",
-                                                "size": "full",
-                                                "cornerRadius": "20px"
-                                            }
-                                        ],
-                                        "width": "80px",
-                                        "height": "80px",
-                                        "cornerRadius": "20px"
-                                    },
-                                    {
-                                        "type": "box",
-                                        "layout": "vertical",
-                                        "contents": [
-                                            {
-                                                "type": "text",
-                                                "text": `${firstName} ${lastName}`,
-                                                "weight": "bold",
-                                                "size": "lg",
-                                                "color": "#1a1a2e",
-                                                "wrap": false
-                                            },
-                                            {
-                                                "type": "text",
-                                                "text": `ตำแหน่ง: ${positionIcon} ${position}`,
-                                                "size": "sm",
-                                                "color": positionColor,
-                                                "weight": "bold",
-                                                "margin": "sm",
-                                                "wrap": false
-                                            },
-                                            {
-                                                "type": "text",
-                                                "text": `หน่วยงาน: ${department}`,
-                                                "size": "sm",
-                                                "color": "#666666",
-                                                "margin": "sm",
-                                                "wrap": true
-                                            }
-                                        ],
-                                        "spacing": "sm",
-                                        "justifyContent": "center"
-                                    }
-                                ],
-                                "spacing": "md",
-                                "paddingAll": "md",
-                                "backgroundColor": "#f8f9fa",
-                                "cornerRadius": "12px",
-                                "margin": "md"
+                                type: "box",
+                                layout: "vertical",
+                                width: "28px",
+                                height: "28px",
+                                cornerRadius: "14px",
+                                backgroundColor: "#3498db",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                contents: [
+                                    { type: "text", text: "✓", color: "#ffffff", weight: "bold", size: "sm", align: "center" }
+                                ]
                             },
                             {
-                                "type": "separator",
-                                "margin": "lg"
-                            },
+                                type: "text",
+                                text: "ลงทะเบียนสำเร็จ",
+                                color: "#ffffff",
+                                weight: "bold",
+                                size: "lg",
+                                flex: 1
+                            }
+                        ]
+                    },
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        paddingAll: "20px",
+                        contents: [
                             {
-                                "type": "box",
-                                "layout": "horizontal",
-                                "contents": [
+                                type: "box",
+                                layout: "horizontal",
+                                spacing: "md",
+                                alignItems: "center",
+                                contents: [
                                     {
-                                        "type": "text",
-                                        "text": "📅",
-                                        "size": "md",
-                                        "flex": 0
+                                        type: "image",
+                                        url: profile.pictureUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
+                                        aspectMode: "cover",
+                                        aspectRatio: "1:1",
+                                        size: "sm",
+                                        gravity: "center",
+                                        flex: 0
                                     },
                                     {
-                                        "type": "text",
-                                        "text": date,
-                                        "size": "sm",
-                                        "color": "#666666",
-                                        "margin": "sm",
-                                        "flex": 1
-                                    },
-                                    {
-                                        "type": "text",
-                                        "text": "🕐",
-                                        "size": "md",
-                                        "flex": 0
-                                    },
-                                    {
-                                        "type": "text",
-                                        "text": time,
-                                        "size": "sm",
-                                        "color": "#666666",
-                                        "margin": "sm",
-                                        "flex": 1
+                                        type: "box",
+                                        layout: "vertical",
+                                        flex: 1,
+                                        contents: [
+                                            { type: "text", text: `${firstName} ${lastName}`, weight: "bold", size: "md", color: "#1a1a1a", wrap: true },
+                                            { type: "text", text: positionLabel, size: "sm", color: "#3498db", weight: "bold", margin: "xs" }
+                                        ]
                                     }
-                                ],
-                                "paddingAll": "sm",
-                                "backgroundColor": "#e8f5e9",
-                                "cornerRadius": "8px",
-                                "margin": "md"
-                            }
-                        ],
-                        "paddingAll": "md"
-                    },
-                    "footer": {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
+                                ]
+                            },
+                            { type: "separator", margin: "lg" },
                             {
-                                "type": "text",
-                                "text": "ขอบคุณที่ลงทะเบียน 🙏",
-                                "size": "sm",
-                                "color": "#888888",
-                                "align": "center",
-                                "margin": "md"
+                                type: "box",
+                                layout: "vertical",
+                                spacing: "sm",
+                                margin: "lg",
+                                contents: [
+                                    flexInfoRow("หน่วยงาน", department),
+                                    flexInfoRow("ที่อยู่", `ต.${subDistrict} อ.${district} จ.${PROVINCE_NAME}`),
+                                    flexInfoRow("เวลา", time)
+                                ]
                             }
-                        ],
-                        "paddingAll": "sm"
+                        ]
                     },
-                    "styles": {
-                        "header": {
-                            "separator": true
-                        }
+                    footer: {
+                        type: "box",
+                        layout: "vertical",
+                        backgroundColor: "#f0f4ff",
+                        paddingAll: "12px",
+                        contents: [
+                            { type: "text", text: "ขอบคุณที่ลงทะเบียนกับ Camma", size: "xs", color: "#8b93a1", align: "center" }
+                        ]
                     }
                 }
             };
 
-            try {
-                console.log('Sending message to LINE...');
-                await liff.sendMessages([message]);
-                console.log('Message sent successfully');
-            } catch (error) {
-                console.error('Error sending message:', error);
-                // Don't throw error - allow form to complete even if message fails
-            }
+            await liff.sendMessages([message]);
         }
-
-
+  
+  
     </script>
-
+   
 </body>
 </html>
