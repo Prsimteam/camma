@@ -203,6 +203,12 @@
         </div>
 
         <div class="form-group">
+            <label for="liffId">LIFF ID (optional)</label>
+            <input type="text" id="liffId" placeholder="1234567890-AbCdEfGh" value="2006670422-dTReuVpo">
+            <div class="hint">ใช้สร้างลิงก์ผ่าน LINE เพื่อเก็บ userID ต้องตรงกับ CONFIG.LIFF_ID ใน index.html หากเว้นว่างจะสร้างลิงก์ปกติ</div>
+        </div>
+
+        <div class="form-group">
             <label>Target URL</label>
             <input type="url" id="targetUrl" placeholder="https://example.com" required>
         </div>
@@ -257,6 +263,7 @@
             const targetUrl = targetUrlInput.value.trim();
             const category = categoryInput.value.trim();
             const detail = detailInput.value.trim();
+            const liffId = document.getElementById('liffId').value.trim();
 
             // Update values back to inputs to show trimmed version
             scriptUrlInput.value = scriptUrl;
@@ -284,8 +291,14 @@
                 return;
             }
 
+            if (liffId && !/^\d+-[A-Za-z0-9]+$/.test(liffId)) {
+                showError('Please enter a valid LIFF ID.');
+                return;
+            }
+
             // Save script URL
             localStorage.setItem('camma_log_script_url', scriptUrl);
+            localStorage.setItem('camma_log_liff_id', liffId);
 
             btn.disabled = true;
             btn.innerHTML = "Generating... <span style='font-size:0.8em'>Please wait</span>";
@@ -303,7 +316,8 @@
 
                 if (data.status === "success") {
                     const trackingId = data.id;
-                    const trackingUrl = `${getBaseUrl()}?id=${trackingId}`;
+                    const baseUrl = liffId ? `https://liff.line.me/${liffId}` : getBaseUrl();
+                    const trackingUrl = `${baseUrl}?id=${encodeURIComponent(trackingId)}`;
 
                     finalLink.href = trackingUrl;
                     finalLink.textContent = trackingUrl;
@@ -337,6 +351,7 @@
         // Restore Script URL
         const savedUrl = localStorage.getItem('camma_log_script_url');
         if (savedUrl) document.getElementById('scriptUrl').value = savedUrl;
+        document.getElementById('liffId').value = localStorage.getItem('camma_log_liff_id') ?? '2006670422-dTReuVpo';
 
     </script>
 
