@@ -51,15 +51,6 @@
         }
     </style>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T1S5VW5N9W"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'G-T1S5VW5N9W');
-    </script>
 </head>
 
 <body>
@@ -81,35 +72,56 @@
         // ==========================================
 
         async function init() {
-            let idToken = '';
-            if (CONFIG.LIFF_ID && CONFIG.WEB_APP_URL) {
-                try {
-                    await loadLiff();
-                    await liff.init({ liffId: CONFIG.LIFF_ID });
-                    // Read the tracking ID only after LIFF restores liff.state.
-                    if (!liff.isLoggedIn()) {
-                        liff.login({ redirectUri: window.location.href });
-                        return;
-                    }
-                    idToken = liff.getIDToken() || '';
-                } catch (_) {
-                    // An unavailable LINE session must not prevent the destination opening.
-                    idToken = '';
-                }
-            }
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
             const msgEl = document.getElementById('message');
             const loaderEl = document.getElementById('loader');
-
             if (!CONFIG.WEB_APP_URL) {
                 loaderEl.style.display = 'none';
-                msgEl.innerHTML = `<div class='config-error'>
-                    <strong>System Not Configured</strong><br>
-                    Please edit <code>index.html</code> and set the <code>WEB_APP_URL</code> variable.
-                </div>`;
+                msgEl.textContent = 'System not configured: WEB_APP_URL is missing.';
                 return;
             }
+
+            // Preserve only the tracking ID. Never save OAuth URLs or credentials.
+            const initialId = getTrackingId(window.location.search);
+            let idToken = '';
+            let lineClientStatus = 'disabled';
+            let analyticsReady = !CONFIG.LIFF_ID;
+            if (CONFIG.LIFF_ID) {
+                let stage = 'sdk_unavailable';
+                try {
+                    msgEl.textContent = 'Connecting to LINE...';
+                    await loadLiff();
+                    stage = 'init_failed';
+                    await liff.init({ liffId: CONFIG.LIFF_ID });
+                    stage = 'session_failed';
+                    const id = getTrackingId(window.location.search) || initialId;
+                    if (!id) {
+                        loaderEl.style.display = 'none';
+                        msgEl.textContent = 'Link ID not found.';
+                        return;
+                    }
+                    if (!liff.isLoggedIn()) {
+                        // Login is automatic inside LIFF; manual login is for other browsers.
+                        if (!liff.isInClient()) {
+                            const redirectUrl = new URL(window.location.href);
+                            redirectUrl.search = new URLSearchParams({ id }).toString();
+                            redirectUrl.hash = '';
+                            liff.login({ redirectUri: redirectUrl.href });
+                            return;
+                        }
+                        lineClientStatus = 'not_logged_in';
+                    } else {
+                        idToken = liff.getIDToken() || '';
+                        lineClientStatus = idToken ? 'token_ready' : 'missing_id_token';
+                    }
+                    // LIFF has now removed credentials from the primary redirect URL.
+                    analyticsReady = true;
+                } catch (_) {
+                    // Keep redirect available, but record which frontend step failed.
+                    idToken = '';
+                    lineClientStatus = stage;
+                }
+            }
+            const id = getTrackingId(window.location.search) || initialId;
 
             if (!id) {
                 // If no ID is present, and we are not on admin page, maybe show a 404 or admin link
@@ -118,21 +130,22 @@
                 msgEl.textContent = "Link ID not found.";
                 return;
             }
+            if (analyticsReady) {
+                try { startAnalytics(id); } catch (_) { /* Optional analytics must not affect tracking. */ }
+            }
 
             // Gather Metadata
             const meta = {
                 userAgent: navigator.userAgent,
                 screen: `${window.screen.width}x${window.screen.height}`,
-                referrer: document.referrer,
+                referrer: cleanReferrer(document.referrer),
                 language: navigator.language,
                 time: new Date().toISOString()
             };
 
             try {
-                // Determine connector (params separator) for GAS URL
-                // usually GAS URLs end in /exec. we append ?action=log...
                 // Form encoding avoids a CORS preflight; credentials never go in the URL.
-                const body = new URLSearchParams({ action: 'log', id, meta: JSON.stringify(meta) });
+                const body = new URLSearchParams({ action: 'log', id, meta: JSON.stringify(meta), lineClientStatus });
                 if (idToken) body.set('idToken', idToken);
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -141,6 +154,7 @@
                     const response = await fetch(CONFIG.WEB_APP_URL, {
                         method: 'POST', body, signal: controller.signal
                     });
+                    if (!response.ok) throw new Error('Tracking server returned HTTP ' + response.status);
                     data = await response.json();
                 } finally {
                     clearTimeout(timeoutId);
@@ -156,6 +170,43 @@
                 loaderEl.style.display = 'none';
                 msgEl.textContent = "Error: " + err.message;
             }
+        }
+
+        function getTrackingId(search) {
+            const params = new URLSearchParams(search);
+            if (params.get('id')) return params.get('id');
+            const state = params.get('liff.state');
+            if (!state) return null;
+            try {
+                // URLSearchParams already decodes liff.state; do not decode it twice.
+                return new URL(state, window.location.href).searchParams.get('id');
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function cleanReferrer(value) {
+            try {
+                const url = new URL(value);
+                return url.origin + url.pathname;
+            } catch (_) { return ''; }
+        }
+
+        function startAnalytics(id) {
+            // Analytics must never receive the LIFF primary URL containing OAuth data.
+            const page = new URL(window.location.href);
+            page.search = new URLSearchParams({ id }).toString();
+            page.hash = '';
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { window.dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'G-T1S5VW5N9W', {
+                page_location: page.href, page_referrer: cleanReferrer(document.referrer)
+            });
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-T1S5VW5N9W';
+            document.head.appendChild(script);
         }
 
         function loadLiff() {
